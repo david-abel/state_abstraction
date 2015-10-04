@@ -1,0 +1,165 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+\input{../p.tex}
+\title{Approximating the Optimal State Abstraction}
+\author{}
+\date{}                                           % Activate to display a given date or no date
+
+% --- Note Commands ---
+\newcommand\davenote[1]{\textcolor{blue}{Dave: #1}}
+
+\begin{document}
+\maketitle
+
+% --- ABSTRACT ---
+\begin{abstract}
+
+\end{abstract}
+
+% --- SECTION: Outline of H2R Talk ---
+\newpage
+\section{Outline of H2R Talk}
+
+\subsection{The Problem}
+\begin{mdframed}
+\vspace{1mm}
+Goal: planning and learning in large\footnote{TOTALLY MASSIVE} state spaces. \\
+Proposed Strategy: abstract the problem to simplify.
+\end{mdframed}
+
+\vspace{4mm}
+\elem{For example:}
+In this lab, we like OO-MDPs a lot. There are other possible representations one might consider to collapse our representation of the real world. Objects seem like a reasonable choice given how object-oriented the human experience seems to be.
+
+%For vision, other compressions make sense.
+%For other sensor channels, different compressions make sense.
+%For different worlds, different compressions make sense.
+
+The main point is that compression helps, but we don't totally know how effective these things could be, and we don't know exactly which compressions to choose. In some sense, we're just picking compressions based on what we think might work.
+
+Some questions to consider:
+\begin{itemize}
+\item Q: Is there a unified definition of state abstraction?
+\item Q: How do different abstractions relate to one another?
+\item Q: How can we select among abstraction schemes?
+\item Q: How does the solution to the abstracted MDP relate to the original MDP?
+\item Q: How should we be compressing? Does it change from domain to domain, task to task?
+\item Q: Can we learn these abstractions? How much data do they require?
+\end{itemize}
+
+Immediate question: How should we compress? Any ideas? Does it change depending on the domain? The task? Are there other things we can use compression for?
+
+So it turns out there have been a huge number of attempts at this:
+\begin{itemize}
+\item Dynamic Programming Aggregation
+\item Stochastic DP with factored representations
+\item Model reduction techniques
+\item Model minimization...
+\item Abstraction Selection...
+\item State Abstraction Selection from...
+\item Proto-value functions
+\item Selecting the state-representation in reinforcement learning
+\item Optimal regret bounds for selecting the...
+\item RL with selective perception
+\item SMDP homomorphisms: an algebraic approach.
+\item Selecting near optimal approximate state...
+\end{itemize}
+
+% - Subsection: Unified Theory Paper -
+\midline
+\subsection{Unified Theory Paper}
+Michael, Tom Walsh, Lihong Li wrote a paper called ``Towards a Unified Theory of State Abstraction for MDPs''~\cite{li2006towards} that surveys these approaches, and puts them into a single framework.
+
+The high level is that there are roughly 5 types of abstractions:
+\begin{enumerate}
+% Model Irrelevance
+\item Model-irrelevance: $\phi_{\text{model}}$ :
+\begin{multline*}
+\forall_s \forall_a \phi_{\text{model}}(s_1) = \phi_{\text{model}}(s_2) \rightarrow \mathcal{R}(s_1,a) = \mathcal{R}(s_2,a)\ \wedge \\
+\sum_{s' \in \phi_{\text{model}}^{-1}(s)} \Pr(s' \mid s_1, a) = \sum_{s' \in \phi_{\text{model}}^{-1}(s)} \Pr(s' \mid s_2, a)
+\end{multline*}
+
+% Q^\pi Irrelevance
+\item $Q^\pi$-irrelevance: $\phi_{Q^\pi}$ :
+\begin{equation*}
+\forall_\pi \phi_{Q^\pi}(s_1) = \phi_{Q^\pi}(s_2) \rightarrow  \forall_a Q^\pi(s_1,a) = Q^\pi(s_2,a)
+\end{equation*}
+
+% Q^* Irrelevance
+\item $Q^*$-irrelevance: $\phi_{Q^*}$ :
+\begin{equation*}
+\phi_Q^*(s_1) = \phi_Q^*(s_2) \rightarrow \forall_a  Q^*(s_1,a) = Q^*(s_2,a)
+\end{equation*}
+
+% a^* Irrelevance
+\item $a^*$-irrelevance: $\phi_{a^*}$:
+\begin{equation*}
+\phi_{a^*}(s_1) = \phi_a^*(s_2) \rightarrow Q^*(s_1,a^*) = \max_a Q^*(s_1,a) = \max_a Q^*(s_2,a) = Q^*(s_2, a)
+\end{equation*}
+
+% \pi^* Irrelevance
+\item $\pi^*$-irrelevance: $\phi_{\pi^*}$:
+\begin{equation*}
+\phi_{\pi^*}(s_1) = \phi_{\pi^*}(s_2) \rightarrow \left( Q^*(s_1, a^*) = \max_a Q^*(s_1,a) \wedge Q^*(s_2,a^*) = \max_a Q^*(s_2,a) \right)
+\end{equation*}
+
+\end{enumerate}
+
+One note: I haven't thought about this too much, but I'm pretty sure that throwing in abstracted actions like Options fits into this framework neatly -- suppose we're in an SMDP and that an option is just an action. Then we can abstract the state space based on where subgoals are/aren't satisfied. Seems like the right sort of result.
+
+Other results from the paper:
+
+\thm{Theorem}{3}{With abstractions $\phi_{\text{model}}$, $\phi_{Q^\pi}$, $\phi_{Q^*}$, and $\phi_{a^*}$, the optimal abstract policy $\bar{\pi}^*$ is optimal in the ground MDP.}
+
+\thm{Theorem}{4.1}{Q-Learning with abstractions $\phi_{\text{model}}$, $\phi_{Q^\pi}$, and $\phi_{Q^*}$, converges to the optimal state-action value function in the ground MDP}
+
+\thm{Theorem}{4.2}{Q-Learning with abstraction $\phi_{a^*}$ does not necessarily converge.}
+
+\thm{Theorem}{4.3}{Q-Learning with abstraction $\phi_{\pi^*}$ can converge to an action-value function whose greedy-policy is suboptimal in the ground MDP.}
+
+In a follow up paper, they have a distribution on MDPs, sample some training MDPs to infer the optimal state abstraction, and use it to solve a test MDP from the same distribution.
+
+
+\elem{Example time!}
+
+First: Sample Complexity (e.g. PAC-MDP means $\epsilon-$optimalilty with polynomial Sample Complexity in the relevant parameters, w/ probability $1-\delta$).
+Second: Grid example that goes from NxM to N.
+
+Q: But what's the elephant in the room with all of this?
+A: Finding states with {\it exactly} the same Q values, or optimal action and action value, is rare!
+A: Furthermore, we need to know something about the optimal behavior in advance!
+
+\midline
+\subsection{New Proposal}
+
+An area I'm interested in investigating: lets relax this assumption of {\bf strict equality} and look at some notion of similarity/approximate equality, and then investigate what is preserved in the resulting policy.
+
+This will let us back off and see what might be learned online in a lifelong reinforcement learning setting. That is, can investigate learning one of these $\phi$ functions online.
+
+
+Tackles:
+\begin{itemize}
+\item Lifelong RL
+\item Online learning
+\item State abstraction
+\item Macroaction/Option learning
+\end{itemize}
+
+% --- SECTION: Introduction ---
+\newpage
+\section{Introduction}
+
+
+% --- SECTION: Conclusion ---
+\newpage
+\section{Conclusion}
+
+
+
+
+% --- BIBLIOGRAPHY ---
+\newpage
+\bibliography{sca_bib}
+
+\end{document}
