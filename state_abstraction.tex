@@ -17,9 +17,9 @@
 
 \end{abstract}
 
-% --- SECTION: Outline of H2R Talk ---
+% --- SECTION: Motivation ---
 \newpage
-\section{Outline of H2R Talk}
+\section{Background}
 
 \subsection{The Problem}
 \begin{mdframed}
@@ -30,7 +30,7 @@ Proposed Strategy: abstract the problem to simplify.
 
 \vspace{4mm}
 \elem{For example:}
-In this lab, we like OO-MDPs a lot. There are other possible representations one might consider to collapse our representation of the real world. Objects seem like a reasonable choice given how object-oriented the human experience seems to be.
+Historically, we'ved relied on OO-MDPs a lot. There are other possible representations one might consider to collapse our representation of the real world. Objects seem like a reasonable choice given how object-oriented the human experience seems to be.
 
 %For vision, other compressions make sense.
 %For other sensor channels, different compressions make sense.
@@ -66,7 +66,7 @@ So it turns out there have been a huge number of attempts at this:
 \item Selecting near optimal approximate state...
 \end{itemize}
 
-% - Subsection: Unified Theory Paper -
+% Subsection: Unified Theory Paper
 \midline
 \subsection{Unified Theory Paper}
 Michael, Tom Walsh, Lihong Li wrote a paper called ``Towards a Unified Theory of State Abstraction for MDPs''~\cite{li2006towards} that surveys these approaches, and puts them into a single framework.
@@ -120,41 +120,78 @@ Other results from the paper:
 
 In a follow up paper, they have a distribution on MDPs, sample some training MDPs to infer the optimal state abstraction, and use it to solve a test MDP from the same distribution.
 
+% --- SECTION: Motivation ---
+\newpage
+\section{Motivation}
 
-\elem{Example time!}
+% Subsection: Arbitrary reduction in Sample Complexity
+\subsection{Result 1: Arbitrary reduction in Sample Complexity}
+First: Grid example that goes from NxM to N, (always go up, no down action).
 
-First: Sample Complexity (e.g. PAC-MDP means $\epsilon-$optimalilty with polynomial Sample Complexity in the relevant parameters, w/ probability $1-\delta$).
-Second: Grid example that goes from NxM to N.
+\subsection{Result 2: With a perfect abstractor, consider the exploration problem}
 
+\subsection{Result 3: Collapsing on {\it just state variables} is insufficient to preserve any kind of optimality}
+
+\subsection{Elephant in the Room}
 Q: But what's the elephant in the room with all of this?
 A: Finding states with {\it exactly} the same Q values, or optimal action and action value, is rare!
 A: Furthermore, we need to know something about the optimal behavior in advance!
 
 \midline
-\subsection{New Proposal}
 
-An area I'm interested in investigating: lets relax this assumption of {\bf strict equality} and look at some notion of similarity/approximate equality, and then investigate what is preserved in the resulting policy.
-
-This will let us back off and see what might be learned online in a lifelong reinforcement learning setting. That is, can investigate learning one of these $\phi$ functions online.
-
-
-Tackles:
-\begin{itemize}
-\item Lifelong RL
-\item Online learning
-\item State abstraction
-\item Macroaction/Option learning
-\end{itemize}
-
-% --- SECTION: Introduction ---
+% --- SECTION: New Proposal ---
 \newpage
-\section{Introduction}
+\section{New Proposal: Approximate Abstraction}
+
+
+For each of the following three cases:
+% Model Equivalence
+\begin{equation}
+ \phi(s_1) = \phi(s_2) \rightarrow \forall_{s,a} : T(s \mid s_i, a) = T(s \mid s_j, a)
+\end{equation}
+
+% Optimal Q Function Equivalence
+\begin{equation}
+ \phi(s_1) = \phi(s_2) \rightarrow \forall_a : Q^*(s_i, a) = Q^*(s_j, a)
+\end{equation}
+
+% Optimal action and value Equivalence
+\begin{equation}
+ \phi(s_1) = \phi(s_2) \rightarrow \argmax_a Q^*(s_i, a) = \argmax_a Q^*(s_j, a) \wedge \max_a Q^*(s_i, a) = \max_a Q^*(s_j, a)
+\end{equation}
+
+Relax the equality condition, instead consider the approximate case, e.g.:
+% Model Similarity
+\begin{equation}
+ \phi(s_1) = \phi(s_2) \rightarrow \forall_{s,a} : |T(s \mid s_i, a) - T(s \mid s_j, a)| \leq \epsilon
+\end{equation}
+
+\elem{The Question:} Can anything be said about the optimality of the policy $\pi_{\phi_{T,\epsilon}}$ in the ground MDP? Are we within some factor of $\epsilon$ away from being optimal?
+
+
+% --- SECTION: Temporal Abstraction ---
+\newpage
+\section{New Proposal: Temporal Abstraction}
+
+In light of Result 3, that state abstraction needs to be defined with respect to some sort of properties about actions, suppose a set of temporally extended actions are included in the action set.
+
+Now, abstractions become temporally extended.
+
+Should be some nice results there.
+
+
 
 
 % --- SECTION: Conclusion ---
 \newpage
 \section{Conclusion}
 
+Future Work:
+\begin{itemize}
+\item Learning $\phi$
+\item Connection to AMDPs (e.g. consider $\Omega : \langle S, A, R, T, \gamma \rangle \mapsto \langle S', A', R', T', \gamma' \rangle$
+\item Connection to teaching.
+\end{itemize}
 
 
 
