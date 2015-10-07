@@ -1,7 +1,7 @@
 \documentclass[11pt]{amsart}
 \usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
 \geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
-\input{../p.tex}
+\input{p.tex}
 \title{Approximating the Optimal State Abstraction}
 \author{}
 \date{}                                           % Activate to display a given date or no date
@@ -191,6 +191,10 @@ Future Work:
 \item Learning $\phi$
 \item Connection to AMDPs (e.g. consider $\Omega : \langle S, A, R, T, \gamma \rangle \mapsto \langle S', A', R', T', \gamma' \rangle$
 \item Connection to teaching.
+\begin{itemize}
+\item AMDPs seem well suited to hierarchical teaching Carl-style.
+\item Problem: once solved for optimal policy in AMDP already solved in low level state. Probably want to set up teaching to avoid this.
+\end{itemize}
 \end{itemize}
 
 
