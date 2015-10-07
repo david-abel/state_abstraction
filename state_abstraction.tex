@@ -17,7 +17,8 @@
 
 \end{abstract}
 
-% --- SECTION: Motivation ---
+
+% --- SECTION: Background ---
 \newpage
 \section{Background}
 
@@ -30,7 +31,7 @@ Proposed Strategy: abstract the problem to simplify.
 
 \vspace{4mm}
 \elem{For example:}
-Historically, we'ved relied on OO-MDPs a lot. There are other possible representations one might consider to collapse our representation of the real world. Objects seem like a reasonable choice given how object-oriented the human experience seems to be.
+Historically, we've relied on OO-MDPs a lot. There are other possible representations one might consider to collapse our representation of the real world. Objects seem like a reasonable choice given how object-oriented the human experience seems to be.
 
 %For vision, other compressions make sense.
 %For other sensor channels, different compressions make sense.
@@ -120,22 +121,38 @@ Other results from the paper:
 
 In a follow up paper, they have a distribution on MDPs, sample some training MDPs to infer the optimal state abstraction, and use it to solve a test MDP from the same distribution.
 
+
+
 % --- SECTION: Motivation ---
 \newpage
 \section{Motivation}
 
-% Subsection: Arbitrary reduction in Sample Complexity
-\subsection{Result 1: Arbitrary reduction in Sample Complexity}
-First: Grid example that goes from NxM to N, (always go up, no down action).
+\elem{Basic Point:} State abstraction for planning, learning, possibly bandits could be EPIC.
 
-\subsection{Result 2: With a perfect abstractor, consider the exploration problem}
+% Subsection: Arbitrary reduction in Sample Complexity for a specific MDP.
+\subsection{Result 1: Arbitrary reduction in Sample Complexity for a particular MDP.}
 
-\subsection{Result 3: Collapsing on {\it just state variables} is insufficient to preserve any kind of optimality}
+% Subsection: More general SC reduction result.
+\subsection{Result 2: More general result about sample complexity reduction for MDPs of a certain type}
 
-\subsection{Elephant in the Room}
-Q: But what's the elephant in the room with all of this?
-A: Finding states with {\it exactly} the same Q values, or optimal action and action value, is rare!
-A: Furthermore, we need to know something about the optimal behavior in advance!
+Q: Assuming a given MDP has property set X, can we say anything about the possible reduction in sample complexity using a state abstraction function.
+
+
+% Maybe something about exploration.
+
+
+% Subsection: Things you should not compress on.
+\subsection{Result 3: Collapsing on just {\it state variables}, or {\it reward}, or {\it other?} is insufficient to preserve any kind of optimality (including $\epsilon$-optimality.}
+
+
+
+% --- SECTION: Elephants In the Room ---
+\section{Elephants in the Room}
+
+\begin{itemize}
+\item Finding states with {\it exactly} the same Q values, or optimal action and action value, is rare!
+\item Can't capture temporal abstraction.
+\end{itemize}
 
 \midline
 
