@@ -141,10 +141,6 @@ Q: Assuming a given MDP has property set X, can we say anything about the possib
 % Maybe something about exploration.
 
 
-% Subsection: Things you should not compress on.
-\subsection{Result 3: Collapsing on just {\it state variables}, or {\it reward}, or {\it other?} is insufficient to preserve any kind of optimality (including $\epsilon$-optimality.}
-
-
 
 % --- SECTION: Elephants In the Room ---
 \section{Elephants in the Room}
@@ -156,13 +152,21 @@ Q: Assuming a given MDP has property set X, can we say anything about the possib
 
 \midline
 
+
+
 % --- SECTION: New Proposal ---
 \newpage
-\section{New Proposal: Approximate Abstraction}
+\section{New Proposal 1: Approximate Abstraction}
 
 
-For each of the following three cases:
+For each of the following four cases:
+
 % Model Equivalence
+\begin{equation}
+ \phi(s_1) = \phi(s_2) \rightarrow \forall_{s,a} : T(s \mid s_1, a) = T(s \mid s_2, a) \wedge \forall_a : R(s_1,a) = R(s_2,a)
+\end{equation}
+
+% Transition Equivalence
 \begin{equation}
  \phi(s_1) = \phi(s_2) \rightarrow \forall_{s,a} : T(s \mid s_i, a) = T(s \mid s_j, a)
 \end{equation}
@@ -172,23 +176,29 @@ For each of the following three cases:
  \phi(s_1) = \phi(s_2) \rightarrow \forall_a : Q^*(s_i, a) = Q^*(s_j, a)
 \end{equation}
 
-% Optimal action and value Equivalence
+% Optimal action and Q value Equivalence
 \begin{equation}
  \phi(s_1) = \phi(s_2) \rightarrow \argmax_a Q^*(s_i, a) = \argmax_a Q^*(s_j, a) \wedge \max_a Q^*(s_i, a) = \max_a Q^*(s_j, a)
 \end{equation}
 
-Relax the equality condition, instead consider the approximate case, e.g.:
+% Possible I-Learning?
+
+% Ordering of Q values?
+
+\elem{Our strategy:} relax the equality condition, instead consider the approximate case, e.g.:
 % Model Similarity
 \begin{equation}
  \phi(s_1) = \phi(s_2) \rightarrow \forall_{s,a} : |T(s \mid s_i, a) - T(s \mid s_j, a)| \leq \epsilon
 \end{equation}
 
-\elem{The Question:} Can anything be said about the optimality of the policy $\pi_{\phi_{T,\epsilon}}$ in the ground MDP? Are we within some factor of $\epsilon$ away from being optimal?
+\subsection{The Question:} Suppose we're given the optimal policy in the abstract MDP under one of the above approximate abstractions, e.g. $\pi^*_{\phi_{T,\epsilon}}$. What can be said about the potential optimality of this policy in the original ground MDP? (for each of the four approximate abstractions).
+
+Note: Similar to simulation lemma from $E^3$, lets take a look.
 
 
 % --- SECTION: Temporal Abstraction ---
 \newpage
-\section{New Proposal: Temporal Abstraction}
+\section{New Proposal 2: Temporal Abstraction}
 
 In light of Result 3, that state abstraction needs to be defined with respect to some sort of properties about actions, suppose a set of temporally extended actions are included in the action set.
 
@@ -196,6 +206,14 @@ Now, abstractions become temporally extended.
 
 Should be some nice results there.
 
+
+% --- SECTION: Other Fruits ---
+\newpage
+\section{Other Low Hanging Fruit Results}
+
+
+% Subsection: Things you should not compress on.
+\subsection{Result 3: Collapsing on just {\it state variables}, or {\it reward}, or {\it value} is insufficient to preserve any kind of optimality (including $\epsilon$-optimality.}
 
 
 
