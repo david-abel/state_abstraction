@@ -129,35 +129,33 @@ In a follow up paper, they have a distribution on MDPs, sample some training MDP
 
 \elem{Basic Point:} State abstraction for planning, learning, possibly bandits could be EPIC.
 
-% Subsection: Arbitrary reduction in Sample Complexity for a specific MDP.
-\subsection{Result 1: Arbitrary reduction in Sample Complexity for a particular MDP.}
+\elem{Result 1:} Arbitrary reduction in Sample Complexity for a particular MDP.
 
-% Subsection: More general SC reduction result.
-\subsection{Result 2: More general result about sample complexity reduction for MDPs of a certain type}
-
-Q: Assuming a given MDP has property set X, can we say anything about the possible reduction in sample complexity using a state abstraction function.
+\elem{Result 2:} More general result about sample complexity reduction for MDPs of a certain type
 
 
-% Maybe something about exploration.
+The Question: Assuming a given MDP has property set X, can we say anything about the possible reduction in sample complexity using a state abstraction function.
+
+
+Possible other Result: Exploration.
 
 
 
 % --- SECTION: Elephants In the Room ---
 \section{Elephants in the Room}
 
-\begin{itemize}
-\item Finding states with {\it exactly} the same Q values, or optimal action and action value, is rare!
+\begin{enumerate}
+\item Finding states with {\it exactly} the same Q values, or optimal action and action value, or same model, is rare!
 \item Can't capture temporal abstraction.
-\end{itemize}
+\end{enumerate}
+
+Proposal: Resolve (1) and (2), so that the nice results from Section 2 can be realized. The next two sections talk about how we might go about doing that.
 
 \midline
-
-
 
 % --- SECTION: New Proposal ---
 \newpage
 \section{New Proposal 1: Approximate Abstraction}
-
 
 For each of the following four cases:
 
@@ -191,20 +189,34 @@ For each of the following four cases:
  \phi(s_1) = \phi(s_2) \rightarrow \forall_{s,a} : |T(s \mid s_i, a) - T(s \mid s_j, a)| \leq \epsilon
 \end{equation}
 
+Sort of like the Simulation Lemma from $E^3$.
+
 \subsection{The Question:} Suppose we're given the optimal policy in the abstract MDP under one of the above approximate abstractions, e.g. $\pi^*_{\phi_{T,\epsilon}}$. What can be said about the potential optimality of this policy in the original ground MDP? (for each of the four approximate abstractions).
 
-Note: Similar to simulation lemma from $E^3$, lets take a look.
+\subsection{Followup Question:} Why {\it won't} this work for other types of abstractions?
+\begin{itemize}
+\item Just using state variables...
+\item Just Reward function at a state...
+\item Just Value of state...
+\item Any combination of these...
+\end{itemize}
+
+Results about which abstractions {\it don't} work. Note: Already have counter examples for the above 3, would be nice to get more general results.
+
+The result is that we identify which criteria are at the core of making state abstraction {\it useful}.
 
 
 % --- SECTION: Temporal Abstraction ---
 \newpage
 \section{New Proposal 2: Temporal Abstraction}
 
-In light of Result 3, that state abstraction needs to be defined with respect to some sort of properties about actions, suppose a set of temporally extended actions are included in the action set.
+In light of the above negative results (regarding which abstractions are useful), that state abstraction needs to be defined with respect to some sort of properties about actions, suppose a set of temporally extended actions are included in the action set.
 
 Now, abstractions become temporally extended.
 
-Should be some nice results there.
+What sort of thing do we want to prove here? Abstractions become temporal if actions are temporally extended? Without temporal extension, forces $T(s,a,s')$ and $R(s,a)$ to do weird things?
+
+Q: Can we treat temporally extended actions in a general enough way to prove things about all possible versions of TEAs, or do we need to do separate proofs for Options/Macroactions?
 
 
 % --- SECTION: Other Fruits ---
@@ -215,6 +227,14 @@ Should be some nice results there.
 % Subsection: Things you should not compress on.
 \subsection{Result 3: Collapsing on just {\it state variables}, or {\it reward}, or {\it value} is insufficient to preserve any kind of optimality (including $\epsilon$-optimality.}
 
+% --- SECTION: Game Plan ---
+\newpage{Game Plan}
+
+First, get results about the approximate state abstraction for each of the 4 under consideration.
+
+Second, investigate temporally extended actions w/ abstraction.
+
+Third, wrap up low hanging fruit results, investigate more general versions of these claims (beyond $\exists MDP s.t. \ldots$.).
 
 
 % --- SECTION: Conclusion ---
