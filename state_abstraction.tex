@@ -206,6 +206,34 @@ Results about which abstractions {\it don't} work. Note: Already have counter ex
 The result is that we identify which criteria are at the core of making state abstraction {\it useful}.
 
 
+
+% --- SECTION: Results! ---
+\newpage
+\section{Results}
+
+\thm{Lemma}{1}{(Simulation Lemma)}
+
+\thm{Lemma}{2}{Under the model approximate abstraction scheme, an the Q values for the ground MDP will be within $\epsilon$ of the abstract MDP under an arbitrary policy.}
+
+\elem{Proof:} Recall our definition of model approximate abstraction:
+\begin{equation}
+\forall_{s_1,s_2} \phi(s_1) = \phi(s_2) \rightarrow \forall_{s,a} | T(s,a,s_1) - T(s,a,s_2) | \leq 2\beta
+\label{eq:approx_model_abs}
+\end{equation}
+
+Sim Lemma says we need T and R to be within $2\beta = \alpha$.
+
+We have our ground MDP: $M_G$, abstract MDP, $M_A$, and noisy ground MDP, $M_{G'}$.
+
+Using a given state abstraction function $\phi$ subject to Equation~\ref{eq:approx_model_abs}, the difference between $T_G$ and $T_{G'}$.
+
+Sim lemma goes through (cause same for $R$).
+
+\thm{Lemma}{3}{Under the optimal Q function approximate abstraction, $\forall_s : |Q_A^*(s,.) - Q_G^*(s,.)| \leq \epsilon$ }
+
+Since for each state, the most you can screw up is by $\epsilon$, since if you don't take $\argmax_a Q^*(s,a)$, then one of the other actions Q functions must have jumped up by at most $\epsilon$, but it's fine because then you're doing no worse then $\epsilon$. It can't have jump mored, because otherwise you wouldn't have compressed on it.
+
+
 % --- SECTION: Temporal Abstraction ---
 \newpage
 \section{New Proposal 2: Temporal Abstraction}
