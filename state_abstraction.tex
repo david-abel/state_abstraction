@@ -211,9 +211,11 @@ The result is that we identify which criteria are at the core of making state ab
 \newpage
 \section{Results}
 
-\thm{Lemma}{1}{(Simulation Lemma)}
+\thm{Lemma}{1}{Given two MDPs, $M_1$ and $M_2$ which differ only by $T$ and $R$, if $\forall_{s,a} |T_1(s,a,\cdot)-T_2(s,a,\cdot)| \leq 2\beta$ and $\forall_{s,a} |R_1(s,a)-R_2(s,a)|\leq \alpha$ then for some fixed policy $\pi$ then $\forall_{s,a} |Q_1^\pi(s,a)-Q_2^\pi(s,a)| \leq \frac{\alpha v_{max}}{C(1-\gamma)} = \epsilon$ (Simulation Lemma)}
 
-\thm{Lemma}{2}{Under the model approximate abstraction scheme, an the Q values for the ground MDP will be within $\epsilon$ of the abstract MDP under an arbitrary policy.}
+Call the ground truth MDP $M_G$, the abstract MDP $M_A=\phi(M_G)$.\footnote{Sloppy notation -- really $\phi$ is only applied to $S$.} Suppose that the agent plans in $M_A$. We would like to bound how well it is \textit{really} performing in $M_G$ based on how it performs in $M_A$. Call the decompressed ground state of $M_A$, $M_{G'}$, the noisy ground MDP.
+
+\thm{Lemma}{2}{Under the model approximate abstraction scheme, $\phi_{model}$, the Q values under any policy in $M_A$ will be within $\epsilon$ of Q values under the same policy in $M_G$.}
 
 \elem{Proof:} Recall our definition of model approximate abstraction:
 \begin{equation}
