@@ -96,7 +96,7 @@ The high level is that there are roughly 5 types of abstractions:
 % a^* Irrelevance
 \item $a^*$-irrelevance: $\phi_{a^*}$:
 \begin{equation*}
-\phi_{a^*}(s_1) = \phi_a^*(s_2) \rightarrow Q^*(s_1,a^*) = \max_a Q^*(s_1,a) = \max_a Q^*(s_2,a) = Q^*(s_2, a)
+\phi_{a^*}(s_1) = \phi_{a^*}(s_2) \rightarrow Q^*(s_1,a^*) = \max_a Q^*(s_1,a) = \max_a Q^*(s_2,a) = Q^*(s_2, a^*)
 \end{equation*}
 
 % \pi^* Irrelevance
@@ -211,15 +211,20 @@ The result is that we identify which criteria are at the core of making state ab
 \newpage
 \section{Results}
 
-\thm{Lemma}{1}{Given two MDPs, $M_1$ and $M_2$ which differ only by $T$ and $R$, if $\forall_{s,a} |T_1(s,a,\cdot)-T_2(s,a,\cdot)| \leq 2\beta$ and $\forall_{s,a} |R_1(s,a)-R_2(s,a)|\leq \alpha$ then for some fixed policy $\pi$ then $\forall_{s,a} |Q_1^\pi(s,a)-Q_2^\pi(s,a)| \leq \frac{\alpha v_{max}}{C(1-\gamma)} = \epsilon$ (Simulation Lemma)}
+\thm{Lemma}{1}{Given two MDPs, $M_1$ and $M_2$ which differ only by $T$ and $R$, if $\forall_{s,a} |T_1(s,a,\cdot)-T_2(s,a,\cdot)| \leq 2\beta$ and $\forall_{s,a} |R_1(s,a)-R_2(s,a)|\leq \alpha$ then for some fixed policy $\pi$ then:
+\begin{equation}
+\forall_{s,a} |Q_1^\pi(s,a)-Q_2^\pi(s,a)| \leq \frac{\alpha \textsc{Vmax}}{C(1-\gamma)} = \epsilon
+\end{equation} (Simulation Lemma)}
 
-Call the ground truth MDP $M_G$, the abstract MDP $M_A=\phi(M_G)$.\footnote{Sloppy notation -- really $\phi$ is only applied to $S$.} Suppose that the agent plans in $M_A$. We would like to bound how well it is \textit{really} performing in $M_G$ based on how it performs in $M_A$. Call the decompressed ground state of $M_A$, $M_{G'}$, the noisy ground MDP.
+Call the ground truth MDP $M_G$, the abstract MDP $M_A=\phi(M_G)$.\footnote{Sloppy notation -- really $\phi$ is only applied to $S$.} Suppose that the agent plans in $M_A$. We would like to bound how well it is \textit{really} performing in $M_G$ based on how it performs in $M_A$. 
+
+Consider the decompressed ground state space of $M_A$, $M_{G'} = \phi^{-1}(\phi(M_G))$.
 
 \thm{Lemma}{2}{Under the model approximate abstraction scheme, $\phi_{model}$, the Q values under any policy in $M_A$ will be within $\epsilon$ of Q values under the same policy in $M_G$.}
 
 \elem{Proof:} Recall our definition of model approximate abstraction:
 \begin{equation}
-\forall_{s_1,s_2} \phi(s_1) = \phi(s_2) \rightarrow \forall_{s,a} | T(s,a,s_1) - T(s,a,s_2) | \leq 2\beta
+\forall_{s_1,s_2} \phi(s_1) = \phi(s_2) \rightarrow \forall_{s,a} | T(s,a,s_1) - T(s,a,s_2) | \leq 2\beta \wedge \forall_a |R(s_1,a) - R(s_2,a)| \leq \alpha
 \label{eq:approx_model_abs}
 \end{equation}
 
@@ -231,10 +236,12 @@ Using a given state abstraction function $\phi$ subject to Equation~\ref{eq:appr
 
 Sim lemma goes through (cause same for $R$).
 
-\thm{Lemma}{3}{Under the optimal Q function approximate abstraction, $\forall_s : |Q_A^*(s,.) - Q_G^*(s,.)| \leq \epsilon$ }
+\thm{Lemma}{3}{Under the optimal Q function approximate abstraction, $\forall_{s,a} : |Q_A^*(s,a) - Q_G^*(s,a)| \leq \epsilon$}
 
 Since for each state, the most you can screw up is by $\epsilon$, since if you don't take $\argmax_a Q^*(s,a)$, then one of the other actions Q functions must have jumped up by at most $\epsilon$, but it's fine because then you're doing no worse then $\epsilon$. It can't have jump mored, because otherwise you wouldn't have compressed on it.
 
+% Note: this might be too tight. A looser bound is $\epsilon D$, where $D$ is the diameter of the MDP, since each state you can incur at most $\epsilon$ error? This seems wrong too, it's not $D$ necessarily? It's more the number of actions executed during planning/learning. Does that seem right?
+% Doesn't it depend on the policy? Like this assumes we're working under a greedy Q policy. Suppose we're using an {\it arbitrary} policy... 
 
 % --- SECTION: Temporal Abstraction ---
 \newpage
