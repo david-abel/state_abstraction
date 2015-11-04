@@ -256,13 +256,26 @@ What sort of thing do we want to prove here? Abstractions become temporal if act
 Q: Can we treat temporally extended actions in a general enough way to prove things about all possible versions of TEAs, or do we need to do separate proofs for Options/Macroactions?
 
 
-% --- SECTION: Other Fruits ---
+% --- SECTION: Other Open Questions + Ideas ---
 \newpage
-\section{Other Low Hanging Fruit Results}
+\section{Other Open Questions + Ideas}
 
 
 % Subsection: Things you should not compress on.
 \subsection{Result 3: Collapsing on just {\it state variables}, or {\it reward}, or {\it value} is insufficient to preserve any kind of optimality (including $\epsilon$-optimality.}
+
+\elem{IDEA:} How about probability matching? I.e. what if we do:
+
+\begin{equation}
+\forall_{s_1,s_2} : \phi(s_1) = \phi(s_2) \rightarrow KL(\Delta_1 || \Delta_2) \leq \epsilon
+\end{equation}
+
+Where $\Delta_i$ is a softmax over Q values at state $s_i$, meaning:
+\begin{equation}
+\Delta_i = \frac{e^{Q(s,a)}}{\sum_b Q(s,b)}
+\end{equation}
+
+
 
 % --- SECTION: Game Plan ---
 \newpage{Game Plan}

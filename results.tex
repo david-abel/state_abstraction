@@ -24,16 +24,12 @@ For each approximate $\phi$ type, we want to show, $\forall_{\epsilon} : \epsilo
 
 We consider four $\phi$ types:
 % phi model
-\begin{multline*}
-\encircle{$\phi_m$}\ : \phi_{m}(s_1) = \phi_m(s_2) \rightarrow \forall_a |\mathcal{R}(s_1,a) - \mathcal{R}(s_2,a)| \leq \epsilon \ \wedge\ 
-\forall_{a,s' \in \phi^{-1}(\bar{s})} | \mathcal{T}(s_1,a,s') - \mathcal{T}(s_2,a,s') | \leq \epsilon
-% Where $\bar{s}$ is an abstract state (i.e. a state from A).
-% |\left(\sum_{s' \in \phi_{m}^{-1}(s)} \Pr(s' \mid s_1, a)\right) - \left(\sum_{s' \in \phi_m^{-1}(s)} \Pr(s' \mid s_2, a)\right) | \leq \epsilon \\
-\end{multline*}
 \begin{align*}
-\encircle{$\phi_{Q^*}$}\ & : \phi_Q^*(s_1) = \phi_Q^*(s_2) \rightarrow \forall_a |Q^*(s_1,a) - Q^*(s_2,a)| \leq \epsilon \\
-\encircle{$\phi_{D}$}\ & : \\
-\encircle{$\phi_{a^*}$}\ & : \phi_{a^*}(s_1) = \phi_{a^*}(s_2) \rightarrow Q^*(s_1,a^*) = Q^*(s_2, a^*)\ \wedge |\max_a Q^*(s_1,a) - \max_a Q^*(s_2,a)| \leq \epsilon  \\
+\encircle{\text{ $\phi_m$ }}\ & : \phi_{m}(s_1) = \phi_m(s_2) \rightarrow \forall_a |\mathcal{R}(s_1,a) - \mathcal{R}(s_2,a)| \leq \epsilon \ \wedge\ 
+\forall_{a,s' \in \phi^{-1}(\bar{s})} | \mathcal{T}(s_1,a,s') - \mathcal{T}(s_2,a,s') | \leq \epsilon \\
+\encircle{\text{ $\phi_{Q^*}$ }}\ & : \phi_{Q^*}(s_1) = \phi_{Q^*}(s_2) \rightarrow \forall_a |Q^*(s_1,a) - Q^*(s_2,a)| \leq \epsilon \\
+\encircle{\text{ $\phi_{D}$ }}\ & : \phi_D(s_1) = \phi_D(s_2) \rightarrow \Delta \left( \Pr_{a \in \mathcal{A}}(a \mid s_1) \mid\mid \Pr_{a \in \mathcal{A}}(a \mid s_2) \right) \leq \epsilon \\
+\encircle{\text{ $\phi_{a^*}$ }}\ & : \phi_{a^*}(s_1) = \phi_{a^*}(s_2) \rightarrow \argmax_a Q^*(s_1,a) = \argmax_a Q^*(s_2, a) \wedge |\max_a Q^*(s_1,a) - \max_a Q^*(s_2,a)| \leq \epsilon  \\
 \end{align*}
 
 % Other results to consider: phi compression can be arbitrarily bad for other methods of approximate compression. Sample complexity increase can be arbitrarily large.
@@ -63,7 +59,7 @@ From Equation~\ref{eq:phi_q_assumption}, we know:
 \forall_s : |\max_a Q^{\pi^*_M}(s,a) - \max_{a'} Q^{\pi^*_{M'}}(s,a')| \leq \max_b | Q^{\pi^*_M}(s,b) - Q^{\pi^*_{M'}}(s,b)| \leq \epsilon
 \end{equation}
 
-But since $V^{\pi} = \max_a Q^\pi(s,a)$, we conclude:
+But since $\forall_\pi : V^{\pi} = \max_a Q^\pi(s,a)$, we conclude:
 \begin{equation}
 \forall_s : |V^{\pi^*_M}(s) - V^{\pi^*_{M'}}(s)| \leq \epsilon
 \end{equation}
