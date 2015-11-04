@@ -35,7 +35,22 @@ We consider four $\phi$ types:
 \newpage
 % Subsection: phi_m Results
 \section{$\phi_{m}$ Results}
+Let the maximum upper bound between optimal behavior in the noisy and ground MDP be called $B_s$.
 
+\begin{align*}
+B_{s} &= max_{s,a}|Q'(s,a)-Q(s,a)|\\
+B_{s} &= |R_s' - R_s + \gamma \sum_{s'}\left[T'Q'-TQ\right]|\\
+&=|R'_s-R_s + \gamma \sum_{s'}\left[(T+T'-T)Q'-TQ\right]|\\
+&\leq |R'_s-R_s|+|\gamma \sum_{s'}\left[(T+\epsilon_{\text{transition}})Q' - TQ\right]|\\
+&\leq \epsilon_{\text{reward}}+|\gamma \sum_{s'}\left[(TQ'+\epsilon_{\text{transition}}Q' - TQ\right]|\\
+&\leq \epsilon_{\text{reward}}+|\gamma \sum_{s'}\left[(T(Q'-Q)+\epsilon_{\text{transition}}Q' \right]|\\
+&\leq \epsilon_{\text{reward}}+|\gamma |\mathcal{S}|\epsilon_{transition}Q'_{\text{max}} + \gamma \sum_{s'}\left[ T B_s\right]|\\
+&\leq \epsilon_{\text{reward}} + \gamma B_{s} + \gamma |\mathcal{S}|\epsilon_{\text{transition}}Q'_{max}|\\
+B_{s} &\leq 
+\frac
+{{\epsilon_{\text{reward}}} + \gamma |\mathcal{S}|\epsilon_{transition}V'_{\text{max}}}
+{1-\gamma}
+\end{align*}
 
 \newpage
 % Subsection: phi_Q^* Results
@@ -70,6 +85,7 @@ But since $\forall_\pi : V^{\pi} = \max_a Q^\pi(s,a)$, we conclude:
 \newpage
 % Subsection: phi_a^* Results
 \section{$\phi_{a^*}$ Results}
+
 
 
 
