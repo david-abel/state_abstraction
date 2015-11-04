@@ -30,7 +30,28 @@ We consider four $\phi$ types:
 \encircle{\text{ $\phi_{a^*}$ }}\ & : \phi_{a^*}(s_1) = \phi_{a^*}(s_2) \rightarrow \argmax_a Q^*(s_1,a) = \argmax_a Q^*(s_2, a) \wedge |\max_a Q^*(s_1,a) - \max_a Q^*(s_2,a)| \leq \epsilon  \\
 \end{align*}
 
+\elem{NOTE:} Instead of performing the abstraction w.r.t. $\phi$, our new strategy is to, given an MDP $M$ (and possibly some other information, $\kappa$), apply a function $H$ to create $M'$, for which all of the old $\phi$ functions may operate.
+
+Specifically:
+\begin{multline}
+H(f, \epsilon) \rightarrow f' \text{  s.t.  } \\ \forall_{(s_1,a,s_1'),(s_2,a,s_2')} \left(f'(s_1,a,s_1') = f'(s_2,a,s_2') \rightarrow | f(s_1,a,s_1') - f(s_2,a,s_2') | \leq \epsilon\right)
+\end{multline}
+
+Where:
+\begin{equation}
+f(s,a,s') \rightarrow \mathbb{R}
+\end{equation}
+
 % Other results to consider: phi compression can be arbitrarily bad for other methods of approximate compression. Sample complexity increase can be arbitrarily large.
+
+\elem{NOTE:} We are {\it not} going to provide results for $\phi_{\pi^*}$, since relaxing equality of optimal actions doesn't mean anything.
+
+\elem{NOTE:} Additionally, we are {\it not} going to provide results for $\phi_{Q^\pi}$, since as Lihong's paper notes, ``It is an open question how to find $Q^\pi$ irrelevance abstractions without enumerating all possible policies, they do not give results. Furthermore, an MDP for which this is true is an awfully weird MDP...
+
+\elem{NOTE:} For $\phi_D$, we consider the space of distributions on optimal Q values where:
+\begin{equation}
+f(Q(s,a)) > f(Q(s,a_2)) \rightarrow Q(s,a_1) > Q(s,a_2)
+\end{equation}
 
 \newpage
 % Subsection: phi_m Results
