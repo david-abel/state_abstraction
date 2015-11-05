@@ -56,10 +56,11 @@ f(Q(s,a)) > f(Q(s,a_2)) \rightarrow Q(s,a_1) > Q(s,a_2)
 \newpage
 % Subsection: phi_m Results
 \section{$\phi_{m}$ Results}
+
 Let the maximum upper bound between optimal behavior in the noisy and ground MDP be called $B_s$.
 
 \begin{align*}
-B_{s} &= max_{s,a}|Q'(s,a)-Q(s,a)|\\
+B_{s} &= \max_{s,a}|Q'(s,a)-Q(s,a)|\\
 B_{s} &= |R_s' - R_s + \gamma \sum_{s'}\left[T'Q'-TQ\right]|\\
 &=|R'_s-R_s + \gamma \sum_{s'}\left[(T+T'-T)Q'-TQ\right]|\\
 &\leq |R'_s-R_s|+|\gamma \sum_{s'}\left[(T+\epsilon_{\text{transition}})Q' - TQ\right]|\\
@@ -72,6 +73,18 @@ B_{s} &\leq
 {{\epsilon_{\text{reward}}} + \gamma |\mathcal{S}|\epsilon_{transition}V'_{\text{max}}}
 {1-\gamma}
 \end{align*}
+
+Therefore, since there is a bound on $B_s$, we can conclude that:
+\begin{equation}
+\forall_{s,a} : |Q'(s,a) - Q(s,a) \leq \frac{{\epsilon_{\text{reward}}} + \gamma |\mathcal{S}|\epsilon_{transition}V'_{\text{max}}}{1-\gamma}
+\end{equation}
+
+Consequently, from the below $\phi_Q^*$ results, we conclude that:
+\begin{equation}
+\forall_s : |V^{\pi^*_M}(s) - V^{\pi^*_{M'}}(s)| \leq \frac{{\epsilon_{\text{reward}}} + \gamma |\mathcal{S}|\epsilon_{transition}V'_{\text{max}}}{1-\gamma}
+\end{equation}
+\qed
+
 
 \newpage
 % Subsection: phi_Q^* Results
