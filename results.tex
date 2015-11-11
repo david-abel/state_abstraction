@@ -116,6 +116,72 @@ But since $\forall_\pi : V^{\pi} = \max_a Q^\pi(s,a)$, we conclude:
 % Subsection: phi_D Results
 \section{$\phi_{D}$ Results}
 
+Instead of letting $\phi_D$ denote a probability distribution\footnote{There are issue with this. Effectively, once the states are collapsed, there are arbitrarily many actual Q functions that could have given rise to the same action distributions, so we can't really say much in M' about Q.} we instead consider a more general class of abstraction functions:
+\begin{equation}
+\tau : \forall_{s_1,s_2 \in \mathcal{S}_M} : \tau(s_1) = \tau(s_2) \rightarrow \forall_a : | \Omega(s_1,a) - \Omega(s_2,a) | \leq \epsilon
+\end{equation}
+
+That is, we consider abstraction where some function $\Omega : \mathcal{S} \times \mathcal{A} \rightarrow \mathbb{R}$ is bounded for two states
+
+We want to prove:
+\begin{equation}
+\forall_{s \in \mathcal{S}_M} | V^{\pi_M^*}(s) - V^{\pi_A^*}(s) | \leq f(\epsilon)
+\end{equation}
+
+Since:
+\begin{equation}
+V^{\pi_A^*}(s) = Q^{\pi_A^*}(s, \pi_A^*(\tau(s)))
+\end{equation}
+
+We can rewrite in terms of $Q$ functions:
+\begin{equation}
+\forall_{s \in \mathcal{S}_M} : | Q^{\pi_M^*}(s, \pi_M^*(s)) - Q^{\pi_A^*}(s, \pi_A^*(\tau(s))) | \leq f(\epsilon)
+\label{eq:phi_d_q_func}
+\end{equation}
+
+Now, for any states we collapsed, we know:
+\begin{equation}
+\forall_{a \in \mathcal{A}} : | \Omega(s_1,a) - \Omega(s_2,a) | \leq \epsilon
+\label{eq:omega_consequent}
+\end{equation}
+
+In this setup, we can place constraints on $\Omega$ that will let us get from Equation~\ref{eq:omega_consequent} to Equation~\ref{eq:phi_d_q_func}
+
+Based on our earlier discussions, there seem to be three things that make sense:
+\begin{align*}
+\Omega(s,a) &= g(\mathcal{T}(s,a)) \\
+\Omega(s,a) &= g(\mathcal{R}(s,a)) \\
+\Omega^\pi(s,a) &= g(Q^\pi(s,a))
+\end{align*}
+For some function $g$.
+
+Suppose we go with the third. What properties need to be true of $g$ for this to go through?
+\begin{enumerate}[A.]
+\item $g$ is linear
+\item $g$ is monotonically increasing
+\item For a given domain of acceptable $Q^\pi$ values, $g$ has an infimum and supremum
+\end{enumerate}
+
+Then, from Equation~\ref{eq:omega_consequent}, we know:
+\begin{equation}
+|g(Q^{\pi_M^*}(s,\pi_M^*(s))) - g(Q^{\pi_A^*}(s, \pi_A^*(\tau(s)))) | \leq \epsilon
+\end{equation}
+
+Since $g$ is linear:
+\begin{equation}
+|g\left(Q^{\pi_M^*}\left(s,\pi_M^*(s)\right) - Q^{\pi_A^*}\left(s, \pi_A^*(\tau(s))\right)\right) | \leq \epsilon
+\end{equation}
+\begin{equation}
+\therefore g\left(Q^{\pi_M^*}\left(s,\pi_M^*(s)\right) - Q^{\pi_A^*}\left(s, \pi_A^*(\tau(s))\right)\right) \leq \epsilon
+\end{equation}
+
+What we want to say here is that by properties (2) and (3), since it's monotonically increasing, and there is a supremum and infimum, we can conclude that:
+\begin{equation}
+Q^{\pi_M^*}\left(s,\pi_M^*(s)\right) - Q^{\pi_A^*}\left(s,\pi_M^*(s)\right) \leq g^{-1}(\epsilon)
+\end{equation}
+
+Where $g^{-1}(\epsilon)$ is (1) well defined, (2) at most a polynomial function of epsilon. If the above properties don't get us there, what would?
+
 \newpage
 % Subsection: phi_a^* Results
 \section{$\phi_{a^*}$ Results}
