@@ -1,13 +1,15 @@
 package graphStateAbstraction;
 
-import stateAbstractor.PhiModel;
-import stateAbstractor.StateAbstractor;
+import java.util.List;
+
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
 import burlap.oomdp.core.states.State;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
+import burlap.oomdp.auxiliary.DomainGenerator;
 import burlap.oomdp.auxiliary.common.NullTermination;
 import burlap.oomdp.core.Domain;
 import burlap.oomdp.core.TerminalFunction;
+import burlap.oomdp.core.TransitionProbability;
 import burlap.oomdp.singleagent.GroundedAction;
 import burlap.oomdp.singleagent.RewardFunction;
 import burlap.oomdp.singleagent.common.UniformCostRF;
@@ -16,11 +18,6 @@ import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 
 public class Test {
 
-	/**
-	 * 
-	 * @param totalNumStates
-	 * @return an n state graph MDP.
-	 */
 	public static GraphDefinedDomain getNStateChain(int totalNumStates) {
 		double slipProb = .8;
 		double gamma = .95;
@@ -43,39 +40,7 @@ public class Test {
 
 		return dg;
 	}	
-	
-	/**
-	 * n State chain reward function -- returns 10 if action 1 is taken in the last state, 2 if
-	 * action 0 is taken ever and 0 otherwise.
-	 * @author Dhershkowitz
-	 *
-	 */
-	public static class nStateChainRF implements RewardFunction {
-		int n;
-		
-		public nStateChainRF(int n) {
-			this.n = n;
-		}
 
-		@Override
-		public double reward(State s, GroundedAction a, State sprime) {
-			if (a.actionName().equals("action0")) {
-				return 2;
-			}
-			else {
-				if (GraphDefinedDomain.getNodeId(s) == n-1) {
-					return 10;
-				}
-			}
-			return 0;
-		}
-		
-	}
-
-	/**
-	 * An example of phiModel (currently not actually implemented).
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		//VI Params
 		int maxIterations = 10000;
@@ -83,11 +48,10 @@ public class Test {
 		double gamma = .95;
 		TerminalFunction tf = new NullTermination();
 		
-		// Ground MDP
-		int n = 5;
+		// Ground MDP -- 5 state chain with uniform negative reward b/c why not...
 		HashableStateFactory hf = new SimpleHashableStateFactory();
-		GraphDefinedDomain dg = getNStateChain(n);
-		RewardFunction rf = new nStateChainRF(n);
+		GraphDefinedDomain dg = getNStateChain(5);
+		RewardFunction rf = new UniformCostRF();
 		Domain d = dg.generateDomain();
 		ValueIteration vi = new ValueIteration(d, rf, tf, gamma, hf, maxDelta, maxIterations);
 		State gInitialState = GraphDefinedDomain.getState(d, 0);
@@ -104,9 +68,6 @@ public class Test {
 		State aInitialState = GraphDefinedDomain.getState(absD, 0);
 		aVi.planFromState(aInitialState);	
 		System.out.println("Abstract initial state value: " + aVi.value(aInitialState));
-		
-		// TESTING STUFF
-		GroundedAction ga = absD.getActions().get(0).getAssociatedGroundedAction();
 
 	}
 
