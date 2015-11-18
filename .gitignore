@@ -6,4 +6,4 @@
 *.gz
 *.bbl
 *.pdf
-Workspace and Code/.metadata/*
+*.metadata*
