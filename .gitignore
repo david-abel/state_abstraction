@@ -1,4 +1,3 @@
-*.metadata
 *.class
 *.aux
 *.blg
@@ -7,3 +6,4 @@
 *.gz
 *.bbl
 *.pdf
+Workspace and Code/.metadata/*
