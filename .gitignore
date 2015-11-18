@@ -1,4 +1,4 @@
-*.metadata
+**/.metadata*
 *.class
 *.aux
 *.blg
