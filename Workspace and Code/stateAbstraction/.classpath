@@ -3,5 +3,7 @@
 	<classpathentry kind="src" path="State Abstraction/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="State Abstraction/src/lib/burlap2.jar"/>
+	<classpathentry kind="lib" path="State Abstraction/src/lib/gs-core-1.3.jar" sourcepath="State Abstraction/src/lib/gs-core-1.3-sources.jar"/>
+	<classpathentry kind="lib" path="State Abstraction/src/lib/gs-ui-1.3.jar"/>
 	<classpathentry kind="output" path="State Abstraction/bin"/>
 </classpath>

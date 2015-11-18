@@ -1,0 +1,10 @@
+package graphStreamVisualizer;
+
+import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
+
+public class GraphStreamVisualizer {
+	GraphDefinedDomain domain;
+	
+	public GraphStreamVisualizer 
+
+}

@@ -1,0 +1,68 @@
+package graphStreamVisualizer;
+
+import java.util.List;
+
+import graphStateAbstraction.Test;
+
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.implementations.*;
+
+import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
+import burlap.oomdp.core.Domain;
+import burlap.oomdp.core.TransitionProbability;
+import burlap.oomdp.core.states.State;
+import burlap.oomdp.singleagent.Action;
+import burlap.oomdp.singleagent.GroundedAction;
+
+public class GraphStreamVisualizer {
+	private GraphDefinedDomain d;
+	int numStates;
+
+	public GraphStreamVisualizer(GraphDefinedDomain d, int numStates) {
+		this.d = d;
+		this.numStates = numStates;
+	}
+
+	public void render() {	
+		Graph graph = new SingleGraph("Tutorial 1");	
+		Domain dom = d.generateDomain();
+
+		for (int stateIndex = 0; stateIndex < numStates; stateIndex++) {
+			//Add nodes for each state.
+			graph.addNode(Integer.toString(stateIndex));
+		}
+			
+			
+			//Add transition probabilities/edges.
+			for (int stateIndex = 0; stateIndex < numStates; stateIndex++) {
+			//Add nodes for each state.
+			State currState = GraphDefinedDomain.getState(dom, stateIndex);
+			
+			for (Action a : dom.getActions()) {
+				GroundedAction ga = a.getAssociatedGroundedAction();
+				
+				List<TransitionProbability> tProbs = ga.getTransitions(currState);
+				for (TransitionProbability tProb : tProbs) {
+					State sPrime = tProb.s;
+					double prob = tProb.p;
+					//TODO ADD PROBABILITY
+					
+					int otherStateIndex = GraphDefinedDomain.getNodeId(sPrime);
+					graph.addEdge(Double.toString(prob), Integer.toString(stateIndex), Integer.toString(otherStateIndex));
+				}
+			}
+			
+			
+		}
+
+		graph.display();
+	}
+	
+	public static void main(String[] args) {
+		int n = 5;
+		GraphDefinedDomain dg = Test.getNStateChain(n);
+		GraphStreamVisualizer test = new GraphStreamVisualizer(dg, n);
+		test.render();
+	}
+
+}
