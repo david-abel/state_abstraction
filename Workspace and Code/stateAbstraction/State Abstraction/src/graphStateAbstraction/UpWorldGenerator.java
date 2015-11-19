@@ -18,12 +18,20 @@ public class UpWorldGenerator {
 		for (int j = 0; j < height; j++){
 			for (int i = 0; i < width; i++) {
 				int currentStateIndex = i +j*width;
+				
+				int leftIndex = 0;
+				if (i==0) leftIndex =  currentStateIndex;
+				else leftIndex = currentStateIndex-1;
+						
+				int rightIndex = 0;
+				if (i == width-1) rightIndex = currentStateIndex;
+				else rightIndex = currentStateIndex+1;
 
 				//Set up left action.
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 0/*action*/, ((currentStateIndex-1)+width)%width, 1.0);
+				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 0/*action*/, leftIndex, 1.0);
 
 				//Set up right action.
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 1/*action*/, (currentStateIndex+1)%width, 1.0);
+				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 1/*action*/, rightIndex, 1.0);
 			}
 		}
 
@@ -31,7 +39,7 @@ public class UpWorldGenerator {
 		for (int j = 0; j < height-1; j++){
 			for (int i = 0; i < width; i++) {
 				int currentStateIndex = i +j*width;
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 0/*action*/, currentStateIndex+width, 1.0);
+				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 2/*action*/, currentStateIndex+width, 1.0);
 			}
 		}
 
@@ -39,7 +47,7 @@ public class UpWorldGenerator {
 		for (int i = 0; i < width; i++) {
 			int j = height-1;
 			int currentStateIndex = i +j*width;
-			((GraphDefinedDomain) dg).setTransition(currentStateIndex, 0/*action*/, currentStateIndex, 1.0);
+			((GraphDefinedDomain) dg).setTransition(currentStateIndex, 2/*action*/, currentStateIndex, 1.0);
 		}
 
 		return dg;
@@ -55,7 +63,7 @@ public class UpWorldGenerator {
 
 		@Override
 		public double reward(State s, GroundedAction a, State sprime) {
-			if (s.equals(sprime)) return 10;
+			if (s.equals(sprime) && a.actionName().equals("action2")) return 10;
 			else return 0;
 		}
 
