@@ -22,7 +22,7 @@ public class Test {
 	 * @return an n state graph MDP.
 	 */
 	public static GraphDefinedDomain getNStateChain(int totalNumStates) {
-		double slipProb = .8;
+		double slipProb = .2;
 		double gamma = .95;
 
 		GraphDefinedDomain dg = new GraphDefinedDomain(totalNumStates);
@@ -37,9 +37,9 @@ public class Test {
 
 		// Set up last state transition
 		((GraphDefinedDomain) dg).setTransition(totalNumStates-1, 0/*action*/, totalNumStates-1, slipProb);
+		((GraphDefinedDomain) dg).setTransition(totalNumStates-1, 0/*action*/, 0,1.0-slipProb);
 		((GraphDefinedDomain) dg).setTransition(totalNumStates-1, 1/*action*/, totalNumStates-1, 1.0-slipProb);
 		((GraphDefinedDomain) dg).setTransition(totalNumStates-1, 1/*action*/, 0, slipProb);
-		((GraphDefinedDomain) dg).setTransition(totalNumStates-1, 0/*action*/, 0, 1.0-slipProb);
 
 		return dg;
 	}	
@@ -63,7 +63,7 @@ public class Test {
 				return 2;
 			}
 			else {
-				if (GraphDefinedDomain.getNodeId(s) == n-1) {
+				if (GraphDefinedDomain.getNodeId(s) == n-1 && GraphDefinedDomain.getNodeId(sprime) == n-1) {
 					return 10;
 				}
 			}

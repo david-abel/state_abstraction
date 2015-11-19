@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cern.colt.Arrays;
 import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.policy.Policy;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
@@ -83,6 +84,7 @@ public abstract class StateAbstractor {
 				for (int actionIndex = 0; actionIndex < inputD.getActions().size(); actionIndex++) {
 					GroundedAction currGA = inputD.getActions().get(actionIndex).getAssociatedGroundedAction();
 					double transitionProbability = 0.0;
+					//Loop over ground states.
 					for (State groundState : abstractStateIndexToGroundStates.get(abstractStateIndex)) {
 						double numStatesInCluster = abstractStateIndexToGroundStates.get(abstractStateIndex).size();
 						for (State otherGroundedState : abstractStateIndexToGroundStates.get(otherAbstractStateIndex)) {
@@ -91,18 +93,22 @@ public abstract class StateAbstractor {
 							//Add to transition prob based on weighting scheme.
 							double transitionProbInGroundState = 0;
 							List<TransitionProbability> gsgaTransitions = currGA.getTransitions(groundState);
+							boolean transitionBetweenGroundStates = false;
 							for (TransitionProbability tp : gsgaTransitions) {
 								if (tp.s.equals(otherGroundedState)) {
 									transitionProbInGroundState = tp.p;
+									transitionBetweenGroundStates = true;
 								}
 							}
+							if (!transitionBetweenGroundStates) continue;
+
 							transitionProbability += weightOfGroundState*transitionProbInGroundState;
 
 							//Add to rewards
-							double oldReward = rf.reward(groundState, currGA, otherGroundedState);
-							rewardMatrix.get(currGA)[abstractStateIndex][otherAbstractStateIndex] += weightOfGroundState*oldReward;
+							double groundReward = rf.reward(groundState, currGA, otherGroundedState);
+							rewardMatrix.get(currGA)[abstractStateIndex][otherAbstractStateIndex] += weightOfGroundState*groundReward;
 						}
-						toReturn.setTransition(abstractStateIndex, actionIndex, otherAbstractStateIndex, transitionProbability);
+						if (transitionProbability != 0) toReturn.setTransition(abstractStateIndex, actionIndex, otherAbstractStateIndex, transitionProbability);
 					}
 				}
 			}

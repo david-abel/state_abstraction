@@ -35,6 +35,29 @@ public class GraphStreamVisualizer {
 	int numStates;
 	RewardFunction rf;
 
+	public static String styleSheet = 
+			"node {fill-color: grey;size: 40px;}" +
+					"edge {shape: cubic-curve;size: 6px;}"		
+					;
+
+	public static String[] colorPalette = {
+		"rgb(198,255,179)",
+		"rgb(179,198,255)",
+		"rgb(236,179,255)",
+		"rgb(255,179,198)",
+		"rgb(198,179,255)",
+		"rgb(255,198,179)",
+		"rgb(255,236,179)",
+		"rgb(236,255,179)",
+		"rgb(179,255,236)",
+		"rgb(255,179,236)",
+		"rgb(179,255,198)",
+		"rgb(179,236,255)",
+		"rgb(117,152,255)",
+		"rgb(56,106,255)",
+		"rgb(255,221,117)",
+	"rgb(255,205,56)"};
+
 	public GraphStreamVisualizer(GraphDefinedDomain d, int numStates, RewardFunction rf) {
 		this.d = d;
 		this.numStates = numStates;
@@ -42,7 +65,11 @@ public class GraphStreamVisualizer {
 	}
 
 	public void render() {	
+		//Use advanced viewer
+		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+
 		Graph graph = new MultiGraph("Tutorial 1");	
+		graph.addAttribute("ui.stylesheet", styleSheet);
 		Domain dom = d.generateDomain();
 
 		for (int stateIndex = 0; stateIndex < numStates; stateIndex++) {
@@ -69,24 +96,31 @@ public class GraphStreamVisualizer {
 					int otherStateIndex = GraphDefinedDomain.getNodeId(sPrime);
 
 					//TODO DONT SKIP SELF LOOPS
-//					if (stateIndex != otherStateIndex) {
-						boolean directed = true;
-						DecimalFormat df = new DecimalFormat("#.#");
-						df.setRoundingMode(RoundingMode.DOWN);
-						String probString = df.format(prob);
-						Edge e = graph.addEdge(Integer.toString(stateIndex) + Integer.toString(otherStateIndex) + ga.actionName(), Integer.toString(stateIndex), Integer.toString(otherStateIndex), directed);
-						e.addAttribute("ui.label", probString + ", " + rf.reward(currState, ga, sPrime));
-//					}
+					//					if (stateIndex != otherStateIndex) {
+					boolean directed = true;
+					DecimalFormat df = new DecimalFormat("#.####");
+					df.setRoundingMode(RoundingMode.DOWN);
+					String probString = df.format(prob);
+					Edge e = graph.addEdge(Integer.toString(stateIndex) + ", " + Integer.toString(otherStateIndex) + ", " + ga.actionName(), Integer.toString(stateIndex), Integer.toString(otherStateIndex), directed);
+					int edgeReward = (int) rf.reward(currState, ga, sPrime);
+					int actionIndex = dom.getActions().indexOf(a);
+					e.addAttribute("ui.label", probString);
+					// Set color to match action
+					String colorString = "fill-color:" + colorPalette[actionIndex] + ";";
+					// Set edge width to mag of reward
+					e.addAttribute("ui.style", "size:" + edgeReward + "px;" + colorString);
 				}
 			}
 
 
 		}
 
+		graph.display( false );
 		Viewer view = graph.display();
 	}
 
 	public static void main(String[] args) {
+
 		//VI Params
 		int maxIterations = 10000;
 		double maxDelta = .0001;
@@ -116,9 +150,9 @@ public class GraphStreamVisualizer {
 		State aInitialState = GraphDefinedDomain.getState(absD, 0);
 		GreedyQPolicy abstractPolicy = aVi.planFromState(aInitialState);	
 
-		
-		
-		GraphStreamVisualizer test = new GraphStreamVisualizer(dg, n, rf);
+
+
+				GraphStreamVisualizer test = new GraphStreamVisualizer(dg, n, rf);
 //		GraphStreamVisualizer test = new GraphStreamVisualizer(absDG, aVi.getAllStates().size(), rfA);
 		test.render();
 	}
