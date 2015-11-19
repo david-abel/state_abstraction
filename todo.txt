@@ -1,1 +1,3 @@
-- (Dave) We should put our existing results into an actual theorem so we know the precise form of the claim.
+- Pitch trench as an RL problem
+- Graph visuals
+- Clean up notation in everything.
