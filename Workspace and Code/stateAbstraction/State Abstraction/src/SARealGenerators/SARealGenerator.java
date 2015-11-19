@@ -18,7 +18,6 @@ import burlap.oomdp.singleagent.RewardFunction;
 public abstract class SARealGenerator {
 	protected Domain d;
 	protected RewardFunction rf;
-	protected double gamma;
 	protected State initialState;
 	
 	/**
@@ -28,10 +27,9 @@ public abstract class SARealGenerator {
 	 * @param gamma
 	 * @param initialState
 	 */
-	public SARealGenerator(Domain d, RewardFunction rf, double gamma, State initialState) {
+	public SARealGenerator(Domain d, RewardFunction rf, State initialState) {
 		this.d = d;
 		this.rf = rf;
-		this.gamma = gamma;
 		this.initialState = initialState;
 	}
 	

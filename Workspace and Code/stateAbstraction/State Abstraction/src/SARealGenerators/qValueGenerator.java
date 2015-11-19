@@ -1,5 +1,7 @@
 package SARealGenerators;
 
+import graphStateAbstraction.VIParams;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,30 +23,29 @@ import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 public class qValueGenerator extends SARealGenerator {
 
 	HashMap<SAPair, Double> realsMap;
+	public qValueGenerator(Domain d, RewardFunction rf, State initialState) {
+		super(d, rf, initialState);
+		
+		this.realsMap = this.getRealsMap();
+	}
+
 
 	/**
 	 * 
 	 * @param d
 	 * @param rf
-	 * @param gamma
 	 * @param initialState
 	 */
-	public qValueGenerator(Domain d, RewardFunction rf, double gamma,
-			State initialState) {
-		super(d, rf, gamma, initialState);
-		this.realsMap = getRealsMap();
-	}
+
 
 	@Override
 	public HashMap<SAPair, Double> getRealsMap() {
 		if (realsMap != null) return realsMap;
 		else {
 			HashMap<SAPair, Double> toReturn = new HashMap<SAPair, Double>();
-			double maxDelta = .001;
-			int maxIterations = 1000;
 			TerminalFunction tf = new NullTermination();
 			HashableStateFactory hf = new SimpleHashableStateFactory();
-			ValueIteration VI = new ValueIteration(d, rf, tf, gamma, hf, maxDelta, maxIterations);
+			ValueIteration VI = new ValueIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations);
 			VI.planFromState(initialState);
 			for (State s : VI.getAllStates()) {
 				for (Action a : VI.getActions()) {

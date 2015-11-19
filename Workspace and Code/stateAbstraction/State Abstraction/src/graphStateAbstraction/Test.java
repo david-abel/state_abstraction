@@ -23,7 +23,6 @@ public class Test {
 	 */
 	public static GraphDefinedDomain getNStateChain(int totalNumStates) {
 		double slipProb = .2;
-		double gamma = .95;
 
 		GraphDefinedDomain dg = new GraphDefinedDomain(totalNumStates);
 
@@ -78,9 +77,7 @@ public class Test {
 	 */
 	public static void main(String[] args) {
 		//VI Params
-		int maxIterations = 10000;
-		double maxDelta = .0001;
-		double gamma = .95;
+
 		TerminalFunction tf = new NullTermination();
 		
 		// Ground MDP
@@ -89,7 +86,7 @@ public class Test {
 		GraphDefinedDomain dg = getNStateChain(n);
 		RewardFunction rf = new nStateChainRF(n);
 		Domain d = dg.generateDomain();
-		ValueIteration vi = new ValueIteration(d, rf, tf, gamma, hf, maxDelta, maxIterations);
+		ValueIteration vi = new ValueIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations);
 		State gInitialState = GraphDefinedDomain.getState(d, 0);
 		vi.planFromState(gInitialState);	
 		System.out.println("Ground initial state value: " + vi.value(gInitialState));
@@ -100,7 +97,7 @@ public class Test {
 		GraphDefinedDomain absDG = phiMod.abstractMDP(dg, rf);
 		RewardFunction rfA = phiMod.getRewardFunction();
 		Domain absD= absDG.generateDomain();
-		ValueIteration aVi = new ValueIteration(absD, rfA, tf, gamma, hfA, maxDelta, maxIterations);
+		ValueIteration aVi = new ValueIteration(absD, rfA, tf, VIParams.gamma, hfA, VIParams.maxDelta, VIParams.maxIterations);
 		State aInitialState = GraphDefinedDomain.getState(absD, 0);
 		aVi.planFromState(aInitialState);	
 		System.out.println("Abstract initial state value: " + aVi.value(aInitialState));
