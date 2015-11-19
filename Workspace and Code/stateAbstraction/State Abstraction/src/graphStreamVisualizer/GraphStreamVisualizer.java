@@ -4,6 +4,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import graphStateAbstraction.NStateChainGenerator;
 import graphStateAbstraction.Test;
 import graphStateAbstraction.VIParams;
 
@@ -117,7 +118,6 @@ public class GraphStreamVisualizer {
 
 		}
 
-		graph.display( false );
 		Viewer view = graph.display();
 	}
 
@@ -127,10 +127,10 @@ public class GraphStreamVisualizer {
 		TerminalFunction tf = new NullTermination();
 
 		// Ground MDP
-		int n = 300;
+		int n = 50;
 		HashableStateFactory hf = new SimpleHashableStateFactory();
-		GraphDefinedDomain dg = Test.getNStateChain(n);
-		RewardFunction rf = new Test.nStateChainRF(n);
+		GraphDefinedDomain dg = NStateChainGenerator.getNStateChain(n);
+		RewardFunction rf = new NStateChainGenerator.nStateChainRF(n);
 		Domain d = dg.generateDomain();
 		ValueIteration vi = new ValueIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations);
 		State gInitialState = GraphDefinedDomain.getState(d, 0);
@@ -138,7 +138,7 @@ public class GraphStreamVisualizer {
 		System.out.println("Ground initial state value: " + vi.value(gInitialState));
 
 		// Abstract MDP VI with a PhiQ* for abstraction
-		double epsilon = 0;
+		double epsilon = 3;
 		qValueGenerator qGen = new qValueGenerator(d, rf, gInitialState);
 		StateAbstractor qPhi = new PhiSAReal(qGen, epsilon, d.getActions());
 		HashableStateFactory hfA = new SimpleHashableStateFactory();
@@ -158,7 +158,7 @@ public class GraphStreamVisualizer {
 
 
 
-//						GraphStreamVisualizer test = new GraphStreamVisualizer(dg, n, rf);
+//		GraphStreamVisualizer test = new GraphStreamVisualizer(dg, n, rf);
 		GraphStreamVisualizer test = new GraphStreamVisualizer(absDG, aVi.getAllStates().size(), rfA);
 		test.render();
 	}

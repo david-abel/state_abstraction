@@ -1,6 +1,7 @@
 package stateAbstractor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,8 +37,14 @@ public abstract class StateAbstractor {
 		HashableStateFactory hf = new SimpleHashableStateFactory();
 
 		HashMap<State, List<State>> stateToPhiedStates = new HashMap<State, List<State>>();
-		// Get all ground states.
+		// Get all ground states in random shuffled order.
+		List<Integer> indexList = new ArrayList<Integer>();
 		for (int stateIndex = 0; stateIndex < inpDG.getNumNodes(); stateIndex++) {
+			indexList.add(stateIndex);
+		}
+		Collections.shuffle(indexList);
+		
+		for (int stateIndex : indexList) {
 			State currGroundState = GraphDefinedDomain.getState(inputD, stateIndex);
 			boolean foundACluster = false;
 			for (State currGroundStateRep : stateToPhiedStates.keySet()) {

@@ -33,8 +33,8 @@ public class QValueAbstractionTest {
 		// Ground MDP
 		int n = 100;
 		HashableStateFactory hf = new SimpleHashableStateFactory();
-		GraphDefinedDomain dg = Test.getNStateChain(n);
-		RewardFunction rf = new Test.nStateChainRF(n);
+		GraphDefinedDomain dg = NStateChainGenerator.getNStateChain(n);
+		RewardFunction rf = new NStateChainGenerator.nStateChainRF(n);
 		Domain d = dg.generateDomain();
 		ValueIteration vi = new ValueIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations);
 		State gInitialState = GraphDefinedDomain.getState(d, 0);
