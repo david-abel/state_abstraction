@@ -2,13 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="Associated" key="selection"/>
+		<item value="maxIter" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="associated"/>
+			<item value="maxIter"/>
+			<item value="maxiter"/>
+			<item value="gamma"/>
+			<item value="System"/>
+			<item value="abstractrewar"/>
+			<item value="rewardmatri"/>
+			<item value="weightOfGround"/>
+			<item value="weightOfground"/>
 		</list>
 		<list key="replacehistory">
 		</list>

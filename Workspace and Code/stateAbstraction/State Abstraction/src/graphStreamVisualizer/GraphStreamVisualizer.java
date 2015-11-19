@@ -108,7 +108,7 @@ public class GraphStreamVisualizer {
 					int actionIndex = dom.getActions().indexOf(a);
 					e.addAttribute("ui.label", probString);
 					// Set color to match action
-					String colorString = "fill-color:" + colorPalette[actionIndex] + ";";
+					String colorString = "fill-color:" + colorPalette[actionIndex % colorPalette.length]  + ";";
 					// Set edge width to mag of reward
 					e.addAttribute("ui.style", "size:" + edgeReward + "px;" + colorString);
 				}
@@ -158,7 +158,7 @@ public class GraphStreamVisualizer {
 
 
 
-		//				GraphStreamVisualizer test = new GraphStreamVisualizer(dg, n, rf);
+//						GraphStreamVisualizer test = new GraphStreamVisualizer(dg, n, rf);
 		GraphStreamVisualizer test = new GraphStreamVisualizer(absDG, aVi.getAllStates().size(), rfA);
 		test.render();
 	}

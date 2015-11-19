@@ -1,2 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy/>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="burlap.domain.singleagent.graphdefined.GraphDefinedDomain"/>
+<fullyQualifiedTypeName name="org.graphstream.graph.Graph"/>
+<fullyQualifiedTypeName name="graphStateAbstraction.Test"/>
+<fullyQualifiedTypeName name="burlap.oomdp.core.states.State"/>
+<fullyQualifiedTypeName name="burlap.oomdp.core.Domain"/>
+<fullyQualifiedTypeName name="burlap.oomdp.singleagent.Action"/>
+<fullyQualifiedTypeName name="burlap.oomdp.singleagent.GroundedAction"/>
+<fullyQualifiedTypeName name="burlap.oomdp.core.TransitionProbability"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="org.graphstream.graph.Edge"/>
+<fullyQualifiedTypeName name="org.graphstream.ui.view.Viewer"/>
+<fullyQualifiedTypeName name="burlap.oomdp.singleagent.RewardFunction"/>
+<fullyQualifiedTypeName name="graphStateAbstraction.Test.nStateChainRF"/>
+<fullyQualifiedTypeName name="java.text.DecimalFormat"/>
+<fullyQualifiedTypeName name="java.math.RoundingMode"/>
+<fullyQualifiedTypeName name="SARealGenerators.qValueGenerator"/>
+<fullyQualifiedTypeName name="burlap.oomdp.statehashing.HashableStateFactory"/>
+<fullyQualifiedTypeName name="stateAbstractor.StateAbstractor"/>
+<fullyQualifiedTypeName name="stateAbstractor.PhiSAReal"/>
+<fullyQualifiedTypeName name="burlap.oomdp.core.TerminalFunction"/>
+<fullyQualifiedTypeName name="burlap.oomdp.auxiliary.common.NullTermination"/>
+<fullyQualifiedTypeName name="burlap.oomdp.statehashing.SimpleHashableStateFactory"/>
+<fullyQualifiedTypeName name="burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration"/>
+<fullyQualifiedTypeName name="burlap.behavior.policy.Policy"/>
+<fullyQualifiedTypeName name="burlap.behavior.policy.GreedyQPolicy"/>
+<fullyQualifiedTypeName name="cern.colt.Arrays"/>
+<fullyQualifiedTypeName name="burlap.behavior.singleagent.planning.stochastic.policyiteration.PolicyIteration"/>
+<fullyQualifiedTypeName name="graphStateAbstraction.VIParams"/>
+</qualifiedTypeNameHistroy>
