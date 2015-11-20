@@ -1,7 +1,7 @@
 package graphStateAbstraction;
 
 public class VIParams {
-	public static int maxIterations = 100;
-	public static double maxDelta = .1;
-	public static double gamma = .99;
+	public static int maxIterations = 1000;
+	public static double maxDelta = .01;
+	public static double gamma = .9;
 }

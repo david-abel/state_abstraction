@@ -42,7 +42,7 @@ public abstract class StateAbstractor {
 		for (int stateIndex = 0; stateIndex < inpDG.getNumNodes(); stateIndex++) {
 			indexList.add(stateIndex);
 		}
-		Collections.shuffle(indexList);
+//		Collections.shuffle(indexList);
 		
 		for (int stateIndex : indexList) {
 			State currGroundState = GraphDefinedDomain.getState(inputD, stateIndex);
@@ -115,8 +115,8 @@ public abstract class StateAbstractor {
 							double groundReward = rf.reward(groundState, currGA, otherGroundedState);
 							rewardMatrix.get(currGA)[abstractStateIndex][otherAbstractStateIndex] += weightOfGroundState*groundReward;
 						}
-						if (transitionProbability != 0) toReturn.setTransition(abstractStateIndex, actionIndex, otherAbstractStateIndex, transitionProbability);
 					}
+						if (transitionProbability != 0) toReturn.setTransition(abstractStateIndex, actionIndex, otherAbstractStateIndex, transitionProbability);
 				}
 			}
 		}
@@ -135,27 +135,33 @@ public abstract class StateAbstractor {
 		return toReturn;
 	}
 	
+	public State getAbstractInitialState(Domain abstractDomain, State groundInitialState) {
+		int groundIndex = GraphDefinedDomain.getNodeId(groundInitialState);
+		int abstractInitialStateIndex = this.groundToAbstractState.get(groundIndex);
+		return GraphDefinedDomain.getState(abstractDomain, abstractInitialStateIndex);
+	}
+	
 	/**
 	 * Uses VI to solve for optimal policy in abstract state, then
 	 * returns the policy for ground MDP as the abstract policy dictates.
 	 * @return policy for ground MDP
 	 */
-	public Policy getPolicyForGroundMDP(GreedyQPolicy abstractPolicy, DomainGenerator abstractDG, DomainGenerator groundDG) {
-		return new PolicyForGroundMDP(this.groundToAbstractState, abstractPolicy, abstractDG, groundDG);
+	public Policy getPolicyForGroundMDP(GreedyQPolicy abstractPolicy, Domain abstractDomain, Domain groundDomain) {
+		return new PolicyForGroundMDP(this.groundToAbstractState, abstractPolicy, groundDomain, abstractDomain);
 	}
 	
 	private class PolicyForGroundMDP extends Policy {
 		
 		private HashMap<Integer, Integer> groundToAbstract; // Using integers b/c states don't hash w/o factory
 		private GreedyQPolicy abstractPolicy;
-		private DomainGenerator aDG;
-		private DomainGenerator gDG;
+		private Domain aD;
+		private Domain gD;
 		
-		public PolicyForGroundMDP(HashMap<Integer, Integer> groundToAbstract, GreedyQPolicy abstractPolicy, DomainGenerator gDG, DomainGenerator aDG) {
+		public PolicyForGroundMDP(HashMap<Integer, Integer> groundToAbstract, GreedyQPolicy abstractPolicy, Domain gD, Domain aD) {
 			this.groundToAbstract= groundToAbstract;
 			this.abstractPolicy = abstractPolicy;
-			this.aDG = aDG;
-			this.gDG = gDG;
+			this.aD = aD;
+			this.gD = gD;
 		}
 
 		@Override
@@ -163,8 +169,10 @@ public abstract class StateAbstractor {
 			//TODO Implement properly
 			Integer groundStateInteger = GraphDefinedDomain.getNodeId(s);
 			Integer abstractStateInteger = this.groundToAbstract.get(groundStateInteger);
-			State abstractState = GraphDefinedDomain.getState(aDG.generateDomain(), abstractStateInteger);//I'm assuming states are indexed by the same int every time the domain is instantiated
-			return this.abstractPolicy.getAction(abstractState);
+			State abstractState = GraphDefinedDomain.getState(this.aD, abstractStateInteger);
+			System.out.println("abs state " + abstractState);
+			AbstractGroundedAction toReturn = this.abstractPolicy.getAction(abstractState);
+			return toReturn;
 		}
 
 		@Override

@@ -44,7 +44,7 @@ public class Test {
 		RewardFunction rfA = phiMod.getRewardFunction();
 		Domain absD= absDG.generateDomain();
 		ValueIteration aVi = new ValueIteration(absD, rfA, tf, VIParams.gamma, hfA, VIParams.maxDelta, VIParams.maxIterations);
-		State aInitialState = GraphDefinedDomain.getState(absD, 0);
+		State aInitialState = phiMod.getAbstractInitialState(absD, gInitialState);
 		aVi.planFromState(aInitialState);	
 		System.out.println("Abstract initial state value: " + aVi.value(aInitialState));
 		

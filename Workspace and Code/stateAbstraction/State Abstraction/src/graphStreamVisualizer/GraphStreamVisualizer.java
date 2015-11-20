@@ -20,6 +20,7 @@ import stateAbstractor.StateAbstractor;
 import SARealGenerators.qValueGenerator;
 import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.policy.Policy;
+import burlap.behavior.singleagent.learning.tdmethods.QLearning;
 import burlap.behavior.singleagent.planning.stochastic.policyiteration.PolicyIteration;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
@@ -31,13 +32,15 @@ import burlap.oomdp.core.states.State;
 import burlap.oomdp.singleagent.Action;
 import burlap.oomdp.singleagent.GroundedAction;
 import burlap.oomdp.singleagent.RewardFunction;
+import burlap.oomdp.singleagent.environment.SimulatedEnvironment;
+import burlap.oomdp.singleagent.explorer.TerminalExplorer;
 import burlap.oomdp.statehashing.HashableStateFactory;
 import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 
 public class GraphStreamVisualizer {
-	private GraphDefinedDomain d;
 	int numStates;
 	RewardFunction rf;
+	private Domain d;
 
 	public static String styleSheet = 
 			"node {fill-color: grey;size: 40px;}" +
@@ -62,10 +65,10 @@ public class GraphStreamVisualizer {
 		"rgb(255,221,117)",
 	"rgb(255,205,56)"};
 
-	public GraphStreamVisualizer(GraphDefinedDomain d, int numStates, RewardFunction rf) {
-		this.d = d;
+	public GraphStreamVisualizer(Domain d, int numStates, RewardFunction rf) {
 		this.numStates = numStates;
 		this.rf = rf;
+		this.d = d;
 	}
 
 	public void render() {	
@@ -74,7 +77,7 @@ public class GraphStreamVisualizer {
 
 		Graph graph = new MultiGraph("Tutorial 1");	
 		graph.addAttribute("ui.stylesheet", styleSheet);
-		Domain dom = d.generateDomain();
+		Domain dom = this.d;
 
 		for (int stateIndex = 0; stateIndex < numStates; stateIndex++) {
 			//Add nodes for each state.
@@ -95,12 +98,9 @@ public class GraphStreamVisualizer {
 				for (TransitionProbability tProb : tProbs) {
 					State sPrime = tProb.s;
 					double prob = tProb.p;
-					//TODO ADD PROBABILITY
 
 					int otherStateIndex = GraphDefinedDomain.getNodeId(sPrime);
 
-					//TODO DONT SKIP SELF LOOPS
-					//					if (stateIndex != otherStateIndex) {
 					boolean directed = true;
 					DecimalFormat df = new DecimalFormat("#.####");
 					df.setRoundingMode(RoundingMode.DOWN);
@@ -121,6 +121,12 @@ public class GraphStreamVisualizer {
 
 		Viewer view = graph.display();
 	}
+	
+	public static void addExplorer(Domain d, RewardFunction rf, TerminalFunction tf, State initialState) {
+		SimulatedEnvironment env = new SimulatedEnvironment(d, rf, tf, initialState);
+		TerminalExplorer exp = new TerminalExplorer(d, env);
+		exp.explore();
+	}
 
 	public static void main(String[] args) {
 
@@ -128,7 +134,7 @@ public class GraphStreamVisualizer {
 		TerminalFunction tf = new NullTermination();
 
 		// Ground MDP
-		int height = 10;
+		int height = 4;
 		int width = 5;
 		int n = height*width;
 		HashableStateFactory hf = new SimpleHashableStateFactory();
@@ -141,6 +147,7 @@ public class GraphStreamVisualizer {
 		System.out.println("Ground initial state value: " + vi.value(gInitialState));
 
 		// Abstract MDP VI with a PhiQ* for abstraction
+		TerminalFunction tfa = new NullTermination();
 		double epsilon = 0;
 		qValueGenerator qGen = new qValueGenerator(d, rf, gInitialState);
 		StateAbstractor qPhi = new PhiSAReal(qGen, epsilon, d.getActions());
@@ -148,22 +155,25 @@ public class GraphStreamVisualizer {
 		GraphDefinedDomain absDG = qPhi.abstractMDP(dg, rf);
 		RewardFunction rfA = qPhi.getRewardFunction();
 		Domain absD= absDG.generateDomain();
-		ValueIteration aVi = new ValueIteration(absD, rfA, tf, VIParams.gamma, hfA, VIParams.maxDelta, VIParams.maxIterations);
-		State aInitialState = GraphDefinedDomain.getState(absD, 0);
+		System.out.println("RUNNING VI FOR ABSTRACT");
+		ValueIteration aVi = new ValueIteration(absD, rfA, tfa, VIParams.gamma, hfA, VIParams.maxDelta, VIParams.maxIterations);
+		State aInitialState =  qPhi.getAbstractInitialState(absD, gInitialState);
+		System.out.println("Abstract initial state is: " + aInitialState);
 		GreedyQPolicy abstractPolicy = aVi.planFromState(aInitialState);	
 
 		//Evaluate abstract policy in ground MDP:
-		Policy groundPolicyFromAbstractPolicy = qPhi.getPolicyForGroundMDP(abstractPolicy, absDG, dg);
+		Policy groundPolicyFromAbstractPolicy = qPhi.getPolicyForGroundMDP(abstractPolicy, absD, d);
 		PolicyIteration PI = new PolicyIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations, 1);
 		PI.setPolicyToEvaluate(groundPolicyFromAbstractPolicy);
 		PI.planFromState(gInitialState);
 		System.out.println("Value of initial state using abstract MDP: " + PI.value(gInitialState) + " vs value actual value of " + vi.value(gInitialState));
 
-
-
-		GraphStreamVisualizer test = new GraphStreamVisualizer(dg, n, rf);
-//		GraphStreamVisualizer test = new GraphStreamVisualizer(absDG, aVi.getAllStates().size(), rfA);
-		test.render();
+//		GraphStreamVisualizer test = new GraphStreamVisualizer(dg, n, rf);
+//		test.render();
+		GraphStreamVisualizer test2 = new GraphStreamVisualizer(absD, aVi.getAllStates().size(), rfA);
+		test2.render();
+//		
+//		addExplorer(absD, rfA, tf, aInitialState);
 	}
 
 }
