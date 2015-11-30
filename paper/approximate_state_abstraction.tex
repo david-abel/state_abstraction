@@ -1,0 +1,67 @@
+\documentclass[11pt]{article}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+\usepackage{aaai}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\title{Approximate State Abstraction}
+\author{David Abel, D. Ellis Hershkowitz, Michael Littman}
+\date{}                                           % Activate to display a given date or no date
+
+% --- Note Commands ---
+\usepackage{color}
+\newcommand\dnote[1]{\textcolor{blue}{Dave: #1}}
+\newcommand\ellisnote[1]{\textcolor{red}{Ellis: #1}}
+
+\begin{document}
+\maketitle
+
+
+% --- ABSTRACT ---
+\begin{abstract}
+The combinatorial explosion that plagues planning and reinforcement learning algorithms can be reversed using abstraction. For instance, prohibitively difficult robotics task representations can be condensed so that solutions are tractably computable. In this work, we investigate a theoretical framework for approximate state abstraction that preserves near optimal behavior. Reinforcement learning agents using these abstractions may treat experiences that resemble each other as equivalent, and generalize knowledge to novel scenarios based on prior experiences. We present preliminary results and directions for future work.
+
+Abstraction lies at the heart of computation. In this work, we demonstrate that the combinatorial explosion central to many issues in artificial intelligence can be reversed using effective abstraction methods. We extend the framework of state abstraction proposed by (Lihong et. al. 2005) to allow for approximately optimal state abstraction, and demonstrate that, in ideal scenarios, this framework allows for arbitrary reduction in the sample complexity of learning in certain learning problem. We develop methods for creating abstract problem representations and prove that their solutions have bounded error on the original, un-abstracted problem. Furthermore, we provide visualizations of the abstracted problems.
+
+\end{abstract}
+
+
+
+% --- SECTION: Introduction ---
+\section{Introduction}
+
+
+% --- SECTION: Background ---
+\section{Background}
+
+
+% --- SECTION: Related Work ---
+\section{Related Work}
+
+
+% --- SECTION: State Abstraction ---
+\section{State Abstraction}
+
+
+% --- SECTION: Preserving Optimality ---
+\section{Preserving Optimality}
+
+
+% --- SECTION: Example Domains ---
+\section{Example Domains}
+
+
+% --- SECTION: Conclusion ---
+\section{Conclusion}
+
+
+
+
+
+
+% --- BIBLIOGRAPHY ---
+\bibliographystyle{aaai}
+\bibliography{state_abs}
+
+\end{document}
