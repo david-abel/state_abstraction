@@ -33,8 +33,8 @@ public class QValueAbstractionTest {
 		// Ground MDP
 		int n = 100;
 		HashableStateFactory hf = new SimpleHashableStateFactory();
-		GraphDefinedDomain dg = Test.getNStateChain(n);
-		RewardFunction rf = new Test.nStateChainRF(n);
+		GraphDefinedDomain dg = NStateChainGenerator.getNStateChain(n);
+		RewardFunction rf = new NStateChainGenerator.nStateChainRF(n);
 		Domain d = dg.generateDomain();
 		ValueIteration vi = new ValueIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations);
 		State gInitialState = GraphDefinedDomain.getState(d, 0);
@@ -50,21 +50,21 @@ public class QValueAbstractionTest {
 		RewardFunction rfA = qPhi.getRewardFunction();
 		Domain absD= absDG.generateDomain();
 		ValueIteration aVi = new ValueIteration(absD, rfA, tf, VIParams.gamma, hfA, VIParams.maxDelta, VIParams.maxIterations);
-		State aInitialState = GraphDefinedDomain.getState(absD, 0);
+		State aInitialState =  qPhi.getAbstractInitialState(absD, gInitialState);
 		GreedyQPolicy abstractPolicy = aVi.planFromState(aInitialState);	
 		
 
 		//Evaluate abstract policy in ground MDP:
-		Policy groundPolicyFromAbstractPolicy = qPhi.getPolicyForGroundMDP(abstractPolicy, absDG, dg);
-		PolicyIteration PI = new PolicyIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations, 1);
-		PI.setPolicyToEvaluate(groundPolicyFromAbstractPolicy);
-		PI.planFromState(gInitialState);
-		System.out.println("Value of initial state using abstract MDP: " + PI.value(gInitialState) + " vs value actual value of " + vi.value(gInitialState));
+		Policy groundPolicyFromAbstractPolicy = qPhi.getPolicyForGroundMDP(abstractPolicy, absD, d);
+//		PolicyIteration PI = new PolicyIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations, 1);
+//		PI.setPolicyToEvaluate(groundPolicyFromAbstractPolicy);
+//		PI.planFromState(gInitialState);
+//		System.out.println("Value of initial state using abstract MDP: " + PI.value(gInitialState) + " vs value actual value of " + vi.value(gInitialState));
 
 		// Print actions for all states
-//		for (int i = 0; i < n; i++) {
-//			State s = GraphDefinedDomain.getState(d, i);
-//			System.out.println("Action for state " + i + " is " +  groundPolicyFromAbstractPolicy.getAction(s).actionName() + " vs " + gPol.getAction(s).actionName() + " from the ground MDP");
-//		}
+		for (int i = 0; i < n; i++) {
+			State s = GraphDefinedDomain.getState(d, i);
+			System.out.println("Action for state " + i + " is " +  groundPolicyFromAbstractPolicy.getAction(s).actionName() + " vs " + gPol.getAction(s).actionName() + " from the ground MDP");
+		}
 	}
 }

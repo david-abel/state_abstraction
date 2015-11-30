@@ -16,60 +16,6 @@ import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 
 public class Test {
 
-	/**
-	 * 
-	 * @param totalNumStates
-	 * @return an n state graph MDP.
-	 */
-	public static GraphDefinedDomain getNStateChain(int totalNumStates) {
-		double slipProb = .2;
-
-		GraphDefinedDomain dg = new GraphDefinedDomain(totalNumStates);
-
-		// Set up transitions
-		for (int i = 0; i < totalNumStates-1; i++) {
-			((GraphDefinedDomain) dg).setTransition(i, 0/*action*/, i+1, slipProb);
-			((GraphDefinedDomain) dg).setTransition(i, 0/*action*/, 0, 1.0-slipProb);
-			((GraphDefinedDomain) dg).setTransition(i, 1/*action*/, 0, slipProb);
-			((GraphDefinedDomain) dg).setTransition(i, 1/*action*/, i+1, 1.0-slipProb);
-		}
-
-		// Set up last state transition
-		((GraphDefinedDomain) dg).setTransition(totalNumStates-1, 0/*action*/, totalNumStates-1, slipProb);
-		((GraphDefinedDomain) dg).setTransition(totalNumStates-1, 0/*action*/, 0,1.0-slipProb);
-		((GraphDefinedDomain) dg).setTransition(totalNumStates-1, 1/*action*/, totalNumStates-1, 1.0-slipProb);
-		((GraphDefinedDomain) dg).setTransition(totalNumStates-1, 1/*action*/, 0, slipProb);
-
-		return dg;
-	}	
-	
-	/**
-	 * n State chain reward function -- returns 10 if action 1 is taken in the last state, 2 if
-	 * action 0 is taken ever and 0 otherwise.
-	 * @author Dhershkowitz
-	 *
-	 */
-	public static class nStateChainRF implements RewardFunction {
-		int n;
-		
-		public nStateChainRF(int n) {
-			this.n = n;
-		}
-
-		@Override
-		public double reward(State s, GroundedAction a, State sprime) {
-			if (a.actionName().equals("action0")) {
-				return 2;
-			}
-			else {
-				if (GraphDefinedDomain.getNodeId(s) == n-1 && GraphDefinedDomain.getNodeId(sprime) == n-1) {
-					return 10;
-				}
-			}
-			return 0;
-		}
-		
-	}
 
 	/**
 	 * An example of phiModel (currently not actually implemented).
@@ -83,8 +29,8 @@ public class Test {
 		// Ground MDP
 		int n = 5;
 		HashableStateFactory hf = new SimpleHashableStateFactory();
-		GraphDefinedDomain dg = getNStateChain(n);
-		RewardFunction rf = new nStateChainRF(n);
+		GraphDefinedDomain dg = NStateChainGenerator.getNStateChain(n);
+		RewardFunction rf = new NStateChainGenerator.nStateChainRF(n);
 		Domain d = dg.generateDomain();
 		ValueIteration vi = new ValueIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations);
 		State gInitialState = GraphDefinedDomain.getState(d, 0);
@@ -98,7 +44,7 @@ public class Test {
 		RewardFunction rfA = phiMod.getRewardFunction();
 		Domain absD= absDG.generateDomain();
 		ValueIteration aVi = new ValueIteration(absD, rfA, tf, VIParams.gamma, hfA, VIParams.maxDelta, VIParams.maxIterations);
-		State aInitialState = GraphDefinedDomain.getState(absD, 0);
+		State aInitialState = phiMod.getAbstractInitialState(absD, gInitialState);
 		aVi.planFromState(aInitialState);	
 		System.out.println("Abstract initial state value: " + aVi.value(aInitialState));
 		
