@@ -134,31 +134,28 @@ public class GraphStreamVisualizer {
 		TerminalFunction tf = new NullTermination();
 
 		// Ground MDP
-		int height = 4;
-		int width = 5;
-		int n = height*width;
+		int height = 10;
+		int width = 30;
+		int n = 10;// height*width;
 		HashableStateFactory hf = new SimpleHashableStateFactory();
-		GraphDefinedDomain dg = UpWorldGenerator.getUPWorld(width, height);
-		RewardFunction rf = new UpWorldGenerator.UpWorldRF();
+		GraphDefinedDomain dg = NStateChainGenerator.getNStateChain(n);//UpWorldGenerator.getUPWorld(width, height);
+		RewardFunction rf = new NStateChainGenerator.nStateChainRF(n);//UpWorldGenerator.UpWorldRF();
 		Domain d = dg.generateDomain();
 		ValueIteration vi = new ValueIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations);
 		State gInitialState = GraphDefinedDomain.getState(d, 0);
 		Policy gPol = vi.planFromState(gInitialState);	
-		System.out.println("Ground initial state value: " + vi.value(gInitialState));
 
 		// Abstract MDP VI with a PhiQ* for abstraction
 		TerminalFunction tfa = new NullTermination();
-		double epsilon = 0;
+		double epsilon = .001;
 		qValueGenerator qGen = new qValueGenerator(d, rf, gInitialState);
 		StateAbstractor qPhi = new PhiSAReal(qGen, epsilon, d.getActions());
 		HashableStateFactory hfA = new SimpleHashableStateFactory();
 		GraphDefinedDomain absDG = qPhi.abstractMDP(dg, rf);
 		RewardFunction rfA = qPhi.getRewardFunction();
 		Domain absD= absDG.generateDomain();
-		System.out.println("RUNNING VI FOR ABSTRACT");
 		ValueIteration aVi = new ValueIteration(absD, rfA, tfa, VIParams.gamma, hfA, VIParams.maxDelta, VIParams.maxIterations);
 		State aInitialState =  qPhi.getAbstractInitialState(absD, gInitialState);
-		System.out.println("Abstract initial state is: " + aInitialState);
 		GreedyQPolicy abstractPolicy = aVi.planFromState(aInitialState);	
 
 		//Evaluate abstract policy in ground MDP:
@@ -168,8 +165,8 @@ public class GraphStreamVisualizer {
 		PI.planFromState(gInitialState);
 		System.out.println("Value of initial state using abstract MDP: " + PI.value(gInitialState) + " vs value actual value of " + vi.value(gInitialState));
 
-//		GraphStreamVisualizer test = new GraphStreamVisualizer(dg, n, rf);
-//		test.render();
+		GraphStreamVisualizer test = new GraphStreamVisualizer(d, n, rf);
+		test.render();
 		GraphStreamVisualizer test2 = new GraphStreamVisualizer(absD, aVi.getAllStates().size(), rfA);
 		test2.render();
 //		

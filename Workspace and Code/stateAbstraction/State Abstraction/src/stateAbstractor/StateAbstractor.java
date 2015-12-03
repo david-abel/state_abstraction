@@ -42,7 +42,7 @@ public abstract class StateAbstractor {
 		for (int stateIndex = 0; stateIndex < inpDG.getNumNodes(); stateIndex++) {
 			indexList.add(stateIndex);
 		}
-//		Collections.shuffle(indexList);
+		Collections.shuffle(indexList);
 		
 		for (int stateIndex : indexList) {
 			State currGroundState = GraphDefinedDomain.getState(inputD, stateIndex);
@@ -166,11 +166,9 @@ public abstract class StateAbstractor {
 
 		@Override
 		public AbstractGroundedAction getAction(State s) {
-			//TODO Implement properly
 			Integer groundStateInteger = GraphDefinedDomain.getNodeId(s);
 			Integer abstractStateInteger = this.groundToAbstract.get(groundStateInteger);
 			State abstractState = GraphDefinedDomain.getState(this.aD, abstractStateInteger);
-			System.out.println("abs state " + abstractState);
 			AbstractGroundedAction toReturn = this.abstractPolicy.getAction(abstractState);
 			return toReturn;
 		}
