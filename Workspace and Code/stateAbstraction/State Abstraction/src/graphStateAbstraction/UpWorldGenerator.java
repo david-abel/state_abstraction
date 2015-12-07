@@ -18,11 +18,11 @@ public class UpWorldGenerator {
 		for (int j = 0; j < height; j++){
 			for (int i = 0; i < width; i++) {
 				int currentStateIndex = i +j*width;
-				
+
 				int leftIndex = 0;
 				if (i==0) leftIndex =  currentStateIndex;
 				else leftIndex = currentStateIndex-1;
-						
+
 				int rightIndex = 0;
 				if (i == width-1) rightIndex = currentStateIndex;
 				else rightIndex = currentStateIndex+1;
@@ -69,5 +69,5 @@ public class UpWorldGenerator {
 			else return 0;
 		}
 
-		}
 	}
+}

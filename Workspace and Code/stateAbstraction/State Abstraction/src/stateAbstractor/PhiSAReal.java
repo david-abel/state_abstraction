@@ -38,8 +38,10 @@ public class PhiSAReal extends StateAbstractor {
 		for (Action a : relActions) {
 			SAPair sa1 = new SAPair(s1, a);
 			SAPair sa2 = new SAPair(s2, a);
-			double sa1Val = this.SARealVals.get(sa1);
-			double sa2Val = this.SARealVals.get(sa2);
+			Double sa1Val = this.SARealVals.get(sa1);
+			Double sa2Val = this.SARealVals.get(sa2);
+			if (sa1Val == null || sa2Val == null) return false; // In some cases the value is not solved for so just don't collapse these states
+
 			double saDiff = Math.abs(sa1Val - sa2Val);
 			maxDiff = Math.max(maxDiff, saDiff);
 
