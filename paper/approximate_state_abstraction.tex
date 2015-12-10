@@ -1,21 +1,42 @@
-\documentclass[11pt]{article}
-\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
-\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
-\usepackage{aaai}
-\usepackage{amsmath}
-\usepackage{amssymb}
+\documentclass{article}
+\usepackage{times}
 \usepackage{graphicx}
-\title{Approximate State Abstraction}
-\author{David Abel, D. Ellis Hershkowitz, Michael Littman}
-\date{}                                           % Activate to display a given date or no date
+\usepackage{subfigure} 
+\usepackage{natbib}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{hyperref}
+\newcommand{\theHalgorithm}{\arabic{algorithm}} % Fixes misbehavior of conflicting packages.
+\usepackage{icml2016/icml2016} 
+
+\icmltitlerunning{Approximate State Abstraction}
 
 % --- Note Commands ---
 \usepackage{color}
 \newcommand\dnote[1]{\textcolor{blue}{Dave: #1}}
 \newcommand\enote[1]{\textcolor{green}{Ellis: #1}}
 
+% --- DOCUMENT ---
 \begin{document}
-\maketitle
+
+\twocolumn[
+\icmltitle{Approximate State Abstraction}
+
+% Paper Meta Info
+\icmlauthor{David Abel}{david_abel@brown.edu}
+\icmladdress{Brown University,
+            115 Waterman Street, Providence, RI 02906}
+\icmlauthor{D. Ellis Hershkowitz}{david_hershkowitz@brown.edu}
+\icmladdress{Brown University,
+            115 Waterman Street, Providence, RI 02906}
+\icmlauthor{Michael Littman}{michael_littman@brown.edu}
+\icmladdress{Brown University,
+            115 Waterman Street, Providence, RI 02906}
+    
+\icmlkeywords{Reinforcement Learning, State Aggregation, State Abstraction, Planning, MDP}
+            
+\vskip 0.3in
+]
 
 
 % --- ABSTRACT ---
@@ -26,6 +47,7 @@ Abstraction lies at the heart of computation. In this work, we demonstrate that 
 
 \end{abstract}
 
+% Set of actions within epsilon (Q*) is the same for two states? Better than boltzmann.
 
 
 % --- SECTION: Introduction ---
