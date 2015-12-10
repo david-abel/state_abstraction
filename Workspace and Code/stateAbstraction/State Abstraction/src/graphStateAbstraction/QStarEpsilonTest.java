@@ -96,33 +96,33 @@ public class QStarEpsilonTest {
 		//		}
 
 		//--------UPWORLD--------
-//		int upWorldWidth = 50;
-//		int upWorldHeight = 20;
-//		GraphDefinedDomain upWorldDG = UpWorldGenerator.getUPWorld(upWorldWidth, upWorldHeight);
-//		RewardFunction upWorldRF = new UpWorldGenerator.UpWorldRF();
-//		double UWStartEpsilon = 0.001;
-//		double UWEndEpsilon = 10;
-//		double UWEpsStep = 1;
-//		List<EpsilonToNumStatesTuple> upWorldResults = testQPhiStateReduction(upWorldDG, upWorldRF, UWStartEpsilon, UWEndEpsilon, UWEpsStep);
-//
-//		System.out.println("upWorldResults: ");
-//		for (EpsilonToNumStatesTuple x : upWorldResults) {
-//			System.out.println(x);
-//		}
+		int upWorldWidth = 50;
+		int upWorldHeight = 20;
+		GraphDefinedDomain upWorldDG = UpWorldGenerator.getUPWorld(upWorldWidth, upWorldHeight);
+		RewardFunction upWorldRF = new UpWorldGenerator.UpWorldRF();
+		double UWStartEpsilon = 0.01;
+		double UWEndEpsilon = 1000;
+		double UWEpsStep = 1;
+		List<EpsilonToNumStatesTuple> upWorldResults = testQPhiStateReduction(upWorldDG, upWorldRF, UWStartEpsilon, UWEndEpsilon, UWEpsStep);
 
-		//--------RANDOMMDP--------
-		int numRandomMDPStates = 1000;
-		int numRandomMDPActions = 3;
-		GraphDefinedDomain randomMDPDG = RandomMDPGenerator.getRandomMDP(numRandomMDPStates, numRandomMDPActions);
-		RewardFunction randomMDPRF = new RandomMDPGenerator.RandomMDPRF(numRandomMDPStates);
-		double RMDPStartEpsilon = 0.001;
-		double RMDPEndEpsilon = 10;
-		double RMDPEpsStep = 1;
-		List<EpsilonToNumStatesTuple> RMDPResults = testQPhiStateReduction(randomMDPDG, randomMDPRF, RMDPStartEpsilon, RMDPEndEpsilon, RMDPEpsStep);
-
-		System.out.println("randomMDPResults: ");
-		for (EpsilonToNumStatesTuple x : RMDPResults) {
+		System.out.println("upWorldResults: ");
+		for (EpsilonToNumStatesTuple x : upWorldResults) {
 			System.out.println(x);
 		}
+
+		//--------RANDOMMDP--------
+//		int numRandomMDPStates = 1000;
+//		int numRandomMDPActions = 3;
+//		GraphDefinedDomain randomMDPDG = RandomMDPGenerator.getRandomMDP(numRandomMDPStates, numRandomMDPActions);
+//		RewardFunction randomMDPRF = new RandomMDPGenerator.RandomMDPRF(numRandomMDPStates);
+//		double RMDPStartEpsilon = 0.001;
+//		double RMDPEndEpsilon = 10;
+//		double RMDPEpsStep = 1;
+//		List<EpsilonToNumStatesTuple> RMDPResults = testQPhiStateReduction(randomMDPDG, randomMDPRF, RMDPStartEpsilon, RMDPEndEpsilon, RMDPEpsStep);
+//
+//		System.out.println("randomMDPResults: ");
+//		for (EpsilonToNumStatesTuple x : RMDPResults) {
+//			System.out.println(x);
+//		}
 	}
 }
