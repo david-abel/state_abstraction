@@ -3,6 +3,10 @@ package graphStateAbstraction;
 import java.util.ArrayList;
 import java.util.List;
 
+import domains.trench.GraphTrenchRF;
+import domains.trench.GraphTrenchTF;
+import domains.trench.TrenchDomainToGraphDomain;
+import domains.trench.TrenchGenerator;
 import stateAbstractor.PhiSAReal;
 import stateAbstractor.StateAbstractor;
 import SARealGenerators.qValueGenerator;
@@ -10,6 +14,7 @@ import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.policy.Policy;
 import burlap.behavior.singleagent.planning.stochastic.policyiteration.PolicyIteration;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
+import burlap.debugtools.DPrint;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.oomdp.auxiliary.DomainGenerator;
 import burlap.oomdp.auxiliary.common.NullTermination;
@@ -37,7 +42,7 @@ public class QStarEpsilonTest {
 	}
 
 
-	public static List<EpsilonToNumStatesTuple> testQPhiStateReduction(GraphDefinedDomain dg, RewardFunction rf, double startEpsilon, double endEpsilon, double epsilonStep) {
+	public static List<EpsilonToNumStatesTuple> testQPhiStateReduction(GraphDefinedDomain dg, RewardFunction rf, int initStateID, double startEpsilon, double endEpsilon, double epsilonStep) {
 		List<EpsilonToNumStatesTuple> toReturn = new ArrayList<EpsilonToNumStatesTuple>();
 
 		for (double epsilon = startEpsilon; epsilon < endEpsilon; epsilon = epsilon*2) {
@@ -96,19 +101,44 @@ public class QStarEpsilonTest {
 		//		}
 
 		//--------UPWORLD--------
-		int upWorldWidth = 50;
-		int upWorldHeight = 20;
-		GraphDefinedDomain upWorldDG = UpWorldGenerator.getUPWorld(upWorldWidth, upWorldHeight);
-		RewardFunction upWorldRF = new UpWorldGenerator.UpWorldRF();
-		double UWStartEpsilon = 0.01;
-		double UWEndEpsilon = 1000;
-		double UWEpsStep = 1;
-		List<EpsilonToNumStatesTuple> upWorldResults = testQPhiStateReduction(upWorldDG, upWorldRF, UWStartEpsilon, UWEndEpsilon, UWEpsStep);
-
-		System.out.println("upWorldResults: ");
-		for (EpsilonToNumStatesTuple x : upWorldResults) {
+//		int upWorldWidth = 50;
+//		int upWorldHeight = 20;
+//		GraphDefinedDomain upWorldDG = UpWorldGenerator.getUPWorld(upWorldWidth, upWorldHeight);
+//		RewardFunction upWorldRF = new UpWorldGenerator.UpWorldRF();
+//		double UWStartEpsilon = 0.01;
+//		double UWEndEpsilon = 1000;
+//		double UWEpsStep = 1;
+//		int initStateID = 0;
+//		List<EpsilonToNumStatesTuple> upWorldResults = testQPhiStateReduction(upWorldDG, upWorldRF, initStateID, UWStartEpsilon, UWEndEpsilon, UWEpsStep);
+//		System.out.println("upWorldResults: ");
+//		for (EpsilonToNumStatesTuple x : upWorldResults) {
+//			System.out.println(x);
+//		}
+		//---------END-----------
+		
+		//---------TRENCH--------
+		int trenchWidth = 4;
+		int trenchHeight = 3;
+		TrenchGenerator gen = new TrenchGenerator(trenchHeight, trenchWidth);
+		TrenchDomainToGraphDomain trenchDomConverter = new TrenchDomainToGraphDomain(gen);
+		
+		
+		GraphDefinedDomain trenchWorldDG = trenchDomConverter.createGraphDomain();
+		RewardFunction trenchWorldRF = new GraphTrenchRF(trenchDomConverter.goalStateID);
+		TerminalFunction trenchWorldTF = new GraphTrenchTF(trenchDomConverter.goalStateID);
+		
+		double trenchStartEpsilon = 0.01;
+		double trenchEndEpsilon = 1000; 
+		double trenchEpsStep = 1;
+		int trenchInitStateID = trenchDomConverter.initStateID;
+		List<EpsilonToNumStatesTuple> trenchResults = testQPhiStateReduction(trenchWorldDG, trenchWorldRF, trenchInitStateID, trenchStartEpsilon, trenchEndEpsilon, trenchEpsStep);
+		System.out.println("trenchResults: ");
+//		DPrint.mode(0);
+		for (EpsilonToNumStatesTuple x : trenchResults) {
 			System.out.println(x);
 		}
+		//---------END-----------
+		
 
 		//--------RANDOMMDP--------
 //		int numRandomMDPStates = 1000;
