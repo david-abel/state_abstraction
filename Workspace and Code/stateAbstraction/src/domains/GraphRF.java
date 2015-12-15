@@ -1,4 +1,4 @@
-package domains.trench;
+package domains;
 
 import java.util.List;
 
@@ -7,11 +7,11 @@ import burlap.oomdp.core.states.State;
 import burlap.oomdp.singleagent.GroundedAction;
 import burlap.oomdp.singleagent.RewardFunction;
 
-public class GraphTrenchRF implements RewardFunction {
+public class GraphRF implements RewardFunction {
 
 	List<Integer> terminalStateIDs;
 	
-	public GraphTrenchRF(List<Integer> terminalStateIDs) {
+	public GraphRF(List<Integer> terminalStateIDs) {
 		this.terminalStateIDs = terminalStateIDs;
 	}
 	

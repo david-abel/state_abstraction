@@ -16,12 +16,12 @@ import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 
 public class TrenchDomainToGraphDomain {
 
-	TrenchGenerator trenchGen;
+	TrenchDomainGenerator trenchGen;
 	Domain oldDomain;
 	public List<Integer> goalStateIDs;
 	public int initStateID;
 	
-	public TrenchDomainToGraphDomain(TrenchGenerator tg) {
+	public TrenchDomainToGraphDomain(TrenchDomainGenerator tg) {
 		this.trenchGen = tg;
 		this.goalStateIDs = new ArrayList<Integer>();
 		this.oldDomain = this.trenchGen.generateDomain();
@@ -41,7 +41,7 @@ public class TrenchDomainToGraphDomain {
 	
 	private void setTransitions(List<State> allStates, List<Action> allActions, GraphDefinedDomain gd) {
 		
-		TerminalFunction tf = new TrenchGenerator.TrenchTF(this.trenchGen.width - 1, this.trenchGen.height - 1);
+		TerminalFunction tf = new TrenchDomainGenerator.TrenchTF(this.trenchGen.width - 1, this.trenchGen.height - 1);
 		
 		
 		for (int stateIndex = 0; stateIndex < allStates.size(); stateIndex++) {
@@ -70,8 +70,8 @@ public class TrenchDomainToGraphDomain {
 	private List<State> getAllStatesFromTrenchProb() {
 		
 		State initialState = this.trenchGen.getInitialState(this.oldDomain);
-		RewardFunction rf = new TrenchGenerator.TrenchRF(this.trenchGen.width - 1, this.trenchGen.height - 1);
-		TerminalFunction tf = new TrenchGenerator.TrenchTF(this.trenchGen.width - 1, this.trenchGen.height - 1);
+		RewardFunction rf = new TrenchDomainGenerator.TrenchRF(this.trenchGen.width - 1, this.trenchGen.height - 1);
+		TerminalFunction tf = new TrenchDomainGenerator.TrenchTF(this.trenchGen.width - 1, this.trenchGen.height - 1);
 		
 		double gamma = 0.99;
 		int numRollouts = 1;

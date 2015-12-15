@@ -1,4 +1,4 @@
-package domains;
+package domains.nchain;
 
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.oomdp.core.states.State;
