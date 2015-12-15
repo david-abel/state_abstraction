@@ -124,11 +124,11 @@ public class TrenchDomainGenerator implements DomainGenerator {
 	 */
 	public State getInitialState(Domain domain) {
 		
+		// Set the initial conditions for the agent.
 		State s = new MutableState();
 		ObjectInstance agent = new MutableObjectInstance(domain.getObjectClass(CLASSAGENT), "agent0");
 		agent.setValue(ATTX, 0);
 		agent.setValue(ATTY, 0);
-		
 		s.addObject(agent);
 
 		for(int x = 0; x < this.width; x++) {

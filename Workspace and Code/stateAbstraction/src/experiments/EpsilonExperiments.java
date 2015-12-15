@@ -3,6 +3,7 @@ package experiments;
 import graphStateAbstractionTest.QStarEpsilonTest;
 import graphStateAbstractionTest.QStarEpsilonTest.EpsilonToNumStatesTuple;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import domains.GraphRF;
@@ -14,6 +15,7 @@ import domains.trench.TrenchDomainToGraphDomain;
 import stateAbstractor.PhiModel;
 import stateAbstractor.PhiSAReal;
 import stateAbstractor.StateAbstractor;
+import plotting.Plotter;
 import SARealGenerators.qValueGenerator;
 import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.policy.Policy;
@@ -38,11 +40,25 @@ import burlap.oomdp.statehashing.SimpleHashableStateFactory;
  */
 public class EpsilonExperiments {
 
-	public static void createEpsilonVsPerformancePlot() {
+	public static void createEpsilonVsPerformancePlot(DomainGenerator gen, TerminalFunction tf, RewardFunction rf, State initialState) {
+		// Convert to graph domain.
+		NormalDomainToGraphDomain graphMaker = new NormalDomainToGraphDomain(gen, tf, rf, initialState);
+		GraphDefinedDomain graphDefinedDomain = graphMaker.createGraphDomain();
+		RewardFunction graphRF = new GraphRF(graphMaker.goalStateIDs);
+		TerminalFunction graphTF = new GraphTF(graphMaker.goalStateIDs);
 		
+		// Iterate over epsilon and compute the number of states.
+		double startEpsilon = 0.0;
+		double endEpsilon = 32.0; 
+		double epsilonIncrement = 0.5;
+		List<EpsilonToNumStatesTuple> epsilonAndNumStatesPairs = QStarEpsilonTest.testQPhiStateReduction(graphDefinedDomain, graphRF, graphTF, graphMaker.initStateID, startEpsilon, endEpsilon, epsilonIncrement);
+		System.out.println("results: ");
+		for (EpsilonToNumStatesTuple x : epsilonAndNumStatesPairs) {
+			System.out.println(x.getEpsilon() + "," + x.getValOfInitState());
+		}
 	}
 	
-	public static void createEpsilonVsNumStatesPlot(DomainGenerator gen, TerminalFunction tf, RewardFunction rf, State initialState) {
+	public static void createEpsilonVsNumStatesPlot(String domainName, DomainGenerator gen, TerminalFunction tf, RewardFunction rf, State initialState) {
 		
 		// Convert to graph domain.
 		NormalDomainToGraphDomain graphMaker = new NormalDomainToGraphDomain(gen, tf, rf, initialState);
@@ -51,15 +67,23 @@ public class EpsilonExperiments {
 		TerminalFunction graphTF = new GraphTF(graphMaker.goalStateIDs);
 		
 		// Iterate over epsilon and compute the number of states.
-		double startEpsilon = 0.64;
-		double endEpsilon = 500; 
-		List<EpsilonToNumStatesTuple> epsilonAndNumStatesPairs = QStarEpsilonTest.testQPhiStateReduction(graphDefinedDomain, graphRF, graphTF, graphMaker.initStateID, startEpsilon, endEpsilon);
+		double startEpsilon = 0.0;
+		double endEpsilon = 32;
+		double epsilonIncrement = 0.5;
+		List<EpsilonToNumStatesTuple> epsilonAndNumStatesPairs = QStarEpsilonTest.testQPhiStateReduction(graphDefinedDomain, graphRF, graphTF, graphMaker.initStateID, startEpsilon, endEpsilon, epsilonIncrement);
+		
+		List<Double> epsilons = new ArrayList<Double>();
+		List<Integer> numStates = new ArrayList<Integer>();
+		
 		System.out.println("results: ");
 		for (EpsilonToNumStatesTuple x : epsilonAndNumStatesPairs) {
-			System.out.println(x);
+			epsilons.add(x.getEpsilon());
+			numStates.add(x.getNumStates());
+			
+			System.out.println(x.getEpsilon() + "," + x.getNumStates());
 		}
 		
-		
+		// Now make the plot...
 	}
 	
 	public static void main(String[] args) {
@@ -72,10 +96,13 @@ public class EpsilonExperiments {
 		RewardFunction rf = new TrenchDomainGenerator.TrenchRF(height - 1, width - 1);
 		Domain oldDomain = gen.generateDomain();
 		State initialState = gen.getInitialState(oldDomain);
+		String domainName = "Trench";
 		
 		// Compress and compare epsilon to number of states.
-		createEpsilonVsNumStatesPlot(gen, tf, rf, initialState);
-
+		createEpsilonVsNumStatesPlot(domainName, gen, tf, rf, initialState);
 		
+		// Compress and compare epsilon to number of states.
+		createEpsilonVsPerformancePlot(gen, tf, rf, initialState);
+
 	}
 }
