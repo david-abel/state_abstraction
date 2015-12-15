@@ -27,15 +27,9 @@ import domains.upworld.UpWorldGenerator;
 
 public class CreateVisuals {
 
-	public static void compressAndVisualizeMDP(DomainGenerator gen, TerminalFunction tf, RewardFunction rf, State initialState, double epsilon) {
-		
-		// Convert to graph domain.
-		NormalDomainToGraphDomain graphMaker = new NormalDomainToGraphDomain(gen, tf, rf, initialState);
-		GraphDefinedDomain graphDefinedDomain = graphMaker.createGraphDomain();
-		RewardFunction graphRF = new GraphRF(graphMaker.goalStateIDs);
-		TerminalFunction graphTF = new GraphTF(graphMaker.goalStateIDs);
+	public static void compressAndVisualizeMDP(GraphDefinedDomain graphDefinedDomain, TerminalFunction graphTF, RewardFunction graphRF, State initGraphState, double epsilon) {
+		// Retrieve the graph domain.
 		Domain graphDomain = graphDefinedDomain.generateDomain();
-		State initGraphState = GraphDefinedDomain.getState(graphDomain, graphMaker.initStateID);
 		
 		// Run vi to compute Q*.
 		ValueIteration vi = new ValueIteration(graphDomain, graphRF, graphTF, VIParams.gamma, new SimpleHashableStateFactory(), VIParams.maxDelta, VIParams.maxIterations);
@@ -65,46 +59,59 @@ public class CreateVisuals {
 		abstractMDPVisualizer.render();
 	}
 	
+	public static void convertCompressAndVisualizeMDP(DomainGenerator gen, TerminalFunction tf, RewardFunction rf, State initialState, double epsilon) {
+		
+		// Convert to graph domain.
+		NormalDomainToGraphDomain graphMaker = new NormalDomainToGraphDomain(gen, tf, rf, initialState);
+		GraphDefinedDomain graphDefinedDomain = graphMaker.createGraphDomain();
+		RewardFunction graphRF = new GraphRF(graphMaker.goalStateIDs);
+		TerminalFunction graphTF = new GraphTF(graphMaker.goalStateIDs);
+		Domain graphDomain = graphDefinedDomain.generateDomain();
+		State initGraphState = GraphDefinedDomain.getState(graphDomain, graphMaker.initStateID);
+		
+		// Compress and visualize.
+		compressAndVisualizeMDP(graphDefinedDomain, graphTF, graphRF, initGraphState, epsilon);
+	}
+	
 	public static void main(String[] args) {
 		
-		String domainToVisualize = "NCHAIN"; // One of "TRENCH", "UPWORLD", "NCHAIN".
-		DomainGenerator gen;
-		TerminalFunction tf;
-		RewardFunction rf;
-		State initialState;
-		double epsilon = 0.5;
+		String domainToVisualize = "NCHAIN"; // One of "TRENCH", "UPWORLD", "NCHAIN", or add your own.
+		double epsilon = 2;
 		
 		if (domainToVisualize == "TRENCH") {
 			// Create trench domain.
 			int height = 3;
 			int width = 3;
-			gen = new TrenchDomainGenerator(height, width);
-			tf = new TrenchDomainGenerator.TrenchTF(height - 1, width - 1);
-			rf = new TrenchDomainGenerator.TrenchRF(height - 1, width - 1);
+			DomainGenerator gen = new TrenchDomainGenerator(height, width);
+			TerminalFunction tf = new TrenchDomainGenerator.TrenchTF(height - 1, width - 1);
+			RewardFunction rf = new TrenchDomainGenerator.TrenchRF(height - 1, width - 1);
 			Domain oldDomain = gen.generateDomain();
-			initialState = ((TrenchDomainGenerator) gen).getInitialState(oldDomain);
+			State initialState = ((TrenchDomainGenerator) gen).getInitialState(oldDomain);
+			convertCompressAndVisualizeMDP(gen, tf, rf, initialState, epsilon);
 		}
 		else if (domainToVisualize == "UPWORLD") {
 			// Create upworld domain.
 			int height = 10;
 			int width = 6;
-			gen = UpWorldGenerator.getUPWorld(width, height);
+			GraphDefinedDomain gen = UpWorldGenerator.getUPWorld(width, height);
 			Domain d = gen.generateDomain();
-			initialState = GraphDefinedDomain.getState(d, 0);
-			tf = new NullTermination();
-			rf = new UpWorldGenerator.UpWorldRF();
+			State initialState = GraphDefinedDomain.getState(d, 0);
+			TerminalFunction tf = new NullTermination();
+			RewardFunction rf = new UpWorldGenerator.UpWorldRF();
+			compressAndVisualizeMDP((GraphDefinedDomain) gen, tf, rf, initialState, epsilon);
 		}
 		else {
 			// Create nchain domain.
 			int numStates = 10;
-			gen = NStateChainGenerator.getNStateChain(numStates);
+			GraphDefinedDomain gen = NStateChainGenerator.getNStateChain(numStates);
 			Domain d = gen.generateDomain();
-			initialState = GraphDefinedDomain.getState(d, 0);
-			tf = new NullTermination();
-			rf = new NStateChainGenerator.nStateChainRF(numStates);
+			State initialState = GraphDefinedDomain.getState(d, 0);
+			TerminalFunction tf = new NullTermination();
+			RewardFunction rf = new NStateChainGenerator.nStateChainRF(numStates);
+			compressAndVisualizeMDP(gen, tf, rf, initialState, epsilon);
 		}
 		
-		compressAndVisualizeMDP(gen, tf, rf, initialState, epsilon);
+		
 	}
 	
 }
