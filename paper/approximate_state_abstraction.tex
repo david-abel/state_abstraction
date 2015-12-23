@@ -30,7 +30,7 @@
 \icmlauthor{D. Ellis Hershkowitz}{david_hershkowitz@brown.edu}
 \icmladdress{Brown University,
             115 Waterman Street, Providence, RI 02906}
-\icmlauthor{Michael Littman}{michael_littman@brown.edu}
+\icmlauthor{Michael L.\ Littman}{michael_littman@brown.edu}
 \icmladdress{Brown University,
             115 Waterman Street, Providence, RI 02906}
     
@@ -42,7 +42,7 @@
 
 % --- ABSTRACT ---
 \begin{abstract}
-The combinatorial explosion that plagues planning and reinforcement learning algorithms can be reversed using abstraction. For instance, prohibitively difficult task representations can be condensed so that solutions are tractably computable. In this work, we investigate a theoretical framework for approximate state abstraction that preserves near optimal behavior. Reinforcement learning agents using these abstractions may treat experiences that resemble each other as equivalent, and generalize knowledge to novel scenarios based on prior experiences. We present theoretical guarantees of the quality of value functions derived from three classes of approximate state abstraction. Additionally, we empirically evaluate the relationship between the degree of approximation and the degree of abstraction achieved, as well as the tradeoff between approximation magnitude and optimality of behavior.
+The combinatorial explosion that plagues planning and reinforcement-learning algorithms can be reversed using abstraction. For instance, prohibitively difficult task representations can be condensed so that solutions are tractably computable. In this work, we investigate a theoretical framework for approximate state abstraction that preserves near optimal behavior. Reinforcement learning agents using these abstractions may treat experiences that resemble each other as equivalent, and generalize knowledge to novel scenarios based on prior experiences. We present theoretical guarantees of the quality of value functions derived from three classes of approximate state abstraction. Additionally, we empirically evaluate the relationship between the degree of approximation and the degree of abstraction achieved, as well as the tradeoff between approximation magnitude and optimality of behavior.
 \end{abstract}
 
 % Set of actions within epsilon (Q*) is the same for two states? Better than boltzmann.
@@ -54,8 +54,8 @@ The combinatorial explosion that plagues planning and reinforcement learning alg
 \begin{itemize}
 \item Solving MDPs is P-Complete, where the dominant factor is $|\mathcal{S}|$.
 \item Sample complexity is {\it also} dominated by $|\mathcal{S}|$.
-\item So, in order to make MDPs with large $|\mathcal{S}|$ tractable, we can reduce the MDPs to a simpler form.
-\item In this work we show that compressing MDPs in a particular way allows for the transfer of bounded-error solutions between the compressed MDP and ground MDP.
+\item To make MDPs with large $|\mathcal{S}|$ tractable, we can reduce the MDPs to a simpler form.
+\item In this work, we show that compressing MDPs in a particular way allows for the transfer of bounded-error solutions between the compressed MDP and ground MDP.
 \item Q: Why approximate?
 \item A: Approximate can compress strictly more than compression based on equality
 \item A: Approximate compression requires the type of knowledge that we could imagine learning (i.e.. approximate knowledge)
@@ -147,7 +147,7 @@ Citation test~\cite{li2006towards}
 % Subsection: UpWorld
 \subsection{UpWorld}
 
-\dnote{As part of upworld we can include the result about the unbounded improvement in sample complexity (small lemma or something?)}
+\dnote{As part of UpWorld we can include the result about the unbounded improvement in sample complexity (small lemma or something?)}
 
 % Insert visual and/or stats on number of states and performance of VI solving the abstract MDP and evaluating the resulting policy on the original MDP
 
