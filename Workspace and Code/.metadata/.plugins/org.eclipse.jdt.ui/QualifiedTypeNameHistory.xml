@@ -40,4 +40,5 @@
 <fullyQualifiedTypeName name="graphStateAbstraction.UpWorldGenerator.UpWorldRF"/>
 <fullyQualifiedTypeName name="java.util.Random"/>
 <fullyQualifiedTypeName name="graphStateAbstraction.RandomMDPGenerator.RandomMDPRF"/>
+<fullyQualifiedTypeName name="graphStreamVisualizer.GraphStreamVisualizer"/>
 </qualifiedTypeNameHistroy>
