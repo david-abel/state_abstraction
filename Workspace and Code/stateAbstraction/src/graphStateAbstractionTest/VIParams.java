@@ -1,4 +1,4 @@
-package graphStateAbstraction;
+package graphStateAbstractionTest;
 
 public class VIParams {
 	public static int maxIterations = 1000;

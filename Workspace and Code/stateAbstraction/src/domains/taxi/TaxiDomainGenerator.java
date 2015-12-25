@@ -1,4 +1,4 @@
-package burlap.behavior.singleagent.learning.modellearning.rmax;
+package domains.taxi;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -7,17 +7,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import burlap.oomdp.core.objects.MutableObjectInstance;
+import burlap.oomdp.core.objects.ObjectInstance;
 import burlap.oomdp.auxiliary.DomainGenerator;
-import burlap.oomdp.auxiliary.common.StateYAMLParser;
 import burlap.oomdp.core.*;
 import burlap.oomdp.core.Attribute.AttributeType;
+import burlap.oomdp.core.states.MutableState;
+import burlap.oomdp.core.states.State;
 import burlap.oomdp.singleagent.Action;
+import burlap.oomdp.singleagent.FullActionModel;
+import burlap.oomdp.singleagent.GroundedAction;
+import burlap.oomdp.singleagent.RewardFunction;
 import burlap.oomdp.singleagent.SADomain;
+import burlap.oomdp.singleagent.common.SimpleAction.SimpleDeterministicAction;
 import burlap.oomdp.singleagent.explorer.VisualExplorer;
 import burlap.oomdp.visualizer.StaticPainter;
 import burlap.oomdp.visualizer.Visualizer;
 
-public class TaxiDomain implements DomainGenerator {
+public class TaxiDomainGenerator implements DomainGenerator {
 
 	public static final String								XATT = "xAtt";
 	public static final String								YATT = "yAtt";
@@ -168,12 +175,12 @@ public class TaxiDomain implements DomainGenerator {
 
 		
 		//ADD PFS
-		new TaxiDomain.wallNorth(WALLNORTHPF, domain, "");
-		new TaxiDomain.wallEast(WALLEASTPF, domain, "");
-		new TaxiDomain.wallSouth(WALLSOUTHPF, domain, "");
-		new TaxiDomain.wallWest(WALLWESTPF, domain, "");
-		new TaxiDomain.passengerInTaxi(PASSENGERINTAXI, domain, "");
-		new TaxiDomain.taxiAtPassenger(TAXIATPASSENGERPF, domain, "");
+		new TaxiDomainGenerator.wallNorth(WALLNORTHPF, domain, "");
+		new TaxiDomainGenerator.wallEast(WALLEASTPF, domain, "");
+		new TaxiDomainGenerator.wallSouth(WALLSOUTHPF, domain, "");
+		new TaxiDomainGenerator.wallWest(WALLWESTPF, domain, "");
+		new TaxiDomainGenerator.passengerInTaxi(PASSENGERINTAXI, domain, "");
+		new TaxiDomainGenerator.taxiAtPassenger(TAXIATPASSENGERPF, domain, "");
 
 		return domain;
 	}
@@ -183,9 +190,9 @@ public class TaxiDomain implements DomainGenerator {
 		int maxX = rand.nextInt(maxMaxX-minMinX) + minMinX;
 		int maxY = rand.nextInt(maxMaxX-minMinX) + minMinX;
 		
-		State s = new State();
+		State s = new MutableState();
 
-		ObjectInstance taxi = new ObjectInstance(domain.getObjectClass(TAXICLASS), "taxi");
+		ObjectInstance taxi = new MutableObjectInstance(domain.getObjectClass(TAXICLASS), "taxi");
 		s.addObject(taxi);
 
 		boolean usesFuel = domain.getAttribute(FUELATT) != null; 
@@ -235,10 +242,10 @@ public class TaxiDomain implements DomainGenerator {
 
 	}
 	
-	public static State getClassicState(Domain domain){
-		State s = new State();
+	public State getInitialState(Domain domain){
+		State s = new MutableState();
 
-		ObjectInstance taxi = new ObjectInstance(domain.getObjectClass(TAXICLASS), "taxi");
+		ObjectInstance taxi = new MutableObjectInstance(domain.getObjectClass(TAXICLASS), "taxi");
 		s.addObject(taxi);
 
 		boolean usesFuel = domain.getAttribute(FUELATT) != null; 
@@ -291,7 +298,7 @@ public class TaxiDomain implements DomainGenerator {
 	protected static void addNInstances(Domain domain, State s, String className, int n){
 		ObjectClass oc = domain.getObjectClass(className);
 		for(int i = 0; i < n; i++){
-			ObjectInstance o = new ObjectInstance(oc, className+i);
+			ObjectInstance o = new MutableObjectInstance(oc, className+i);
 			s.addObject(o);
 		}
 	}
@@ -319,7 +326,7 @@ public class TaxiDomain implements DomainGenerator {
 	 * @param lt
 	 */
 	public static void setLocation(State s, int i, int x, int y, int lt){
-		ObjectInstance l = s.getObjectsOfTrueClass(LOCATIONCLASS).get(i);
+		ObjectInstance l = s.getObjectsOfClass(LOCATIONCLASS).get(i);
 		l.setValue(XATT, x);
 		l.setValue(YATT, y);
 		l.setValue(LOCATIONATT, lt);
@@ -334,7 +341,7 @@ public class TaxiDomain implements DomainGenerator {
 	 * @param lt
 	 */
 	public static void setPassenger(State s, int i, int x, int y, int lt){
-		ObjectInstance p = s.getObjectsOfTrueClass(PASSENGERCLASS).get(i);
+		ObjectInstance p = s.getObjectsOfClass(PASSENGERCLASS).get(i);
 		p.setValue(XATT, x);
 		p.setValue(YATT, y);
 		p.setValue(LOCATIONATT, lt);
@@ -346,14 +353,14 @@ public class TaxiDomain implements DomainGenerator {
 	}
 
 	public static void setHWall(State s, int i, int wallMin, int wallMax, int wallOffset){
-		ObjectInstance w = s.getObjectsOfTrueClass(HWALLCLASS).get(i);
+		ObjectInstance w = s.getObjectsOfClass(HWALLCLASS).get(i);
 		w.setValue(WALLMINATT, wallMin);
 		w.setValue(WALLMAXATT, wallMax);
 		w.setValue(WALLOFFSETATT, wallOffset);
 	}
 
 	public static void setVWall(State s, int i, int wallMin, int wallMax, int wallOffset){
-		ObjectInstance w = s.getObjectsOfTrueClass(VWALLCLASS).get(i);
+		ObjectInstance w = s.getObjectsOfClass(VWALLCLASS).get(i);
 		w.setValue(WALLMINATT, wallMin);
 		w.setValue(WALLMAXATT, wallMax);
 		w.setValue(WALLOFFSETATT, wallOffset);
@@ -362,15 +369,15 @@ public class TaxiDomain implements DomainGenerator {
 	protected State move(State s, int dx, int dy){
 
 		ObjectInstance taxi = s.getFirstObjectOfClass(TAXICLASS);
-		int tx = taxi.getDiscValForAttribute(XATT);
-		int ty = taxi.getDiscValForAttribute(YATT);
+		int tx = taxi.getIntValForAttribute(XATT);
+		int ty = taxi.getIntValForAttribute(YATT);
 
 		int nx = tx+dx;
 		int ny = ty+dy;
 
 		//using fuel?
 		if(this.includeFuel){
-			int fuel = taxi.getDiscValForAttribute(FUELATT);
+			int fuel = taxi.getIntValForAttribute(FUELATT);
 			if(fuel == 0){
 				//no movement possible
 				return s;
@@ -383,7 +390,7 @@ public class TaxiDomain implements DomainGenerator {
 		//check for wall bounding
 
 		if(dx > 0){
-			List<ObjectInstance> vwalls = s.getObjectsOfTrueClass(VWALLCLASS);
+			List<ObjectInstance> vwalls = s.getObjectsOfClass(VWALLCLASS);
 			for(ObjectInstance wall : vwalls){
 				if(wallEast(tx, ty, wall)){
 					nx = tx;
@@ -392,7 +399,7 @@ public class TaxiDomain implements DomainGenerator {
 			}
 		}
 		else if(dx < 0){
-			List<ObjectInstance> vwalls = s.getObjectsOfTrueClass(VWALLCLASS);
+			List<ObjectInstance> vwalls = s.getObjectsOfClass(VWALLCLASS);
 			for(ObjectInstance wall : vwalls){
 				if(wallWest(tx, ty, wall)){
 					nx = tx;
@@ -401,7 +408,7 @@ public class TaxiDomain implements DomainGenerator {
 			}
 		}
 		else if(dy > 0){
-			List<ObjectInstance> hwalls = s.getObjectsOfTrueClass(HWALLCLASS);
+			List<ObjectInstance> hwalls = s.getObjectsOfClass(HWALLCLASS);
 			for(ObjectInstance wall : hwalls){
 				if(wallNorth(tx, ty, wall)){
 					ny = ty;
@@ -410,7 +417,7 @@ public class TaxiDomain implements DomainGenerator {
 			}
 		}
 		else if(dy < 0){
-			List<ObjectInstance> hwalls = s.getObjectsOfTrueClass(HWALLCLASS);
+			List<ObjectInstance> hwalls = s.getObjectsOfClass(HWALLCLASS);
 			for(ObjectInstance wall : hwalls){
 				if(wallSouth(tx, ty, wall)){
 					ny = ty;
@@ -425,9 +432,9 @@ public class TaxiDomain implements DomainGenerator {
 
 
 		//do we need to move a passenger as well?
-		List<ObjectInstance> passengers = s.getObjectsOfTrueClass(PASSENGERCLASS);
+		List<ObjectInstance> passengers = s.getObjectsOfClass(PASSENGERCLASS);
 		for(ObjectInstance p : passengers){
-			int inTaxi = p.getDiscValForAttribute(INTAXIATT);
+			int inTaxi = p.getIntValForAttribute(INTAXIATT);
 			if(inTaxi == 1){
 				p.setValue(XATT, nx);
 				p.setValue(YATT, ny);
@@ -448,13 +455,13 @@ public class TaxiDomain implements DomainGenerator {
 		@Override
 		public boolean isTrue(State s, String[] params) {
 			ObjectInstance taxi = s.getFirstObjectOfClass(TAXICLASS);
-			int tx = taxi.getDiscValForAttribute(XATT);
-			int ty = taxi.getDiscValForAttribute(YATT);
+			int tx = taxi.getIntValForAttribute(XATT);
+			int ty = taxi.getIntValForAttribute(YATT);
 
 
 			//check for wall bounding
 
-			List<ObjectInstance> vwalls = s.getObjectsOfTrueClass(VWALLCLASS);
+			List<ObjectInstance> vwalls = s.getObjectsOfClass(VWALLCLASS);
 			for(ObjectInstance wall : vwalls){
 				if(wallEast(tx, ty, wall)){
 					return true;
@@ -476,13 +483,13 @@ public class TaxiDomain implements DomainGenerator {
 		@Override
 		public boolean isTrue(State s, String[] params) {
 			ObjectInstance taxi = s.getFirstObjectOfClass(TAXICLASS);
-			int tx = taxi.getDiscValForAttribute(XATT);
-			int ty = taxi.getDiscValForAttribute(YATT);
+			int tx = taxi.getIntValForAttribute(XATT);
+			int ty = taxi.getIntValForAttribute(YATT);
 
 
 			//check for wall bounding
 
-			List<ObjectInstance> vwalls = s.getObjectsOfTrueClass(VWALLCLASS);
+			List<ObjectInstance> vwalls = s.getObjectsOfClass(VWALLCLASS);
 			for(ObjectInstance wall : vwalls){
 				if(wallWest(tx, ty, wall)){
 					return true;
@@ -503,13 +510,13 @@ public class TaxiDomain implements DomainGenerator {
 		@Override
 		public boolean isTrue(State s, String[] params) {
 			ObjectInstance taxi = s.getFirstObjectOfClass(TAXICLASS);
-			int tx = taxi.getDiscValForAttribute(XATT);
-			int ty = taxi.getDiscValForAttribute(YATT);
+			int tx = taxi.getIntValForAttribute(XATT);
+			int ty = taxi.getIntValForAttribute(YATT);
 
 
 			//check for wall bounding
 
-			List<ObjectInstance> hwalls = s.getObjectsOfTrueClass(HWALLCLASS);
+			List<ObjectInstance> hwalls = s.getObjectsOfClass(HWALLCLASS);
 			for(ObjectInstance wall : hwalls){
 				if(wallSouth(tx, ty, wall)){
 					return true;
@@ -530,13 +537,13 @@ public class TaxiDomain implements DomainGenerator {
 		@Override
 		public boolean isTrue(State s, String[] params) {
 			ObjectInstance taxi = s.getFirstObjectOfClass(TAXICLASS);
-			int tx = taxi.getDiscValForAttribute(XATT);
-			int ty = taxi.getDiscValForAttribute(YATT);
+			int tx = taxi.getIntValForAttribute(XATT);
+			int ty = taxi.getIntValForAttribute(YATT);
 
 
 			//check for wall bounding
 
-			List<ObjectInstance> hwalls = s.getObjectsOfTrueClass(HWALLCLASS);
+			List<ObjectInstance> hwalls = s.getObjectsOfClass(HWALLCLASS);
 			for(ObjectInstance wall : hwalls){
 				if(wallNorth(tx, ty, wall)){
 					return true;
@@ -557,9 +564,9 @@ public class TaxiDomain implements DomainGenerator {
 		public boolean isTrue(State s, String[] params) {
 			ObjectInstance taxi = s.getFirstObjectOfClass(TAXICLASS);
 			
-			List<ObjectInstance> passengers = s.getObjectsOfTrueClass(PASSENGERCLASS);
+			List<ObjectInstance> passengers = s.getObjectsOfClass(PASSENGERCLASS);
 			for (ObjectInstance pass : passengers) {
-				if (pass.getDiscValForAttribute(INTAXIATT) == 1) return true;
+				if (pass.getIntValForAttribute(INTAXIATT) == 1) return true;
 			}
 			return false;
 		}
@@ -574,13 +581,13 @@ public class TaxiDomain implements DomainGenerator {
 		@Override
 		public boolean isTrue(State s, String[] params) {
 			ObjectInstance taxi = s.getFirstObjectOfClass(TAXICLASS);
-			int taxiX = taxi.getDiscValForAttribute(XATT);
-			int taxiY = taxi.getDiscValForAttribute(YATT);
+			int taxiX = taxi.getIntValForAttribute(XATT);
+			int taxiY = taxi.getIntValForAttribute(YATT);
 
-			List<ObjectInstance> passengers = s.getObjectsOfTrueClass(PASSENGERCLASS);
+			List<ObjectInstance> passengers = s.getObjectsOfClass(PASSENGERCLASS);
 			for (ObjectInstance pass : passengers) {
-				int passX = pass.getDiscValForAttribute(XATT);
-				int passY = pass.getDiscValForAttribute(YATT);
+				int passX = pass.getIntValForAttribute(XATT);
+				int passY = pass.getIntValForAttribute(YATT);
 				if (taxiX == passX && taxiY == passY) return true;
 			}
 			return false;
@@ -588,47 +595,43 @@ public class TaxiDomain implements DomainGenerator {
 	}
 
 
-	public class MoveAction extends Action{
+	public class MoveAction extends SimpleDeterministicAction implements FullActionModel {
 
 		int dx;
 		int dy;
 
 		public MoveAction(String name, Domain domain, int dx, int dy){
-			super(name, domain, "");
+			super(name, domain);
 			this.dx = dx;
 			this.dy = dy;
 		}
 
 		@Override
-		protected State performActionHelper(State s, String[] params) {
+		protected State performActionHelper(State s,
+				GroundedAction groundedAction) {
 			return move(s, this.dx, this.dy);
 		}
-
-		@Override
-		public List<TransitionProbability> getTransitions(State s, String [] params){
-			return this.deterministicTransition(s, params);
-		}
-
 	}
 
 
-	public class PickupAction extends Action{
+	public class PickupAction extends SimpleDeterministicAction implements FullActionModel {
 
 		public PickupAction(Domain domain){
-			super(PICKUPACTION, domain, "");
+			super(PICKUPACTION, domain);
 		}
 
 		@Override
-		protected State performActionHelper(State s, String[] params) {
+		protected State performActionHelper(State s,
+				GroundedAction groundedAction) {
 
 			ObjectInstance taxi = s.getFirstObjectOfClass(TAXICLASS);
-			int tx = taxi.getDiscValForAttribute(XATT);
-			int ty = taxi.getDiscValForAttribute(YATT);
+			int tx = taxi.getIntValForAttribute(XATT);
+			int ty = taxi.getIntValForAttribute(YATT);
 
-			List<ObjectInstance> passengers = s.getObjectsOfTrueClass(PASSENGERCLASS);
+			List<ObjectInstance> passengers = s.getObjectsOfClass(PASSENGERCLASS);
 			for(ObjectInstance p : passengers){
-				int px = p.getDiscValForAttribute(XATT);
-				int py = p.getDiscValForAttribute(YATT);
+				int px = p.getIntValForAttribute(XATT);
+				int py = p.getIntValForAttribute(YATT);
 
 				if(tx == px && ty == py){
 					p.setValue(INTAXIATT, 1);
@@ -640,25 +643,21 @@ public class TaxiDomain implements DomainGenerator {
 			return s;
 		}
 
-		@Override
-		public List<TransitionProbability> getTransitions(State s, String [] params){
-			return this.deterministicTransition(s, params);
-		}
-
 	}
 
-	public class DropoffAction extends Action{
+	public class DropoffAction extends SimpleDeterministicAction implements FullActionModel {
 
 		public DropoffAction(Domain domain){
-			super(DROPOFFACTION, domain, "");
+			super(DROPOFFACTION, domain);
 		}
 
 		@Override
-		protected State performActionHelper(State s, String[] params) {
+		protected State performActionHelper(State s,
+				GroundedAction groundedAction) {
 
-			List<ObjectInstance> passengers = s.getObjectsOfTrueClass(PASSENGERCLASS);
+			List<ObjectInstance> passengers = s.getObjectsOfClass(PASSENGERCLASS);
 			for(ObjectInstance p : passengers){
-				int in = p.getDiscValForAttribute(INTAXIATT);
+				int in = p.getIntValForAttribute(INTAXIATT);
 				if(in == 1){
 					p.setValue(INTAXIATT, 0);
 					break;
@@ -668,38 +667,34 @@ public class TaxiDomain implements DomainGenerator {
 			return s;
 		}
 
-		@Override
-		public List<TransitionProbability> getTransitions(State s, String [] params){
-			return this.deterministicTransition(s, params);
-		}
-
 	}
 
 
-	public class FillupAction extends Action{
+	public class FillupAction extends SimpleDeterministicAction implements FullActionModel {
 
 		public FillupAction(Domain domain){
-			super(FILLUPACTION, domain, "");
+			super(FILLUPACTION, domain);
 		}
 
 
 		@Override
-		protected State performActionHelper(State s, String[] params) {
+		protected State performActionHelper(State s,
+				GroundedAction groundedAction) {
 
 			if(!includeFuel){
 				return s;
 			}
 
 			ObjectInstance taxi = s.getFirstObjectOfClass(TAXICLASS);
-			int tx = taxi.getDiscValForAttribute(XATT);
-			int ty = taxi.getDiscValForAttribute(YATT);
+			int tx = taxi.getIntValForAttribute(XATT);
+			int ty = taxi.getIntValForAttribute(YATT);
 
-			List<ObjectInstance> locations = s.getObjectsOfTrueClass(LOCATIONCLASS);
+			List<ObjectInstance> locations = s.getObjectsOfClass(LOCATIONCLASS);
 			for(ObjectInstance l : locations){
-				int lt = l.getDiscValForAttribute(LOCATIONATT);
+				int lt = l.getIntValForAttribute(LOCATIONATT);
 				if(lt == 0){
-					int lx = l.getDiscValForAttribute(XATT);
-					int ly = l.getDiscValForAttribute(YATT);
+					int lx = l.getIntValForAttribute(XATT);
+					int ly = l.getIntValForAttribute(YATT);
 					if(tx == lx && ty == ly){
 						taxi.setValue(FUELATT, maxFuel);
 					}
@@ -709,31 +704,24 @@ public class TaxiDomain implements DomainGenerator {
 			return s;
 		}
 
-		@Override
-		public List<TransitionProbability> getTransitions(State s, String [] params){
-			return this.deterministicTransition(s, params);
-		}
-
-
-
 	}
 
 
 	public static boolean wallEast(int tx, int ty, ObjectInstance wall){
-		int wallo = wall.getDiscValForAttribute(WALLOFFSETATT);
+		int wallo = wall.getIntValForAttribute(WALLOFFSETATT);
 		if(wallo == tx+1){
-			int wallmin = wall.getDiscValForAttribute(WALLMINATT);
-			int wallmax = wall.getDiscValForAttribute(WALLMAXATT);
+			int wallmin = wall.getIntValForAttribute(WALLMINATT);
+			int wallmax = wall.getIntValForAttribute(WALLMAXATT);
 			return ty >= wallmin && ty < wallmax;
 		}
 		return false;
 	}
 
 	public static boolean wallWest(int tx, int ty, ObjectInstance wall){
-		int wallo = wall.getDiscValForAttribute(WALLOFFSETATT);
+		int wallo = wall.getIntValForAttribute(WALLOFFSETATT);
 		if(wallo == tx){
-			int wallmin = wall.getDiscValForAttribute(WALLMINATT);
-			int wallmax = wall.getDiscValForAttribute(WALLMAXATT);
+			int wallmin = wall.getIntValForAttribute(WALLMINATT);
+			int wallmax = wall.getIntValForAttribute(WALLMAXATT);
 			return ty >= wallmin && ty < wallmax;
 		}
 		return false;
@@ -741,20 +729,20 @@ public class TaxiDomain implements DomainGenerator {
 
 
 	public static boolean wallNorth(int tx, int ty, ObjectInstance wall){
-		int wallo = wall.getDiscValForAttribute(WALLOFFSETATT);
+		int wallo = wall.getIntValForAttribute(WALLOFFSETATT);
 		if(wallo == ty+1){
-			int wallmin = wall.getDiscValForAttribute(WALLMINATT);
-			int wallmax = wall.getDiscValForAttribute(WALLMAXATT);
+			int wallmin = wall.getIntValForAttribute(WALLMINATT);
+			int wallmax = wall.getIntValForAttribute(WALLMAXATT);
 			return tx >= wallmin && tx < wallmax;
 		}
 		return false;
 	}
 
 	public static boolean wallSouth(int tx, int ty, ObjectInstance wall){
-		int wallo = wall.getDiscValForAttribute(WALLOFFSETATT);
+		int wallo = wall.getIntValForAttribute(WALLOFFSETATT);
 		if(wallo == ty){
-			int wallmin = wall.getDiscValForAttribute(WALLMINATT);
-			int wallmax = wall.getDiscValForAttribute(WALLMAXATT);
+			int wallmin = wall.getIntValForAttribute(WALLMINATT);
+			int wallmax = wall.getIntValForAttribute(WALLMAXATT);
 			return tx >= wallmin && tx < wallmax;
 		}
 		return false;
@@ -769,85 +757,63 @@ public class TaxiDomain implements DomainGenerator {
 	 */
 	public static void main(String[] args) {
 
-		TaxiDomain dg = new TaxiDomain();
+		TaxiDomainGenerator dg = new TaxiDomainGenerator();
 		dg.includeFuel = false;
 		Domain d = dg.generateDomain();
-		State s = TaxiDomain.getRandomState(d);
+		State s = TaxiDomainGenerator.getRandomState(d);
 
 		//TerminalExplorer exp = new TerminalExplorer(d);
 		//exp.exploreFromState(s);
 
 
-		StateYAMLParser sp = new StateYAMLParser(d);
-		String sstr = sp.stateToString(s);
-		//System.out.println(sstr);
-
-		Visualizer v = TaxiVisualizer.getVisualizer(dg.maxX, dg.maxY);
-		v.getStateRenderLayer().addStaticPainter(new VictoryText());
-		VisualExplorer exp = new VisualExplorer(d, v, s);
-
-
-		exp.addKeyAction("w", TaxiDomain.NORTHACTION);
-		exp.addKeyAction("s", TaxiDomain.SOUTHACTION);
-		exp.addKeyAction("d", TaxiDomain.EASTACTION);
-		exp.addKeyAction("a", TaxiDomain.WESTACTION);
-		exp.addKeyAction("p", TaxiDomain.PICKUPACTION);
-		exp.addKeyAction(";", TaxiDomain.DROPOFFACTION);
-		exp.addKeyAction("f", TaxiDomain.FILLUPACTION);
-		//		
-		//		
-		//		exp.addKeyAction("1", TaxiDomain.NORTHACTION);
-		//		exp.addKeyAction("2", TaxiDomain.SOUTHACTION);
-		//		exp.addKeyAction("3", TaxiDomain.EASTACTION);
-		//		exp.addKeyAction("4", TaxiDomain.WESTACTION);
-		//		exp.addKeyAction("5", TaxiDomain.PICKUPACTION);
-		//		exp.addKeyAction("6", TaxiDomain.DROPOFFACTION);
-		//		exp.addKeyAction("7", TaxiDomain.FILLUPACTION);
-
-		exp.initGUI();
-
 
 	}
 
-
-
-	public static class VictoryText implements StaticPainter{
+	
+	public static class TaxiRF implements RewardFunction {
 
 		@Override
-		public void paint(Graphics2D g2, State s, float cWidth, float cHeight) {
+		public double reward(State s, GroundedAction a, State sprime) {
+			List<ObjectInstance> allPassengers = sprime.getObjectsOfClass(PASSENGERCLASS);
 			
-
-			ObjectInstance p = s.getFirstObjectOfClass(PASSENGERCLASS);
-			int px = p.getDiscValForAttribute(XATT);
-			int py = p.getDiscValForAttribute(YATT);
-			int intaxi = p.getDiscValForAttribute(INTAXIATT);
-
-			if(intaxi == 0 && px == 0 && py == 4){
-
-				g2.setColor(Color.black);
-				g2.setFont(new Font("TimesRoman", Font.PLAIN, 200));
-				g2.drawString("Victory!", 70, 400);
-
+			// Check to see if all passengers are in their goal locations.
+			int numPassengersInPlace = 0;
+			for(ObjectInstance passenger : allPassengers) {
+				int xLoc = passenger.getIntValForAttribute(XATT);
+				int yLoc = passenger.getIntValForAttribute(YATT);
+				int agentDestType = passenger.getIntValForAttribute(LOCATIONATT);
+				List<ObjectInstance> goalLocations = sprime.getObjectsOfClass(LOCATIONCLASS);
+				for (ObjectInstance goalLoc :goalLocations) {
+						int goalX = goalLoc.getIntValForAttribute(XATT);
+						int goalY = goalLoc.getIntValForAttribute(YATT);
+						if (xLoc == goalX && yLoc == goalY && goalLoc.getIntValForAttribute(LOCATIONATT) == agentDestType) {
+							numPassengersInPlace++;
+						}
+					}
 			}
 			
+			if (numPassengersInPlace == allPassengers.size()) {
+				// If all passengers in their destinates, return positive reward.
+				return 100;
+			}
+			else {
+				return -1;
+			}
 		}
-
-
-
-
+		
 	}
 
 	public static class TaxiTF implements TerminalFunction {
 
 		private boolean passengerAtLocation(ObjectInstance passenger, State state) {
-			int xLoc = passenger.getDiscValForAttribute(XATT);
-			int yLoc = passenger.getDiscValForAttribute(YATT);
-			int agentDestType = passenger.getDiscValForAttribute(LOCATIONATT);
-			List<ObjectInstance> goalLocations = state.getObjectsOfTrueClass(LOCATIONCLASS);
+			int xLoc = passenger.getIntValForAttribute(XATT);
+			int yLoc = passenger.getIntValForAttribute(YATT);
+			int agentDestType = passenger.getIntValForAttribute(LOCATIONATT);
+			List<ObjectInstance> goalLocations = state.getObjectsOfClass(LOCATIONCLASS);
 			for (ObjectInstance goalLoc :goalLocations) {
-				int goalX = goalLoc.getDiscValForAttribute(XATT);
-				int goalY = goalLoc.getDiscValForAttribute(YATT);
-				if (xLoc == goalX && yLoc == goalY && goalLoc.getDiscValForAttribute(LOCATIONATT) == agentDestType) {
+				int goalX = goalLoc.getIntValForAttribute(XATT);
+				int goalY = goalLoc.getIntValForAttribute(YATT);
+				if (xLoc == goalX && yLoc == goalY && goalLoc.getIntValForAttribute(LOCATIONATT) == agentDestType) {
 					return true;
 				}
 			}
@@ -856,9 +822,9 @@ public class TaxiDomain implements DomainGenerator {
 
 		@Override
 		public boolean isTerminal(State s) {
-			List<ObjectInstance> passengers = s.getObjectsOfTrueClass(PASSENGERCLASS);
+			List<ObjectInstance> passengers = s.getObjectsOfClass(PASSENGERCLASS);
 			for (ObjectInstance passenger: passengers) {
-				if (passenger.getDiscValForAttribute(INTAXIATT) == 1 || !passengerAtLocation(passenger, s)) return false;
+				if (passenger.getIntValForAttribute(INTAXIATT) == 1 || !passengerAtLocation(passenger, s)) return false;
 			}
 			return true;
 		}

@@ -1,6 +1,6 @@
-package graphStateAbstraction;
+package graphStateAbstractionTest;
 
-import domains.NStateChainGenerator;
+import domains.nchain.NChainGenerator;
 import stateAbstractor.PhiModel;
 import stateAbstractor.StateAbstractor;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
@@ -30,8 +30,8 @@ public class Test {
 		// Ground MDP
 		int n = 5;
 		HashableStateFactory hf = new SimpleHashableStateFactory();
-		GraphDefinedDomain dg = NStateChainGenerator.getNStateChain(n);
-		RewardFunction rf = new NStateChainGenerator.nStateChainRF(n);
+		GraphDefinedDomain dg = NChainGenerator.getNStateChain(n);
+		RewardFunction rf = new NChainGenerator.nStateChainRF(n);
 		Domain d = dg.generateDomain();
 		ValueIteration vi = new ValueIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations);
 		State gInitialState = GraphDefinedDomain.getState(d, 0);

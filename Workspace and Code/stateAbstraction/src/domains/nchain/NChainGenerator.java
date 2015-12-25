@@ -10,7 +10,7 @@ import burlap.oomdp.singleagent.RewardFunction;
  * @author Dhershkowitz
  *
  */
-public class NStateChainGenerator {
+public class NChainGenerator {
 	/**
 	 * 
 	 * @param totalNumStates

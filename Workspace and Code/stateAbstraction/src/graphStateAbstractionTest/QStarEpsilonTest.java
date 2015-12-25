@@ -1,14 +1,14 @@
-package graphStateAbstraction;
+package graphStateAbstractionTest;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import domains.trench.GraphTrenchRF;
-import domains.trench.GraphTrenchTF;
+import domains.GraphRF;
+import domains.GraphTF;
 import domains.trench.TrenchDomainToGraphDomain;
-import domains.trench.TrenchGenerator;
-import domains.trench.TrenchGenerator.TrenchRF;
-import domains.trench.TrenchGenerator.TrenchTF;
+import domains.trench.TrenchDomainGenerator;
+import domains.trench.TrenchDomainGenerator.TrenchRF;
+import domains.trench.TrenchDomainGenerator.TrenchTF;
 import stateAbstractor.PhiSAReal;
 import stateAbstractor.StateAbstractor;
 import SARealGenerators.qValueGenerator;
@@ -32,7 +32,7 @@ public class QStarEpsilonTest {
 	public static class EpsilonToNumStatesTuple {
 		private double eps;
 		private int numStates;
-		private double valOfInitialState;
+		private double valOfInitialState; // NOW STORES THE DELTA BETWEEN THE VALUE OF GROUND AND ABSTRACT
 		public EpsilonToNumStatesTuple(double epsilon, int numStates, double valOfInitialState) {
 			this.eps = epsilon;
 			this.numStates = numStates;
@@ -42,15 +42,26 @@ public class QStarEpsilonTest {
 		public String toString() {
 			return eps + "\t" + numStates + "\t" + valOfInitialState;
 		}
+		
+		public double getEpsilon() {
+			return this.eps;
+		}
+		
+		public int getNumStates() {
+			return this.numStates;
+		}
+		
+		public double getValOfInitState() {
+			return this.valOfInitialState;
+		}
 	}
 
 
-	public static List<EpsilonToNumStatesTuple> testQPhiStateReduction(GraphDefinedDomain dg, RewardFunction rf, TerminalFunction tf, int initStateID, double startEpsilon, double endEpsilon) {
+
+	public static List<EpsilonToNumStatesTuple> testQPhiStateReduction(GraphDefinedDomain dg, RewardFunction rf, TerminalFunction tf, int initStateID, double startEpsilon, double endEpsilon, double epsilonIncrement) {
 		List<EpsilonToNumStatesTuple> toReturn = new ArrayList<EpsilonToNumStatesTuple>();
 
-		for (double epsilon = startEpsilon; epsilon < endEpsilon; epsilon = epsilon*2) {
-
-			//VI Params
+		for (double epsilon = startEpsilon; epsilon < endEpsilon; epsilon = epsilon + epsilonIncrement) {
 
 			// Ground MDP
 			int n = 100;
@@ -80,7 +91,7 @@ public class QStarEpsilonTest {
 			PI.planFromState(gInitialState);
 			double valueOfInitialState = PI.value(gInitialState);
 
-			EpsilonToNumStatesTuple toAdd = new EpsilonToNumStatesTuple(epsilon, numAbstractStates, valueOfInitialState);
+			EpsilonToNumStatesTuple toAdd = new EpsilonToNumStatesTuple(epsilon, numAbstractStates, Math.abs(valueOfInitialState - vi.value(gInitialState)));
 			toReturn.add(toAdd);
 
 		}	
@@ -122,16 +133,16 @@ public class QStarEpsilonTest {
 		int height = 3;
 		int width = 3;
 		
-		TrenchGenerator gen = new TrenchGenerator(height, width);
+		TrenchDomainGenerator gen = new TrenchDomainGenerator(height, width);
 		
 		TrenchDomainToGraphDomain graphTrenchMaker = new TrenchDomainToGraphDomain(gen);
 		GraphDefinedDomain trenchGraphDefinedDomain = graphTrenchMaker.createGraphDomain();
-		RewardFunction graphRF = new GraphTrenchRF(graphTrenchMaker.goalStateIDs);
-		TerminalFunction graphTF = new GraphTrenchTF(graphTrenchMaker.goalStateIDs);
+		RewardFunction graphRF = new GraphRF(graphTrenchMaker.goalStateIDs);
+		TerminalFunction graphTF = new GraphTF(graphTrenchMaker.goalStateIDs);
 		
 		double trenchStartEpsilon = 0.64;
-		double trenchEndEpsilon = 500; 
-		List<EpsilonToNumStatesTuple> trenchResults = testQPhiStateReduction(trenchGraphDefinedDomain, graphRF, graphTF, graphTrenchMaker.initStateID, trenchStartEpsilon, trenchEndEpsilon);
+		double trenchEndEpsilon = 25; 
+		List<EpsilonToNumStatesTuple> trenchResults = testQPhiStateReduction(trenchGraphDefinedDomain, graphRF, graphTF, graphTrenchMaker.initStateID, trenchStartEpsilon, trenchEndEpsilon, 2.0);
 		System.out.println("trenchResults: ");
 //		DPrint.mode(0);
 		for (EpsilonToNumStatesTuple x : trenchResults) {

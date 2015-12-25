@@ -1,4 +1,4 @@
-package graphStateAbstraction;
+package graphStateAbstractionTest;
 
 import java.util.Random;
 
