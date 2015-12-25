@@ -1,6 +1,7 @@
-/SARealGenerators/
-/domains/
-/graphStateAbstraction/
-/graphStreamVisualizer/
-/lib/
-/stateAbstractor/
+/domains
+/graphStateAbstraction
+/SARealGenerators
+/graphStateAbstractionTest
+/graphStreamVisualizer
+/experiments
+/plotting
