@@ -61,6 +61,8 @@ public class QStarEpsilonTest {
 	public static List<EpsilonToNumStatesTuple> testQPhiStateReduction(GraphDefinedDomain dg, RewardFunction rf, TerminalFunction tf, State initGraphState, double startEpsilon, double endEpsilon, double epsilonIncrement) {
 		List<EpsilonToNumStatesTuple> toReturn = new ArrayList<EpsilonToNumStatesTuple>();
 
+		int numOriginalStates = dg.getNumNodes();
+		
 		for (double epsilon = startEpsilon; epsilon < endEpsilon; epsilon = epsilon + epsilonIncrement) {
 
 			// Ground MDP
@@ -89,7 +91,7 @@ public class QStarEpsilonTest {
 
 			//Gather up values for this test iteration
 			int numAbstractStates = aVi.getAllStates().size();
-			System.out.println("Num abstract states: " + numAbstractStates + ", " + epsilon);
+			System.out.println("Num abstract states (eps): " + numAbstractStates + " (" + epsilon + ")");
 
 			Policy groundPolicyFromAbstractPolicy = qPhi.getPolicyForGroundMDP(abstractPolicy, absD, d);
 			PolicyIteration abstractPI = new PolicyIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations, 1);
@@ -97,14 +99,16 @@ public class QStarEpsilonTest {
 			abstractPI.planFromState(initGraphState);
 			double valueOfInitialState = abstractPI.value(initGraphState);
 
-			System.out.println("Val of abstract init: " + valueOfInitialState);
-			System.out.println("Val of ground init: " + valueOfInitGroundState + "\n");
+			System.out.println("\tVal of abstract init: " + valueOfInitialState);
+			System.out.println("\tVal of ground init: " + valueOfInitGroundState + "\n");
 			
 			
 			EpsilonToNumStatesTuple toAdd = new EpsilonToNumStatesTuple(epsilon, numAbstractStates, Math.abs(valueOfInitGroundState - valueOfInitialState));
 			toReturn.add(toAdd);
 
-		}	
+		}
+		
+		System.out.println("Num Original State: " + numOriginalStates);
 		return toReturn;
 	}
 
