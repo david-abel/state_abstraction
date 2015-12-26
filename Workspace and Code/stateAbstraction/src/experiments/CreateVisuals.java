@@ -21,19 +21,35 @@ import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 import domains.GraphRF;
 import domains.GraphTF;
 import domains.NormalDomainToGraphDomain;
-import domains.nchain.NStateChainGenerator;
+import domains.nchain.NChainGenerator;
+import domains.taxi.TaxiDomainGenerator;
 import domains.trench.TrenchDomainGenerator;
 import domains.upworld.UpWorldGenerator;
 
+/**
+ * Imeplementation to visualize an arbitrary MDP domain as a graph
+ * and for compressing under any of our approximate abstraction schemes
+ * (and visualizing).
+ * @author David Abel.
+ *
+ */
 public class CreateVisuals {
 
+	/**
+	 * Function that compresses a GraphDefinedDomain under phi_{Q^*}, for the given epsilon.
+	 * @param graphDefinedDomain
+	 * @param graphTF
+	 * @param graphRF
+	 * @param initGraphState
+	 * @param epsilon
+	 */
 	public static void compressAndVisualizeMDP(GraphDefinedDomain graphDefinedDomain, TerminalFunction graphTF, RewardFunction graphRF, State initGraphState, double epsilon) {
 		// Retrieve the graph domain.
 		Domain graphDomain = graphDefinedDomain.generateDomain();
 		
 		// Run vi to compute Q*.
 		ValueIteration vi = new ValueIteration(graphDomain, graphRF, graphTF, VIParams.gamma, new SimpleHashableStateFactory(), VIParams.maxDelta, VIParams.maxIterations);
-		Policy groundPolicy = vi.planFromState(initGraphState);
+		Policy gPi = vi.planFromState(initGraphState);
 		
 		// Abstract the MDP.
 		qValueGenerator qGen = new qValueGenerator(graphDomain, graphRF, initGraphState, graphTF);
@@ -41,7 +57,7 @@ public class CreateVisuals {
 		GraphDefinedDomain abstractDG = qPhi.abstractMDP(graphDefinedDomain, graphRF);
 		RewardFunction abstractRF = qPhi.getRewardFunction();
 		Domain abstractDomain = abstractDG.generateDomain();
-		ValueIteration aVi = new ValueIteration(abstractDomain, abstractRF, new NullTermination(), VIParams.gamma, new SimpleHashableStateFactory(), VIParams.maxDelta, VIParams.maxIterations);
+		ValueIteration aVi = new ValueIteration(abstractDomain, abstractRF, graphTF, VIParams.gamma, new SimpleHashableStateFactory(), VIParams.maxDelta, VIParams.maxIterations);
 		State aInitialState =  qPhi.getAbstractInitialState(abstractDomain, initGraphState);
 		GreedyQPolicy abstractPolicy = aVi.planFromState(aInitialState);
 		
@@ -59,6 +75,15 @@ public class CreateVisuals {
 		abstractMDPVisualizer.render();
 	}
 	
+	/**
+	 * Function that compresses an arbitrary DomainGenerator by first converting it into a GraphDefinedDomain
+	 * And then compresses and visualizes.
+	 * @param gen
+	 * @param tf
+	 * @param rf
+	 * @param initialState
+	 * @param epsilon
+	 */
 	public static void convertCompressAndVisualizeMDP(DomainGenerator gen, TerminalFunction tf, RewardFunction rf, State initialState, double epsilon) {
 		
 		// Convert to graph domain.
@@ -75,8 +100,9 @@ public class CreateVisuals {
 	
 	public static void main(String[] args) {
 		
+		// Change the text here to switch between visuals.
 		String domainToVisualize = "NCHAIN"; // One of "TRENCH", "UPWORLD", "NCHAIN", or add your own.
-		double epsilon = 2;
+		double epsilon = 0.0;
 		
 		if (domainToVisualize == "TRENCH") {
 			// Create trench domain.
@@ -92,7 +118,7 @@ public class CreateVisuals {
 		else if (domainToVisualize == "UPWORLD") {
 			// Create upworld domain.
 			int height = 10;
-			int width = 6;
+			int width = 4;
 			GraphDefinedDomain gen = UpWorldGenerator.getUPWorld(width, height);
 			Domain d = gen.generateDomain();
 			State initialState = GraphDefinedDomain.getState(d, 0);
@@ -100,14 +126,23 @@ public class CreateVisuals {
 			RewardFunction rf = new UpWorldGenerator.UpWorldRF();
 			compressAndVisualizeMDP((GraphDefinedDomain) gen, tf, rf, initialState, epsilon);
 		}
+		else if (domainToVisualize == "TAXI") {
+			// Create taxi domain.
+			TaxiDomainGenerator taxiGen = new TaxiDomainGenerator();
+			Domain d = taxiGen.generateDomain();
+			TerminalFunction tf = new TaxiDomainGenerator.TaxiTF();
+			RewardFunction rf = new TaxiDomainGenerator.TaxiRF();
+			State initialTaxiState = taxiGen.getInitialState(d);
+			convertCompressAndVisualizeMDP(taxiGen, tf, rf, initialTaxiState, epsilon);
+		}
 		else {
 			// Create nchain domain.
-			int numStates = 10;
-			GraphDefinedDomain gen = NStateChainGenerator.getNStateChain(numStates);
+			int numStates = 20;
+			GraphDefinedDomain gen = NChainGenerator.getNStateChain(numStates);
 			Domain d = gen.generateDomain();
 			State initialState = GraphDefinedDomain.getState(d, 0);
 			TerminalFunction tf = new NullTermination();
-			RewardFunction rf = new NStateChainGenerator.nStateChainRF(numStates);
+			RewardFunction rf = new NChainGenerator.nStateChainRF(numStates);
 			compressAndVisualizeMDP(gen, tf, rf, initialState, epsilon);
 		}
 		

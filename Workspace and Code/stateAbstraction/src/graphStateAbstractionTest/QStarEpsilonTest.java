@@ -58,40 +58,50 @@ public class QStarEpsilonTest {
 
 
 
-	public static List<EpsilonToNumStatesTuple> testQPhiStateReduction(GraphDefinedDomain dg, RewardFunction rf, TerminalFunction tf, int initStateID, double startEpsilon, double endEpsilon, double epsilonIncrement) {
+	public static List<EpsilonToNumStatesTuple> testQPhiStateReduction(GraphDefinedDomain dg, RewardFunction rf, TerminalFunction tf, State initGraphState, double startEpsilon, double endEpsilon, double epsilonIncrement) {
 		List<EpsilonToNumStatesTuple> toReturn = new ArrayList<EpsilonToNumStatesTuple>();
 
 		for (double epsilon = startEpsilon; epsilon < endEpsilon; epsilon = epsilon + epsilonIncrement) {
 
 			// Ground MDP
-			int n = 100;
 			HashableStateFactory hf = new SimpleHashableStateFactory();
 			Domain d = dg.generateDomain();
 			ValueIteration vi = new ValueIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations);
-			State gInitialState = GraphDefinedDomain.getState(d, initStateID);
-			Policy gPol = vi.planFromState(gInitialState);	
 
+			GreedyQPolicy groundPolicy = vi.planFromState(initGraphState);
+			PolicyIteration PI = new PolicyIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations, 1);
+			PI.setPolicyToEvaluate(groundPolicy);
+			PI.planFromState(initGraphState);
+			double valueOfInitGroundState = PI.value(initGraphState);
+			
 			// Abstract MDP VI with a PhiQ* for abstraction
-			qValueGenerator qGen = new qValueGenerator(d, rf, gInitialState, tf);
+			qValueGenerator qGen = new qValueGenerator(d, rf, initGraphState, tf);
 			StateAbstractor qPhi = new PhiSAReal(qGen, epsilon, d.getActions());
-			HashableStateFactory hfA = new SimpleHashableStateFactory();
 			GraphDefinedDomain absDG = qPhi.abstractMDP(dg, rf);
 			RewardFunction rfA = qPhi.getRewardFunction();
-			Domain absD= absDG.generateDomain();
-			ValueIteration aVi = new ValueIteration(absD, rfA, tf, VIParams.gamma, hfA, VIParams.maxDelta, VIParams.maxIterations);
-			State aInitialState =  qPhi.getAbstractInitialState(absD, gInitialState);
+			Domain absD = absDG.generateDomain();
+			ValueIteration aVi = new ValueIteration(absD, rfA, tf, VIParams.gamma, new SimpleHashableStateFactory(), VIParams.maxDelta, VIParams.maxIterations);
+
+			
+			
+			State aInitialState =  qPhi.getAbstractInitialState(absD, initGraphState);
 			GreedyQPolicy abstractPolicy = aVi.planFromState(aInitialState);	
 
 			//Gather up values for this test iteration
 			int numAbstractStates = aVi.getAllStates().size();
+			System.out.println("Num abstract states: " + numAbstractStates + ", " + epsilon);
 
 			Policy groundPolicyFromAbstractPolicy = qPhi.getPolicyForGroundMDP(abstractPolicy, absD, d);
-			PolicyIteration PI = new PolicyIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations, 1);
-			PI.setPolicyToEvaluate(groundPolicyFromAbstractPolicy);
-			PI.planFromState(gInitialState);
-			double valueOfInitialState = PI.value(gInitialState);
+			PolicyIteration abstractPI = new PolicyIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations, 1);
+			abstractPI.setPolicyToEvaluate(groundPolicyFromAbstractPolicy);
+			abstractPI.planFromState(initGraphState);
+			double valueOfInitialState = abstractPI.value(initGraphState);
 
-			EpsilonToNumStatesTuple toAdd = new EpsilonToNumStatesTuple(epsilon, numAbstractStates, Math.abs(valueOfInitialState - vi.value(gInitialState)));
+			System.out.println("Val of abstract init: " + valueOfInitialState);
+			System.out.println("Val of ground init: " + valueOfInitGroundState + "\n");
+			
+			
+			EpsilonToNumStatesTuple toAdd = new EpsilonToNumStatesTuple(epsilon, numAbstractStates, Math.abs(valueOfInitGroundState - valueOfInitialState));
 			toReturn.add(toAdd);
 
 		}	
@@ -137,12 +147,14 @@ public class QStarEpsilonTest {
 		
 		TrenchDomainToGraphDomain graphTrenchMaker = new TrenchDomainToGraphDomain(gen);
 		GraphDefinedDomain trenchGraphDefinedDomain = graphTrenchMaker.createGraphDomain();
+		Domain d = trenchGraphDefinedDomain.generateDomain();
+		
 		RewardFunction graphRF = new GraphRF(graphTrenchMaker.goalStateIDs);
 		TerminalFunction graphTF = new GraphTF(graphTrenchMaker.goalStateIDs);
-		
+		State initGraphState = GraphDefinedDomain.getState(d, graphTrenchMaker.initStateID);
 		double trenchStartEpsilon = 0.64;
 		double trenchEndEpsilon = 25; 
-		List<EpsilonToNumStatesTuple> trenchResults = testQPhiStateReduction(trenchGraphDefinedDomain, graphRF, graphTF, graphTrenchMaker.initStateID, trenchStartEpsilon, trenchEndEpsilon, 2.0);
+		List<EpsilonToNumStatesTuple> trenchResults = testQPhiStateReduction(trenchGraphDefinedDomain, graphRF, graphTF, initGraphState, trenchStartEpsilon, trenchEndEpsilon, 2.0);
 		System.out.println("trenchResults: ");
 //		DPrint.mode(0);
 		for (EpsilonToNumStatesTuple x : trenchResults) {
