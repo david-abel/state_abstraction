@@ -37,12 +37,16 @@ def parseResultsFile(resultsFile):
 
 	return epsilons, numStates, groundStateVals, abstractStateVals
 
-def plot(xData, yData, yAxisLabel, taskName, scatter=False, xAxisLabel="Epsilon"):
+def plot(xData, yData, yAxisLabel, taskName, scatter=False, xAxisLabel="Epsilon", epsilons=[]):
 	
 	if scatter:
 		# Scatter plot.
-		colors = np.random.rand(len(xData))
-		plt.scatter(xData, yData, s=64, c=colors, alpha=0.5)
+		
+
+		for i in xrange(len(xData)):
+			plt.scatter(xData[i], yData[i], s=(epsilons[i]**2+1)*20, alpha=0.5)
+
+		
 	else: 
 		# Line plot.
 		plt.plot(xData, yData, marker="o", color="black")
@@ -80,7 +84,7 @@ def makePlot(taskName):
 	# Plot.
 	plot(epsilons, numStates, "Num States", taskName)
 	plot(epsilons, performances, "Abstract vs. Ground Init State Value", taskName)
-	plot(performances, numStates, "Num States", taskName, scatter=True, xAxisLabel="Abstract vs. Ground Init State Value")
+	plot(abstractStateVals, numStates, "Num States", taskName, scatter=True, xAxisLabel="Abstract Policy Value", epsilons=epsilons)
 
 def main():
 
