@@ -57,6 +57,7 @@ public class EpsilonExperiments {
 		List<Integer> numStates = new ArrayList<Integer>();
 		
 		
+		clearOldResultsFile(taskName);
 		
 		System.out.println("results: ");
 		for (EpsilonToNumStatesTuple x : epsilonAndNumStatesPairs) {
@@ -67,6 +68,18 @@ public class EpsilonExperiments {
 		}
 		
 		// Now make the plot...
+	}
+	
+	private static void clearOldResultsFile(String taskName) {
+		FileWriter fileOut;
+		try {
+			fileOut = new FileWriter(resultsDir + "/" + taskName + "/" + taskName + ".results", false);
+			fileOut.write("");
+			fileOut.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private static void writeDataPointToFile(EpsilonToNumStatesTuple x, String taskName) {
@@ -104,7 +117,7 @@ public class EpsilonExperiments {
 		Domain oldTrenchDomain = trenchGen.generateDomain();
 		State initialTrenchState = trenchGen.getInitialState(oldTrenchDomain);
 //		resultsFile = resultsFile + "trench/";
-//		compressAndGenEpsilonResults(trenchGen, trenchTF, trenchRF, initialTrenchState, "trench");
+//		
 		
 		// Create taxi domain.
 		TaxiDomainGenerator taxiGen = new TaxiDomainGenerator();
@@ -112,9 +125,6 @@ public class EpsilonExperiments {
 		RewardFunction taxiRF = new TaxiDomainGenerator.TaxiRF();
 		Domain oldTaxiDomain = taxiGen.generateDomain();
 		State initialTaxiState = taxiGen.getInitialState(oldTaxiDomain);
-//		resultsFile = resultsFile + "taxi/";
-//		generateEpsilonResults(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi");
-		
 		
 		// Create upworld domain.
 		int upWorldHeight = 10;
@@ -124,17 +134,31 @@ public class EpsilonExperiments {
 		State initialUpWorldState = GraphDefinedDomain.getState(upWorldDomain, 0);
 		TerminalFunction upWorldTF = new NullTermination();
 		RewardFunction upWorldRF = new UpWorldGenerator.UpWorldRF();
-		generateEpsilonResults(upWorldGen, upWorldTF, upWorldRF, initialUpWorldState, "upworld");
 		
 		
 		// Create nchain domain.
-		int numStates = 20;
+		int numStates = 50;
 		GraphDefinedDomain nChainGen = NChainGenerator.getNStateChain(numStates);
 		Domain nChainDomain = nChainGen.generateDomain();
 		State initialNChainState = GraphDefinedDomain.getState(nChainDomain, 0);
 		TerminalFunction nChainTF = new NullTermination();
 		RewardFunction nChainRF = new NChainGenerator.nStateChainRF(numStates);
-//		generateEpsilonResults(nChainGen, nChainTF, nChainRF, initialNChainState, "nchain");
 
+		String task = "TAXI"; // NCHAIN, TRENCH, TAXI, UPWORLD
+		
+		if (task == "NCHAIN") {
+			generateEpsilonResults(nChainGen, nChainTF, nChainRF, initialNChainState, "nchain");
+		}
+		else if (task == "TRENCH") {
+			compressAndGenEpsilonResults(trenchGen, trenchTF, trenchRF, initialTrenchState, "trench");
+		}
+		else if (task == "TAXI") {
+			compressAndGenEpsilonResults(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi");
+		}
+		else {
+			generateEpsilonResults(upWorldGen, upWorldTF, upWorldRF, initialUpWorldState, "upworld");
+		}
+		
+		
 	}
 }

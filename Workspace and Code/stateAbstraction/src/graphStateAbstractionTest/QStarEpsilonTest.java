@@ -32,15 +32,19 @@ public class QStarEpsilonTest {
 	public static class EpsilonToNumStatesTuple {
 		private double eps;
 		private int numStates;
-		private double valOfInitialState; // NOW STORES THE DELTA BETWEEN THE VALUE OF GROUND AND ABSTRACT
-		public EpsilonToNumStatesTuple(double epsilon, int numStates, double valOfInitialState) {
+		private double valOfInitGroundState; // NOW STORES THE DELTA BETWEEN THE VALUE OF GROUND AND ABSTRACT
+		private double valOfInitAbstractState;
+		
+		
+		public EpsilonToNumStatesTuple(double epsilon, int numStates, double valOfInitGroundState, double valOfInitAbstractState) {
 			this.eps = epsilon;
 			this.numStates = numStates;
-			this.valOfInitialState = valOfInitialState;
+			this.valOfInitGroundState = valOfInitGroundState;
+			this.valOfInitAbstractState = valOfInitAbstractState;
 		}
 		@Override
 		public String toString() {
-			return eps + "\t" + numStates + "\t" + valOfInitialState;
+			return eps + "\t" + numStates + "\t" + valOfInitGroundState + "\t" + valOfInitAbstractState;
 		}
 		
 		public double getEpsilon() {
@@ -51,8 +55,12 @@ public class QStarEpsilonTest {
 			return this.numStates;
 		}
 		
-		public double getValOfInitState() {
-			return this.valOfInitialState;
+		public double getValOfGroundInitState() {
+			return this.valOfInitGroundState;
+		}
+		
+		public double getValOfInitAbstractState() {
+			return this.valOfInitAbstractState;
 		}
 	}
 
@@ -71,6 +79,8 @@ public class QStarEpsilonTest {
 			ValueIteration vi = new ValueIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations);
 
 			GreedyQPolicy groundPolicy = vi.planFromState(initGraphState);
+			
+			
 			PolicyIteration PI = new PolicyIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations, 1);
 			PI.setPolicyToEvaluate(groundPolicy);
 			PI.planFromState(initGraphState);
@@ -97,13 +107,13 @@ public class QStarEpsilonTest {
 			PolicyIteration abstractPI = new PolicyIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations, 1);
 			abstractPI.setPolicyToEvaluate(groundPolicyFromAbstractPolicy);
 			abstractPI.planFromState(initGraphState);
-			double valueOfInitialState = abstractPI.value(initGraphState);
+			double valueOfInitAbstractState = abstractPI.value(initGraphState);
 
-			System.out.println("\tVal of abstract init: " + valueOfInitialState);
+			System.out.println("\tVal of abstract init: " + valueOfInitAbstractState);
 			System.out.println("\tVal of ground init: " + valueOfInitGroundState + "\n");
 			
 			
-			EpsilonToNumStatesTuple toAdd = new EpsilonToNumStatesTuple(epsilon, numAbstractStates, Math.abs(valueOfInitGroundState - valueOfInitialState));
+			EpsilonToNumStatesTuple toAdd = new EpsilonToNumStatesTuple(epsilon, numAbstractStates, valueOfInitGroundState, valueOfInitAbstractState);
 			toReturn.add(toAdd);
 
 		}
