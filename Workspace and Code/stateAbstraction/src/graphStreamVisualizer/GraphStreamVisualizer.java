@@ -1,11 +1,10 @@
 package graphStreamVisualizer;
 
+import graphStateAbstractionTest.VIParams;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.List;
-
-import graphStateAbstraction.Test;
-import graphStateAbstraction.VIParams;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -13,7 +12,7 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.*;
 import org.graphstream.ui.view.Viewer;
 
-import domains.UpWorldGenerator;
+import domains.upworld.UpWorldGenerator;
 import stateAbstractor.PhiSAReal;
 import stateAbstractor.StateAbstractor;
 import SARealGenerators.qValueGenerator;
