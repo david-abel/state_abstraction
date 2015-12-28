@@ -144,8 +144,15 @@ public class EpsilonExperiments {
 		TerminalFunction nChainTF = new NullTermination();
 		RewardFunction nChainRF = new NChainGenerator.nStateChainRF(numStates);
 
-		String task = "TAXI"; // NCHAIN, TRENCH, TAXI, UPWORLD
+		String task = "UPWORLD"; // NCHAIN, TRENCH, TAXI, UPWORLD
 		
+		
+		if (task == "ALL") {
+			generateEpsilonResults(nChainGen, nChainTF, nChainRF, initialNChainState, "nchain");
+			compressAndGenEpsilonResults(trenchGen, trenchTF, trenchRF, initialTrenchState, "trench");
+			compressAndGenEpsilonResults(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi");
+			generateEpsilonResults(upWorldGen, upWorldTF, upWorldRF, initialUpWorldState, "upworld");
+		}
 		if (task == "NCHAIN") {
 			generateEpsilonResults(nChainGen, nChainTF, nChainRF, initialNChainState, "nchain");
 		}
@@ -159,6 +166,20 @@ public class EpsilonExperiments {
 			generateEpsilonResults(upWorldGen, upWorldTF, upWorldRF, initialUpWorldState, "upworld");
 		}
 		
-		
+		makePlots();
+	}
+	
+	private static void makePlots() {
+		String[] cmd = {
+		        "/bin/bash",
+		        "-c",
+		        "python plotter.py all"
+		    };
+		try {
+			Runtime.getRuntime().exec(cmd, null, new File(filePath + "/src/plotting/"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
