@@ -7,3 +7,6 @@
 *.gz
 *.bbl
 *.pdf
+*.index
+*.png
+*.results
