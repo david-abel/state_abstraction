@@ -41,4 +41,6 @@
 <fullyQualifiedTypeName name="java.util.Random"/>
 <fullyQualifiedTypeName name="graphStateAbstraction.RandomMDPGenerator.RandomMDPRF"/>
 <fullyQualifiedTypeName name="graphStreamVisualizer.GraphStreamVisualizer"/>
+<fullyQualifiedTypeName name="domains.upworld.UpWorldGenerator"/>
+<fullyQualifiedTypeName name="graphStateAbstractionTest.VIParams"/>
 </qualifiedTypeNameHistroy>

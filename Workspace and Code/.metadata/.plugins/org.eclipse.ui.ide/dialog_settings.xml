@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
-	<section name="ChooseWorkspaceDialogSettings">
-		<item value="277" key="DIALOG_Y_ORIGIN"/>
-		<item value="423" key="DIALOG_X_ORIGIN"/>
-	</section>
-	<section name="BasicNewProjectResourceWizard">
-	</section>
 	<section name="ExternalProjectImportWizard">
-		<item value="false" key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED"/>
-		<item value="false" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
 		<item value="false" key="WizardProjectsImportPage.STORE_NESTED_PROJECTS"/>
+		<item value="false" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
+		<item value="false" key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED"/>
 		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
 			<item value="/Users/Dhershkowitz/Documents/Research/state_abstraction/Workspace and Code/stateAbstraction"/>
 			<item value="/Users/Dhershkowitz/Documents/Authored Research Papers/StateAbstraction/state_abstraction/Workspace and Code/stateAbstraction"/>
@@ -27,5 +21,11 @@
 		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
 			<item value="org.eclipse.ui.Basic"/>
 		</list>
+	</section>
+	<section name="ChooseWorkspaceDialogSettings">
+		<item value="277" key="DIALOG_Y_ORIGIN"/>
+		<item value="423" key="DIALOG_X_ORIGIN"/>
+	</section>
+	<section name="BasicNewProjectResourceWizard">
 	</section>
 </section>
