@@ -37,6 +37,11 @@ public class EpsilonExperiments {
 	static String filePath = new File("").getAbsolutePath();
 	static String resultsDir = filePath + "/src/plotting/";
 	
+	// Iterate over epsilon and compute the number of states.
+	final static double startEpsilon = 0.0;
+	final static double endEpsilon = 11.0;
+	final static double epsilonIncrement = 1.0;
+	
 	/**
 	 * Given a DomainGenerator + RF + TF + initState, this method generates abstract MDPs subject to different epsilons, and prints the results.
 	 * @param domainName
@@ -47,10 +52,7 @@ public class EpsilonExperiments {
 	 */
 	public static void generateEpsilonResults(GraphDefinedDomain graphDefinedDomain, TerminalFunction graphTF, RewardFunction graphRF, State initGraphState, String taskName) {
 		
-		// Iterate over epsilon and compute the number of states.
-		double startEpsilon = 0.0;
-		double endEpsilon = 5.0;
-		double epsilonIncrement = 0.5;
+		
 		List<EpsilonToNumStatesTuple> epsilonAndNumStatesPairs = QStarEpsilonTest.testQPhiStateReduction(graphDefinedDomain, graphRF, graphTF, initGraphState, startEpsilon, endEpsilon, epsilonIncrement);
 		
 		List<Double> epsilons = new ArrayList<Double>();
@@ -144,7 +146,7 @@ public class EpsilonExperiments {
 		TerminalFunction nChainTF = new NullTermination();
 		RewardFunction nChainRF = new NChainGenerator.nStateChainRF(numStates);
 
-		String task = "UPWORLD"; // NCHAIN, TRENCH, TAXI, UPWORLD
+		String task = "ALL"; // NCHAIN, TRENCH, TAXI, UPWORLD
 		
 		
 		if (task == "ALL") {
