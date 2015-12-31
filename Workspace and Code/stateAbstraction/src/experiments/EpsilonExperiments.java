@@ -40,7 +40,7 @@ public class EpsilonExperiments {
 	// Iterate over epsilon and compute the number of states.
 	final static double startEpsilon = 0.0;
 	final static double endEpsilon = 11.0;
-	final static double epsilonIncrement = 1.0;
+	final static double epsilonIncrement = .2;
 	
 	/**
 	 * Given a DomainGenerator + RF + TF + initState, this method generates abstract MDPs subject to different epsilons, and prints the results.
@@ -52,12 +52,10 @@ public class EpsilonExperiments {
 	 */
 	public static void generateEpsilonResults(GraphDefinedDomain graphDefinedDomain, TerminalFunction graphTF, RewardFunction graphRF, State initGraphState, String taskName) {
 		
-		
 		List<EpsilonToNumStatesTuple> epsilonAndNumStatesPairs = QStarEpsilonTest.testQPhiStateReduction(graphDefinedDomain, graphRF, graphTF, initGraphState, startEpsilon, endEpsilon, epsilonIncrement);
 		
 		List<Double> epsilons = new ArrayList<Double>();
 		List<Integer> numStates = new ArrayList<Integer>();
-		
 		
 		clearOldResultsFile(taskName);
 		
