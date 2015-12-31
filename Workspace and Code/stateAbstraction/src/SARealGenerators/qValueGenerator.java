@@ -1,6 +1,6 @@
 package SARealGenerators;
 
-import graphStateAbstraction.VIParams;
+import graphStateAbstractionTest.VIParams;
 
 import java.util.HashMap;
 import java.util.List;

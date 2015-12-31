@@ -1,4 +1,0 @@
-INDEX VERSION 1.127+/Users/Dhershkowitz/Documents/Research/StateAbstraction/state_abstraction/Workspace and Code/.metadata/.plugins/org.eclipse.jdt.core
-2981669230.index
-842697833.index
-1176566503.index
