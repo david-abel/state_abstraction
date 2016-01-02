@@ -89,7 +89,7 @@ public class QStarEpsilonTest {
 			// Abstract MDP VI with a PhiQ* for abstraction
 			qValueGenerator qGen = new qValueGenerator(d, rf, initGraphState, tf);
 			StateAbstractor qPhi = new PhiSAReal(qGen, epsilon, d.getActions());
-			GraphDefinedDomain absDG = qPhi.abstractMDP(dg, rf);
+			GraphDefinedDomain absDG = qPhi.abstractMDP(dg, rf, tf, initGraphState);
 			RewardFunction rfA = qPhi.getRewardFunction();
 			Domain absD = absDG.generateDomain();
 			ValueIteration aVi = new ValueIteration(absD, rfA, tf, VIParams.gamma, new SimpleHashableStateFactory(), VIParams.maxDelta, VIParams.maxIterations);

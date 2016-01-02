@@ -149,7 +149,7 @@ public class GraphStreamVisualizer {
 		qValueGenerator qGen = new qValueGenerator(d, rf, gInitialState, new NullTermination());
 		StateAbstractor qPhi = new PhiSAReal(qGen, epsilon, d.getActions());
 		HashableStateFactory hfA = new SimpleHashableStateFactory();
-		GraphDefinedDomain absDG = qPhi.abstractMDP(dg, rf);
+		GraphDefinedDomain absDG = qPhi.abstractMDP(dg, rf, tf, gInitialState);
 		RewardFunction rfA = qPhi.getRewardFunction();
 		Domain absD= absDG.generateDomain();
 		ValueIteration aVi = new ValueIteration(absD, rfA, tfa, VIParams.gamma, hfA, VIParams.maxDelta, VIParams.maxIterations);

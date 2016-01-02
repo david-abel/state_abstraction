@@ -54,11 +54,11 @@ public class NChainGenerator {
 		@Override
 		public double reward(State s, GroundedAction a, State sprime) {
 			if (a.actionName().equals("action0")) {
-				return 2;
+				return .2;
 			}
 			else {
 				if (GraphDefinedDomain.getNodeId(s) == n-1 && GraphDefinedDomain.getNodeId(sprime) == n-1) {
-					return 10;
+					return 1;
 				}
 			}
 			return 0;

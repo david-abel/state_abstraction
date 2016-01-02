@@ -1,18 +1,23 @@
 package stateAbstractor;
 
+import graphStateAbstractionTest.VIParams;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import cern.colt.Arrays;
 import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.policy.Policy;
+import burlap.behavior.singleagent.EpisodeAnalysis;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.oomdp.auxiliary.DomainGenerator;
 import burlap.oomdp.core.AbstractGroundedAction;
 import burlap.oomdp.core.Domain;
+import burlap.oomdp.core.TerminalFunction;
 import burlap.oomdp.core.TransitionProbability;
 import burlap.oomdp.core.states.State;
 import burlap.oomdp.singleagent.Action;
@@ -29,10 +34,13 @@ public abstract class StateAbstractor {
 
 	/**
 	 * 
-	 * @param inpDG the ground MDP domain generator
+	 * @param inpDG the ground MDP domain
 	 * @param rf the ground MDP reward function
+	 * @param tf the ground MDP terminal functions
+	 * @param initialState the initial state in the ground MDP
+	 * @return the abstract MDP as a GraphDefinedDomain
 	 */
-	public GraphDefinedDomain abstractMDP(GraphDefinedDomain inpDG, RewardFunction rf) {
+	public GraphDefinedDomain abstractMDP(GraphDefinedDomain inpDG, RewardFunction rf, TerminalFunction tf, State initialState) {
 		Domain inputD = inpDG.generateDomain();
 		HashableStateFactory hf = new SimpleHashableStateFactory();
 
@@ -95,7 +103,7 @@ public abstract class StateAbstractor {
 					for (State groundState : abstractStateIndexToGroundStates.get(abstractStateIndex)) {
 						double numStatesInCluster = abstractStateIndexToGroundStates.get(abstractStateIndex).size();
 						for (State otherGroundedState : abstractStateIndexToGroundStates.get(otherAbstractStateIndex)) {
-							double weightOfGroundState = 1.0/numStatesInCluster; // TODO: Don't just assume uniform weighting
+							double weightOfGroundState = getSteadyStateWeighting(inputD, groundState, abstractStateIndexToGroundStates.get(abstractStateIndex), hf, initialState, rf, tf);
 
 							//Add to transition prob based on weighting scheme.
 							double transitionProbInGroundState = 0;
@@ -133,6 +141,53 @@ public abstract class StateAbstractor {
 		}
 		
 		return toReturn;
+	}
+	
+	private HashMap<HashableState, Double> steadyStateMapping = null;
+	private double getSteadyStateWeighting(Domain d, State s, List<State> allStatesInCluster, HashableStateFactory hf, State initialState, RewardFunction rf, TerminalFunction tf) {
+		HashableState hs = hf.hashState(s);
+		if (steadyStateMapping == null) {
+			setUpSteadyStateMapping(d, initialState, tf, rf, hf);
+		}
+		double totalProbMassOfGroundStatesInCluster = 0.0;
+		for (State stateInCluster : allStatesInCluster) {
+			HashableState hsO = hf.hashState(stateInCluster);
+			totalProbMassOfGroundStatesInCluster += steadyStateMapping.getOrDefault(hsO, new Double(0));
+		}
+		double toReturn = steadyStateMapping.getOrDefault(hs, new Double(0))/totalProbMassOfGroundStatesInCluster;
+		if (totalProbMassOfGroundStatesInCluster == 0.0) return 1.0/allStatesInCluster.size(); //Return uniform weighting if probability is 0 for all
+		System.out.println(toReturn);
+				
+		return toReturn;
+	}
+	
+	private void setUpSteadyStateMapping(Domain d, State initialState, TerminalFunction tf, RewardFunction rf, HashableStateFactory hf) {
+			this.steadyStateMapping = new HashMap<HashableState, Double>();
+			ValueIteration VI = new ValueIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations);
+			GreedyQPolicy pol = VI.planFromState(initialState);
+			//Perform rollouts
+			int numRollouts = 100;
+			int maxNumSteps = 1000;
+			double totalNumberOfStatesVisited = 0;
+			for (int i = 0; i < numRollouts; i++) {
+				EpisodeAnalysis ea = pol.evaluateBehavior(initialState, rf, maxNumSteps);
+				//Increment states visited
+				for (State s : ea.stateSequence) {
+					HashableState hs = hf.hashState(s);
+					Double oldValue = steadyStateMapping.getOrDefault(hs, new Double(0));
+					steadyStateMapping.put(hs, (oldValue+1));
+					totalNumberOfStatesVisited += 1;
+				}
+			}
+			//Normalize by sum
+			for (Entry<HashableState, Double> kvPair : steadyStateMapping.entrySet()) {
+				double normValue = kvPair.getValue()/totalNumberOfStatesVisited;
+				if (totalNumberOfStatesVisited == 0.0) {
+					normValue = 0.0;
+				}
+				steadyStateMapping.put(kvPair.getKey(), normValue);
+			}
+			
 	}
 	
 	public State getAbstractInitialState(Domain abstractDomain, State groundInitialState) {

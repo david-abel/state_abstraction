@@ -54,7 +54,7 @@ public class CreateVisuals {
 		// Abstract the MDP.
 		qValueGenerator qGen = new qValueGenerator(graphDomain, graphRF, initGraphState, graphTF);
 		StateAbstractor qPhi = new PhiSAReal(qGen, epsilon, graphDomain.getActions());
-		GraphDefinedDomain abstractDG = qPhi.abstractMDP(graphDefinedDomain, graphRF);
+		GraphDefinedDomain abstractDG = qPhi.abstractMDP(graphDefinedDomain, graphRF, graphTF, initGraphState);
 		RewardFunction abstractRF = qPhi.getRewardFunction();
 		Domain abstractDomain = abstractDG.generateDomain();
 		ValueIteration aVi = new ValueIteration(abstractDomain, abstractRF, graphTF, VIParams.gamma, new SimpleHashableStateFactory(), VIParams.maxDelta, VIParams.maxIterations);
@@ -101,7 +101,7 @@ public class CreateVisuals {
 	public static void main(String[] args) {
 		
 		// Change the text here to switch between visuals.
-		String domainToVisualize = "NCHAIN"; // One of "TRENCH", "UPWORLD", "NCHAIN", or add your own.
+		String domainToVisualize = "UPWORLD"; // One of "TRENCH", "UPWORLD", "NCHAIN", or add your own.
 		double epsilon = 0.0;
 		
 		if (domainToVisualize == "TRENCH") {

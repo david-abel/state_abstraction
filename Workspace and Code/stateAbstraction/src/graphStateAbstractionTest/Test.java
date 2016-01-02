@@ -41,7 +41,7 @@ public class Test {
 		// Abstract MDP VI with a PhiModel for abstraction
 		HashableStateFactory hfA = new SimpleHashableStateFactory();
 		StateAbstractor phiMod = new PhiModel();
-		GraphDefinedDomain absDG = phiMod.abstractMDP(dg, rf);
+		GraphDefinedDomain absDG = phiMod.abstractMDP(dg, rf, tf, gInitialState);
 		RewardFunction rfA = phiMod.getRewardFunction();
 		Domain absD= absDG.generateDomain();
 		ValueIteration aVi = new ValueIteration(absD, rfA, tf, VIParams.gamma, hfA, VIParams.maxDelta, VIParams.maxIterations);

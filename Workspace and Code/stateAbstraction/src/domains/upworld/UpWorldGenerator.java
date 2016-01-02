@@ -64,7 +64,7 @@ public class UpWorldGenerator {
 		@Override
 		public double reward(State s, GroundedAction a, State sprime) {
 			if (s.equals(sprime) && a.actionName().equals("action2")){ 
-				return 10;
+				return 1;
 			}
 			else return 0;
 		}
