@@ -27,6 +27,11 @@ import burlap.oomdp.statehashing.HashableState;
 import burlap.oomdp.statehashing.HashableStateFactory;
 import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 
+/**
+ * Class used to convert ground MDPs into abstract MDPs.
+ * @author Dhershkowitz
+ *
+ */
 public abstract class StateAbstractor {
 
 	private RewardFunction aRF;
@@ -138,48 +143,67 @@ public abstract class StateAbstractor {
 		//Instantiate abstract MDP with num states as clusters.
 		GraphDefinedDomain toReturn = new GraphDefinedDomain(abstractStateIndexToGroundStates.keySet().size());
 
-		// Initialize reward matrix.
+		// Initialize transition and reward matrix for abstract MDP.
 		HashMap<GroundedAction, double[][]> rewardMatrix = new HashMap<GroundedAction, double[][]>();
+		HashMap<Integer, double[][]> transitionMatrix = new HashMap<Integer, double[][]>();//Maps from action index to transition matrix
+		int i = 0;
 		for (Action a : groundD.getActions()) {
 			GroundedAction ga = a.getAssociatedGroundedAction();
 			rewardMatrix.put(ga, new double[toReturn.getNumNodes()][toReturn.getNumNodes()]);
+			transitionMatrix.put(i, new double[toReturn.getNumNodes()][toReturn.getNumNodes()]);
+			i++;
 		}
 
-		//Set up new transitions and rewards in abstracted MDP.
+		//Loop over abstract states.
 		for (int abstractStateIndex = 0; abstractStateIndex < toReturn.getNumNodes(); abstractStateIndex++) {
-			for (int otherAbstractStateIndex = 0; otherAbstractStateIndex < toReturn.getNumNodes(); otherAbstractStateIndex++) {
-				for (int actionIndex = 0; actionIndex < groundD.getActions().size(); actionIndex++) {
-					GroundedAction currGA = groundD.getActions().get(actionIndex).getAssociatedGroundedAction();
-					double transitionProbability = 0.0;
-					//Loop over ground states.
-					for (State groundState : abstractStateIndexToGroundStates.get(abstractStateIndex)) {
-						double numStatesInCluster = abstractStateIndexToGroundStates.get(abstractStateIndex).size();
+			double numStatesInCluster = abstractStateIndexToGroundStates.get(abstractStateIndex).size();
+
+				//Loop over ground states in the current abstract state.
+				for (State groundState : abstractStateIndexToGroundStates.get(abstractStateIndex)) {
+					double weightOfGroundState = 1.0/numStatesInCluster; //getSteadyStateWeighting(groundD, groundState, abstractStateIndexToGroundStates.get(abstractStateIndex), hf, initialState, groundRF, groundTF);
+
+					//Loop over actions.
+					for (int actionIndex = 0; actionIndex < groundD.getActions().size(); actionIndex++) {
+						//Add to transition matrix.
+						GroundedAction currGA = groundD.getActions().get(actionIndex).getAssociatedGroundedAction();
+						List<TransitionProbability> gsgaTransitions = currGA.getTransitions(groundState);
+						for (TransitionProbability tp : gsgaTransitions) {
+							double toAdd = weightOfGroundState*tp.p;
+							int abstractStateIndexOfArrivedInState = this.groundToAbstractState.get(GraphDefinedDomain.getNodeId(tp.s));
+							transitionMatrix.get(actionIndex)[abstractStateIndex][abstractStateIndexOfArrivedInState] += toAdd;
+						}
+
+
+						//Loop over other abstract states.
+						for (int otherAbstractStateIndex = 0; otherAbstractStateIndex < toReturn.getNumNodes(); otherAbstractStateIndex++) {
+
+						//Loop over ground states for the other abstract state.
 						for (State otherGroundedState : abstractStateIndexToGroundStates.get(otherAbstractStateIndex)) {
-							double weightOfGroundState = getSteadyStateWeighting(groundD, groundState, abstractStateIndexToGroundStates.get(abstractStateIndex), hf, initialState, groundRF, groundTF);
 
-							//Add to transition prob based on weighting scheme.
-							double transitionProbInGroundState = 0;
-							List<TransitionProbability> gsgaTransitions = currGA.getTransitions(groundState);
-							boolean transitionBetweenGroundStates = false;
-							for (TransitionProbability tp : gsgaTransitions) {
-								if (tp.s.equals(otherGroundedState)) {
-									transitionProbInGroundState = tp.p;
-									transitionBetweenGroundStates = true;
-								}
-							}
-							if (!transitionBetweenGroundStates) continue;
-
-							transitionProbability += weightOfGroundState*transitionProbInGroundState;
-
-							//Add to rewards
+							//Add to rewards.
 							double groundReward = groundRF.reward(groundState, currGA, otherGroundedState);
 							rewardMatrix.get(currGA)[abstractStateIndex][otherAbstractStateIndex] += weightOfGroundState*groundReward;
 						}
+
 					}
-					if (transitionProbability != 0) toReturn.setTransition(abstractStateIndex, actionIndex, otherAbstractStateIndex, transitionProbability);
 				}
 			}
 		}
+		//Use transition matrix to create transition dynamics.
+		for (Entry<Integer, double[][]> kv : transitionMatrix.entrySet()) {
+			int actionIndex = kv.getKey();
+			double [][] transitionMatrixForAction = kv.getValue();
+			for (int fromAbstractStateIndex = 0; fromAbstractStateIndex < transitionMatrixForAction.length; fromAbstractStateIndex++) {
+				for (int toAbstractStateIndex = 0; toAbstractStateIndex < transitionMatrixForAction.length; toAbstractStateIndex++) {
+					double probabilityOfTransition = transitionMatrixForAction[fromAbstractStateIndex][toAbstractStateIndex];
+					if (probabilityOfTransition != 0) {
+						toReturn.setTransition(fromAbstractStateIndex, actionIndex, toAbstractStateIndex, probabilityOfTransition);
+					}
+				}
+			}
+		}
+
+		//Use reward matrix to create reward function.
 		this.aRF = new abstractRewardMatrix(rewardMatrix);
 
 		return toReturn;
@@ -199,9 +223,12 @@ public abstract class StateAbstractor {
 	 */
 	private double getSteadyStateWeighting(Domain d, State s, List<State> allStatesInCluster, HashableStateFactory hf, State initialState, RewardFunction groundRF, TerminalFunction groundTF) {
 		HashableState hs = hf.hashState(s);
+		//If steadyStateMapping not yet set up, do it.
 		if (steadyStateMapping == null) {
 			setUpSteadyStateMapping(d, initialState, groundTF, groundRF, hf);
 		}
+
+		//Sum up steady state dist across all states in cluster and then return percentage the input state contributes 
 		double totalProbMassOfGroundStatesInCluster = 0.0;
 		for (State stateInCluster : allStatesInCluster) {
 			HashableState hsO = hf.hashState(stateInCluster);
