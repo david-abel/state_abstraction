@@ -88,9 +88,9 @@ public class CreateVisuals {
 		// Convert to graph domain.
 		NormalDomainToGraphDomain graphMaker = new NormalDomainToGraphDomain(gen, tf, rf, initialState);
 		GraphDefinedDomain graphDefinedDomain = graphMaker.createGraphDomain();
-		RewardFunction graphRF = new GraphRF(graphMaker.goalStateIDs);
 		TerminalFunction graphTF = new NullTermination();
 		Domain graphDomain = graphDefinedDomain.generateDomain();
+		RewardFunction graphRF = new GraphRF(graphDomain, rf, tf, graphMaker.graphIndexToNonGraphState, graphMaker.graphActionIndexToNonGraphAction);
 		State initGraphState = GraphDefinedDomain.getState(graphDomain, graphMaker.initStateID);
 		
 		// Compress and visualize.

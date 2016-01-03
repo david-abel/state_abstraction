@@ -1,6 +1,7 @@
 package domains;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import burlap.behavior.policy.GreedyQPolicy;
@@ -22,16 +23,18 @@ public class NormalDomainToGraphDomain {
 	RewardFunction oldDomainRF;
 	State oldDomainInitialState;
 	Domain oldDomain;
-	public List<Integer> goalStateIDs;
 	public int initStateID;
+	public HashMap<Integer, State> graphIndexToNonGraphState;
+	public HashMap<Integer, Action> graphActionIndexToNonGraphAction;
 	
 	public NormalDomainToGraphDomain(DomainGenerator tg, TerminalFunction originalTF, RewardFunction originalRF, State initState) {
 		this.domainGen = tg;
 		this.oldDomainTF = originalTF;
 		this.oldDomainRF = originalRF;
 		this.oldDomainInitialState = initState;
-		this.goalStateIDs = new ArrayList<Integer>();
 		this.oldDomain = this.domainGen.generateDomain();
+		this.graphIndexToNonGraphState = new HashMap<Integer, State>();
+		this.graphActionIndexToNonGraphAction = new HashMap<Integer, Action>();
 	}
 	
 	
@@ -56,9 +59,11 @@ public class NormalDomainToGraphDomain {
 		
 		// Loop over each state and set transitions in the graph.
 		for (int stateIndex = 0; stateIndex < allStates.size(); stateIndex++) {
+			this.graphIndexToNonGraphState.put(stateIndex, allStates.get(stateIndex));
 
 			// Loop over each action to determine effects of the action.
 			for (int actionIndex = 0; actionIndex < allActions.size(); actionIndex++) {
+				this.graphActionIndexToNonGraphAction.put(actionIndex, allActions.get(actionIndex));
 				
 				// Find S, A, S'.
 				GroundedAction ga = allActions.get(actionIndex).getAssociatedGroundedAction();
@@ -80,9 +85,6 @@ public class NormalDomainToGraphDomain {
 			
 			
 		}
-		
-		System.out.println("GOAL STATEs: " + goalStateIDs.size());
-		
 	}
 	
 	private List<State> getAllStates() {

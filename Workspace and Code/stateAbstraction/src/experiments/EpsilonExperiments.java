@@ -97,7 +97,7 @@ public class EpsilonExperiments {
 		NormalDomainToGraphDomain graphMaker = new NormalDomainToGraphDomain(gen, tf, rf, initialState);
 		GraphDefinedDomain graphDefinedDomain = graphMaker.createGraphDomain();
 		Domain d = graphDefinedDomain.generateDomain();
-		RewardFunction graphRF = new GraphRF(graphMaker.goalStateIDs);
+		RewardFunction graphRF = new GraphRF(d, rf, tf, graphMaker.graphIndexToNonGraphState, graphMaker.graphActionIndexToNonGraphAction);
 		State initGraphState = GraphDefinedDomain.getState(d, graphMaker.initStateID);
 		generateEpsilonResults(graphDefinedDomain, graphRF, initGraphState, taskName);
 	}

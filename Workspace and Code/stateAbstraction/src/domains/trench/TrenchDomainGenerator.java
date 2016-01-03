@@ -400,7 +400,7 @@ public class TrenchDomainGenerator implements DomainGenerator {
 		ValueIteration vi = new ValueIteration(domain, rf, tf, gamma, new SimpleHashableStateFactory(), minDelta, numRollouts);
 		GreedyQPolicy policy = vi.planFromState(initialState);
 		EpisodeAnalysis ea = policy.evaluateBehavior(initialState, rf, tf);
-		System.out.println(ea.rewardSequence);
+		System.out.println("NonGraph reward sequence: " + ea.rewardSequence);
 
 		
 		// Test converting it into a graph and planning.
@@ -408,12 +408,12 @@ public class TrenchDomainGenerator implements DomainGenerator {
 		GraphDefinedDomain trenchGraphDefinedDomain = graphTrenchMaker.createGraphDomain();
 		Domain graphDomain = trenchGraphDefinedDomain.generateDomain();
 		State graphInitState = GraphDefinedDomain.getState(graphDomain, graphTrenchMaker.initStateID);
-		RewardFunction graphRF = new GraphRF(graphTrenchMaker.goalStateIDs);
-		TerminalFunction graphTF = new GraphTF(graphTrenchMaker.goalStateIDs);
+		RewardFunction graphRF = new GraphRF(graphDomain, rf, tf, graphTrenchMaker.graphIndexToNonGraphState, graphTrenchMaker.graphActionIndexToNonGraphAction);
+		TerminalFunction graphTF = new NullTermination();
 		ValueIteration vi2 = new ValueIteration(graphDomain, graphRF, graphTF, gamma, new SimpleHashableStateFactory(), minDelta, numRollouts);
 		GreedyQPolicy policy2 = vi2.planFromState(graphInitState);
-		EpisodeAnalysis ea2 = policy2.evaluateBehavior(graphInitState, graphRF, graphTF);
-		System.out.println(ea2.rewardSequence);
+		EpisodeAnalysis ea2 = policy2.evaluateBehavior(graphInitState, graphRF, graphTF, 100);
+		System.out.println("Graph reward sequence:" + ea2.rewardSequence);
 	}
 	
 }

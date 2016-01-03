@@ -152,26 +152,26 @@ public class QStarEpsilonTest {
 		//---------END-----------
 		
 		//---------TRENCH--------
-		int height = 3;
-		int width = 3;
-		
-		TrenchDomainGenerator gen = new TrenchDomainGenerator(height, width);
-		
-		TrenchDomainToGraphDomain graphTrenchMaker = new TrenchDomainToGraphDomain(gen);
-		GraphDefinedDomain trenchGraphDefinedDomain = graphTrenchMaker.createGraphDomain();
-		Domain d = trenchGraphDefinedDomain.generateDomain();
-		
-		RewardFunction graphRF = new GraphRF(graphTrenchMaker.goalStateIDs);
-		TerminalFunction graphTF = new NullTermination();
-		State initGraphState = GraphDefinedDomain.getState(d, graphTrenchMaker.initStateID);
-		double trenchStartEpsilon = 0.64;
-		double trenchEndEpsilon = 25; 
-		List<EpsilonToNumStatesTuple> trenchResults = testQPhiStateReduction(trenchGraphDefinedDomain, graphRF, graphTF, initGraphState, trenchStartEpsilon, trenchEndEpsilon, 2.0);
-		System.out.println("trenchResults: ");
-//		DPrint.mode(0);
-		for (EpsilonToNumStatesTuple x : trenchResults) {
-			System.out.println(x);
-		}
+//		int height = 3;
+//		int width = 3;
+//		
+//		TrenchDomainGenerator gen = new TrenchDomainGenerator(height, width);
+//		
+//		TrenchDomainToGraphDomain graphTrenchMaker = new TrenchDomainToGraphDomain(gen);
+//		GraphDefinedDomain trenchGraphDefinedDomain = graphTrenchMaker.createGraphDomain();
+//		Domain d = trenchGraphDefinedDomain.generateDomain();
+//		
+//		RewardFunction graphRF = new GraphRF(graphTrenchMaker.goalStateIDs);
+//		TerminalFunction graphTF = new NullTermination();
+//		State initGraphState = GraphDefinedDomain.getState(d, graphTrenchMaker.initStateID);
+//		double trenchStartEpsilon = 0.64;
+//		double trenchEndEpsilon = 25; 
+//		List<EpsilonToNumStatesTuple> trenchResults = testQPhiStateReduction(trenchGraphDefinedDomain, graphRF, graphTF, initGraphState, trenchStartEpsilon, trenchEndEpsilon, 2.0);
+//		System.out.println("trenchResults: ");
+////		DPrint.mode(0);
+//		for (EpsilonToNumStatesTuple x : trenchResults) {
+//			System.out.println(x);
+//		}
 		
 		//---------END-----------
 		
