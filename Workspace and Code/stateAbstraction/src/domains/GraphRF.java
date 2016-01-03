@@ -18,10 +18,10 @@ public class GraphRF implements RewardFunction {
 	@Override
 	public double reward(State s, GroundedAction a, State sprime) {
 		if(terminalStateIDs.contains(GraphDefinedDomain.getNodeId(sprime))) {
-			return 100.0;
+			return 1.0;
 		}
 		else {
-			return -1.0;
+			return 0.0;
 		}
 	}
 

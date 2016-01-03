@@ -794,10 +794,10 @@ public class TaxiDomainGenerator implements DomainGenerator {
 			
 			if (numPassengersInPlace == allPassengers.size()) {
 				// If all passengers in their destinates, return positive reward.
-				return 100;
+				return 1;
 			}
 			else {
-				return -1;
+				return 0;
 			}
 		}
 		

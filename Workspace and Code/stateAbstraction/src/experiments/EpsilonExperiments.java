@@ -39,8 +39,8 @@ public class EpsilonExperiments {
 	
 	// Iterate over epsilon and compute the number of states.
 	final static double startEpsilon = 0.0;
-	final static double endEpsilon = 11.0;
-	final static double epsilonIncrement = 1;
+	final static double endEpsilon = .1;
+	final static double epsilonIncrement = 0.005;
 	
 	/**
 	 * Given a DomainGenerator + RF + TF + initState, this method generates abstract MDPs subject to different epsilons, and prints the results.
@@ -144,7 +144,7 @@ public class EpsilonExperiments {
 		TerminalFunction nChainTF = new NullTermination();
 		RewardFunction nChainRF = new NChainGenerator.nStateChainRF(numStates);
 
-		String task = "NCHAIN"; // NCHAIN, TRENCH, TAXI, UPWORLD
+		String task = "TAXI"; // NCHAIN, TRENCH, TAXI, UPWORLD
 		
 		
 		if (task == "ALL") {
