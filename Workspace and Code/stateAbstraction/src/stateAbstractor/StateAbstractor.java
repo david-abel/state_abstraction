@@ -69,10 +69,10 @@ public abstract class StateAbstractor {
 			groundStateIndexList.add(stateIndex);
 		}
 		Collections.shuffle(groundStateIndexList);
-		
-		
+
+
 		HashMap<State, List<State>> stateToPhiedStates = new HashMap<State, List<State>>();
-		
+
 		for (int stateIndex : groundStateIndexList) {
 			State currGroundState = GraphDefinedDomain.getState(groundDomain, stateIndex);
 			boolean foundACluster = false;
@@ -102,7 +102,7 @@ public abstract class StateAbstractor {
 		for (int abstractStateIndex = 0; abstractStateIndex < clusters.size(); abstractStateIndex++) {
 			abstractStateIndexToGroundStates.put(abstractStateIndex, clusters.get(abstractStateIndex));
 		}
-		
+
 		return abstractStateIndexToGroundStates;
 	}
 
@@ -134,7 +134,7 @@ public abstract class StateAbstractor {
 
 	private GraphDefinedDomain setupAbstractDomainAndAbstractRewardFunctionAndAbstractTerminalFunction(Domain groundD, State initialState, RewardFunction groundRF, TerminalFunction groundTF, HashMap<Integer, List<State>> abstractStateIndexToGroundStates) {
 		HashableStateFactory hf = new SimpleHashableStateFactory();
-		
+
 		//Instantiate abstract MDP with num states as clusters.
 		GraphDefinedDomain toReturn = new GraphDefinedDomain(abstractStateIndexToGroundStates.keySet().size());
 
@@ -181,7 +181,7 @@ public abstract class StateAbstractor {
 			}
 		}
 		this.aRF = new abstractRewardMatrix(rewardMatrix);
-		
+
 		return toReturn;
 	}
 
@@ -324,6 +324,18 @@ public abstract class StateAbstractor {
 			int sPrimeIndex = GraphDefinedDomain.getNodeId(sprime);
 			double toReturn = rewardMatrix.get(a)[sIndex][sPrimeIndex];
 			return toReturn;
+		}
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			for (Entry<GroundedAction, double[][]> kvPair : rewardMatrix.entrySet()) {
+				sb.append(kvPair.getKey().actionName() + ":\n");
+				for (double[] rewards: kvPair.getValue()) {
+					sb.append(Arrays.toString(rewards) + "\n");
+				}
+			}
+
+			return sb.toString();
 		}
 	}
 
