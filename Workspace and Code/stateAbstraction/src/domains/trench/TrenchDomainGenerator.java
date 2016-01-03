@@ -10,6 +10,7 @@ import burlap.behavior.singleagent.EpisodeAnalysis;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.oomdp.auxiliary.DomainGenerator;
+import burlap.oomdp.auxiliary.common.NullTermination;
 import burlap.oomdp.core.Attribute;
 import burlap.oomdp.core.Domain;
 import burlap.oomdp.core.ObjectClass;
@@ -24,7 +25,6 @@ import burlap.oomdp.singleagent.RewardFunction;
 import burlap.oomdp.singleagent.SADomain;
 import burlap.oomdp.singleagent.common.SimpleAction.SimpleDeterministicAction;
 import burlap.oomdp.statehashing.SimpleHashableStateFactory;
-
 
 
 public class TrenchDomainGenerator implements DomainGenerator {

@@ -50,9 +50,9 @@ public class EpsilonExperiments {
 	 * @param rf
 	 * @param initialState
 	 */
-	public static void generateEpsilonResults(GraphDefinedDomain graphDefinedDomain, TerminalFunction graphTF, RewardFunction graphRF, State initGraphState, String taskName) {
+	public static void generateEpsilonResults(GraphDefinedDomain graphDefinedDomain, RewardFunction graphRF, State initGraphState, String taskName) {
 		
-		List<EpsilonToNumStatesTuple> epsilonAndNumStatesPairs = QStarEpsilonTest.testQPhiStateReduction(graphDefinedDomain, graphRF, graphTF, initGraphState, startEpsilon, endEpsilon, epsilonIncrement);
+		List<EpsilonToNumStatesTuple> epsilonAndNumStatesPairs = QStarEpsilonTest.testQPhiStateReduction(graphDefinedDomain, graphRF, new NullTermination(), initGraphState, startEpsilon, endEpsilon, epsilonIncrement);
 		
 		List<Double> epsilons = new ArrayList<Double>();
 		List<Integer> numStates = new ArrayList<Integer>();
@@ -98,10 +98,8 @@ public class EpsilonExperiments {
 		GraphDefinedDomain graphDefinedDomain = graphMaker.createGraphDomain();
 		Domain d = graphDefinedDomain.generateDomain();
 		RewardFunction graphRF = new GraphRF(graphMaker.goalStateIDs);
-		TerminalFunction graphTF = new GraphTF(graphMaker.goalStateIDs);
 		State initGraphState = GraphDefinedDomain.getState(d, graphMaker.initStateID);
-		
-		generateEpsilonResults(graphDefinedDomain, graphTF, graphRF, initGraphState, taskName);
+		generateEpsilonResults(graphDefinedDomain, graphRF, initGraphState, taskName);
 	}
 	
 	public static void main(String[] args) {
@@ -132,7 +130,6 @@ public class EpsilonExperiments {
 		GraphDefinedDomain upWorldGen = UpWorldGenerator.getUPWorld(upWorldWidth, upWorldHeight);
 		Domain upWorldDomain = upWorldGen.generateDomain();
 		State initialUpWorldState = GraphDefinedDomain.getState(upWorldDomain, 0);
-		TerminalFunction upWorldTF = new NullTermination();
 		RewardFunction upWorldRF = new UpWorldGenerator.UpWorldRF();
 		
 		
@@ -141,19 +138,18 @@ public class EpsilonExperiments {
 		GraphDefinedDomain nChainGen = NChainGenerator.getNStateChain(numStates);
 		Domain nChainDomain = nChainGen.generateDomain();
 		State initialNChainState = GraphDefinedDomain.getState(nChainDomain, 0);
-		TerminalFunction nChainTF = new NullTermination();
 		RewardFunction nChainRF = new NChainGenerator.nStateChainRF(numStates);
 
 		String task = "TAXI"; // NCHAIN, TRENCH, TAXI, UPWORLD		
 		
 		if (task == "ALL") {
-			generateEpsilonResults(nChainGen, nChainTF, nChainRF, initialNChainState, "nchain");
+			generateEpsilonResults(nChainGen, nChainRF, initialNChainState, "nchain");
 			compressAndGenEpsilonResults(trenchGen, trenchTF, trenchRF, initialTrenchState, "trench");
 			compressAndGenEpsilonResults(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi");
-			generateEpsilonResults(upWorldGen, upWorldTF, upWorldRF, initialUpWorldState, "upworld");
+			generateEpsilonResults(upWorldGen, upWorldRF, initialUpWorldState, "upworld");
 		}
 		if (task == "NCHAIN") {
-			generateEpsilonResults(nChainGen, nChainTF, nChainRF, initialNChainState, "nchain");
+			generateEpsilonResults(nChainGen, nChainRF, initialNChainState, "nchain");
 		}
 		else if (task == "TRENCH") {
 			compressAndGenEpsilonResults(trenchGen, trenchTF, trenchRF, initialTrenchState, "trench");
@@ -162,7 +158,7 @@ public class EpsilonExperiments {
 			compressAndGenEpsilonResults(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi");
 		}
 		else {
-			generateEpsilonResults(upWorldGen, upWorldTF, upWorldRF, initialUpWorldState, "upworld");
+			generateEpsilonResults(upWorldGen, upWorldRF, initialUpWorldState, "upworld");
 		}
 		
 		makePlots();

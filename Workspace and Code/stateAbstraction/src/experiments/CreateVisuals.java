@@ -19,7 +19,6 @@ import burlap.oomdp.singleagent.RewardFunction;
 import burlap.oomdp.statehashing.HashableStateFactory;
 import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 import domains.GraphRF;
-import domains.GraphTF;
 import domains.NormalDomainToGraphDomain;
 import domains.nchain.NChainGenerator;
 import domains.taxi.TaxiDomainGenerator;
@@ -90,7 +89,7 @@ public class CreateVisuals {
 		NormalDomainToGraphDomain graphMaker = new NormalDomainToGraphDomain(gen, tf, rf, initialState);
 		GraphDefinedDomain graphDefinedDomain = graphMaker.createGraphDomain();
 		RewardFunction graphRF = new GraphRF(graphMaker.goalStateIDs);
-		TerminalFunction graphTF = new GraphTF(graphMaker.goalStateIDs);
+		TerminalFunction graphTF = new NullTermination();
 		Domain graphDomain = graphDefinedDomain.generateDomain();
 		State initGraphState = GraphDefinedDomain.getState(graphDomain, graphMaker.initStateID);
 		

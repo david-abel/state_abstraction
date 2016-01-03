@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domains.GraphRF;
-import domains.GraphTF;
 import domains.trench.TrenchDomainToGraphDomain;
 import domains.trench.TrenchDomainGenerator;
 import domains.trench.TrenchDomainGenerator.TrenchRF;
@@ -163,7 +162,7 @@ public class QStarEpsilonTest {
 		Domain d = trenchGraphDefinedDomain.generateDomain();
 		
 		RewardFunction graphRF = new GraphRF(graphTrenchMaker.goalStateIDs);
-		TerminalFunction graphTF = new GraphTF(graphTrenchMaker.goalStateIDs);
+		TerminalFunction graphTF = new NullTermination();
 		State initGraphState = GraphDefinedDomain.getState(d, graphTrenchMaker.initStateID);
 		double trenchStartEpsilon = 0.64;
 		double trenchEndEpsilon = 25; 

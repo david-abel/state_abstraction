@@ -56,12 +56,7 @@ public class NormalDomainToGraphDomain {
 		
 		// Loop over each state and set transitions in the graph.
 		for (int stateIndex = 0; stateIndex < allStates.size(); stateIndex++) {
-			
-			if (this.oldDomainTF.isTerminal(allStates.get(stateIndex))) {
-				// Found a terminal state.
-				goalStateIDs.add(stateIndex);
-			}
-			
+
 			// Loop over each action to determine effects of the action.
 			for (int actionIndex = 0; actionIndex < allActions.size(); actionIndex++) {
 				
@@ -70,11 +65,23 @@ public class NormalDomainToGraphDomain {
 				State nextState = ga.executeIn(allStates.get(stateIndex));
 				int nextStateNodeID = allStates.indexOf(nextState);
 				
-				// Set transition.
-				gd.setTransition(stateIndex, actionIndex, nextStateNodeID, 1.0);
+
+				if (this.oldDomainTF.isTerminal(allStates.get(stateIndex))) {
+					// Set terminal transition.
+					gd.setTransition(stateIndex, actionIndex, stateIndex, 1.0);
+				}
+				else {
+					// Set non-terminal transition.
+					gd.setTransition(stateIndex, actionIndex, nextStateNodeID, 1.0);
+					
+				}
+				
 			}
+			
+			
 		}
 		
+		System.out.println("GOAL STATEs: " + goalStateIDs.size());
 		
 	}
 	
