@@ -312,7 +312,7 @@ public class TrenchDomainGenerator implements DomainGenerator {
 	}
 
 	/**
-	 * Trench Reward: 100 at goal location, -1 everywhere else.
+	 * Trench Reward: 1 at goal location, 0 everywhere else.
 	 * @author dabel
 	 *
 	 */

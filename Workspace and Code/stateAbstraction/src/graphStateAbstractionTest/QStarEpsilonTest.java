@@ -94,8 +94,6 @@ public class QStarEpsilonTest {
 			Domain absD = absDG.generateDomain();
 			ValueIteration aVi = new ValueIteration(absD, rfA, tf, VIParams.gamma, new SimpleHashableStateFactory(), VIParams.maxDelta, VIParams.maxIterations);
 
-			
-			
 			State aInitialState =  qPhi.getAbstractInitialState(absD, initGraphState);
 			GreedyQPolicy abstractPolicy = aVi.planFromState(aInitialState);	
 
@@ -106,7 +104,8 @@ public class QStarEpsilonTest {
 			Policy groundPolicyFromAbstractPolicy = qPhi.getPolicyForGroundMDP(abstractPolicy, absD, d);
 			PolicyIteration abstractPI = new PolicyIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations, 1);
 			abstractPI.setPolicyToEvaluate(groundPolicyFromAbstractPolicy);
-			abstractPI.planFromState(initGraphState);
+			GreedyQPolicy pol = abstractPI.planFromState(initGraphState);
+			System.out.println("QStarEpsilonTesT: Reward seq of abstract pol: " + pol.evaluateBehavior(initGraphState, rf, 100).rewardSequence);
 			double valueOfInitAbstractState = abstractPI.value(initGraphState);
 
 			System.out.println("\tVal of abstract init: " + valueOfInitAbstractState);

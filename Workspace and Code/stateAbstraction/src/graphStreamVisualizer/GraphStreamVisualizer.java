@@ -115,6 +115,7 @@ public class GraphStreamVisualizer {
 					String probString = df.format(prob);
 					Edge e = graph.addEdge(Integer.toString(stateIndex) + ", " + Integer.toString(otherStateIndex) + ", " + ga.actionName(), Integer.toString(stateIndex), Integer.toString(otherStateIndex), directed);
 					int edgeReward = (int) rf.reward(currState, ga, sPrime);
+					System.out.println("GraphStreamVis edgeReward: " + edgeReward);
 					int actionIndex = dom.getActions().indexOf(a);
 					e.addAttribute("ui.label", probString);
 					// Set color to match action

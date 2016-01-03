@@ -144,8 +144,7 @@ public class EpsilonExperiments {
 		TerminalFunction nChainTF = new NullTermination();
 		RewardFunction nChainRF = new NChainGenerator.nStateChainRF(numStates);
 
-		String task = "TAXI"; // NCHAIN, TRENCH, TAXI, UPWORLD
-		
+		String task = "TAXI"; // NCHAIN, TRENCH, TAXI, UPWORLD		
 		
 		if (task == "ALL") {
 			generateEpsilonResults(nChainGen, nChainTF, nChainRF, initialNChainState, "nchain");

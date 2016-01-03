@@ -101,8 +101,8 @@ public class CreateVisuals {
 	public static void main(String[] args) {
 		
 		// Change the text here to switch between visuals.
-		String domainToVisualize = "UPWORLD"; // One of "TRENCH", "UPWORLD", "NCHAIN", or add your own.
-		double epsilon = 0.0;
+		String domainToVisualize = "TRENCH"; // One of "TRENCH", "UPWORLD", "NCHAIN", or add your own.
+		double epsilon = .05;
 		
 		if (domainToVisualize == "TRENCH") {
 			// Create trench domain.
