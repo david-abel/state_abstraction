@@ -29,32 +29,52 @@ import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 
 public abstract class StateAbstractor {
 
-	private RewardFunction rf;
+	private RewardFunction aRF;
 	private HashMap<Integer, Integer> groundToAbstractState;
 	private HashMap<Integer, List<Integer>> abstractIndexToGroundIndex;
 
 	/**
 	 * 
-	 * @param inpDG the ground MDP domain
-	 * @param rf the ground MDP reward function
-	 * @param tf the ground MDP terminal functions
-	 * @param initialState the initial state in the ground MDP
-	 * @return the abstract MDP as a GraphDefinedDomain
+	 * @param inpDG
+	 * @param groundRF
+	 * @param groundTF
+	 * @param initialGroundState
+	 * @return a GraphDefinedDomain of the resulting abstractMDP
 	 */
-	public GraphDefinedDomain abstractMDP(GraphDefinedDomain inpDG, RewardFunction rf, TerminalFunction tf, State initialState) {
-		Domain inputD = inpDG.generateDomain();
-		HashableStateFactory hf = new SimpleHashableStateFactory();
+	public GraphDefinedDomain abstractMDP(GraphDefinedDomain inpDG, RewardFunction groundRF, TerminalFunction groundTF, State initialGroundState) {
+		Domain groundD = inpDG.generateDomain();
 
-		HashMap<State, List<State>> stateToPhiedStates = new HashMap<State, List<State>>();
+		//Use the input phi and epsilon to group together ground states greedily. Returns mapping from abstract state index to list of ground states.
+		HashMap<Integer, List<State>> abstractStateIndexToGroundStates = setupGroupingsOfGroundStatesIntoAbstractStates(inpDG, groundD);
+
+		//Setup map from abstract state index to ground indices for public function.
+		setupAbstractIndexToGroundIndexMap(abstractStateIndexToGroundStates);
+
+		// Set up mapping from ground MDP states to abstract MDP states (used later to get ground policy).
+		setupGroundIndexToAbstractStateIndexMap(abstractStateIndexToGroundStates);
+
+		return setupAbstractDomainAndAbstractRewardFunctionAndAbstractTerminalFunction(groundD, initialGroundState, groundRF, groundTF, abstractStateIndexToGroundStates);
+	}
+
+	/**
+	 * 
+	 * @param groundDomain the input ground MDP domain
+	 * @param groundStateIndexList 
+	 * @return
+	 */
+	private HashMap<Integer, List<State>> setupGroupingsOfGroundStatesIntoAbstractStates(GraphDefinedDomain groundDG, Domain groundDomain) {
 		// Get all ground states in random shuffled order.
-		List<Integer> indexList = new ArrayList<Integer>();
-		for (int stateIndex = 0; stateIndex < inpDG.getNumNodes(); stateIndex++) {
-			indexList.add(stateIndex);
+		List<Integer> groundStateIndexList = new ArrayList<Integer>();
+		for (int stateIndex = 0; stateIndex < groundDG.getNumNodes(); stateIndex++) {
+			groundStateIndexList.add(stateIndex);
 		}
-		Collections.shuffle(indexList);
+		Collections.shuffle(groundStateIndexList);
 		
-		for (int stateIndex : indexList) {
-			State currGroundState = GraphDefinedDomain.getState(inputD, stateIndex);
+		
+		HashMap<State, List<State>> stateToPhiedStates = new HashMap<State, List<State>>();
+		
+		for (int stateIndex : groundStateIndexList) {
+			State currGroundState = GraphDefinedDomain.getState(groundDomain, stateIndex);
 			boolean foundACluster = false;
 			for (State currGroundStateRep : stateToPhiedStates.keySet()) {
 				// Should add to this cluster.
@@ -83,11 +103,14 @@ public abstract class StateAbstractor {
 			abstractStateIndexToGroundStates.put(abstractStateIndex, clusters.get(abstractStateIndex));
 		}
 		
-		//Setup map from abstract state index to ground indices.
+		return abstractStateIndexToGroundStates;
+	}
+
+	private void setupAbstractIndexToGroundIndexMap(HashMap<Integer, List<State>> abstractStateIndexToGroundStates) {
 		this.abstractIndexToGroundIndex = new HashMap<Integer, List<Integer>>();
-		for (int abstractStateIndex = 0; abstractStateIndex < clusters.size(); abstractStateIndex++) {
+		for (int abstractStateIndex = 0; abstractStateIndex < abstractStateIndexToGroundStates.size(); abstractStateIndex++) {
 			List<Integer> groundStateIndices = new ArrayList<Integer>();
-			
+
 			for (State groundState : abstractStateIndexToGroundStates.get(abstractStateIndex)) {
 				Integer groundStateIndex = GraphDefinedDomain.getNodeId(groundState);
 				groundStateIndices.add(groundStateIndex);
@@ -96,13 +119,28 @@ public abstract class StateAbstractor {
 			this.abstractIndexToGroundIndex.put(abstractStateIndex, groundStateIndices);
 		}
 
+	}
 
+	private void setupGroundIndexToAbstractStateIndexMap(HashMap<Integer, List<State>> abstractStateIndexToGroundStates) {
+		this.groundToAbstractState = new HashMap<Integer, Integer>();
+		for (Integer abstractStateIndex : abstractStateIndexToGroundStates.keySet()) {
+			List<State> groundStates = abstractStateIndexToGroundStates.get(abstractStateIndex);
+			for (State sg : groundStates) {
+				Integer sgInt = GraphDefinedDomain.getNodeId(sg);
+				this.groundToAbstractState.put(sgInt, abstractStateIndex);
+			}
+		}
+	}
+
+	private GraphDefinedDomain setupAbstractDomainAndAbstractRewardFunctionAndAbstractTerminalFunction(Domain groundD, State initialState, RewardFunction groundRF, TerminalFunction groundTF, HashMap<Integer, List<State>> abstractStateIndexToGroundStates) {
+		HashableStateFactory hf = new SimpleHashableStateFactory();
+		
 		//Instantiate abstract MDP with num states as clusters.
-		GraphDefinedDomain toReturn = new GraphDefinedDomain(stateToPhiedStates.keySet().size());
+		GraphDefinedDomain toReturn = new GraphDefinedDomain(abstractStateIndexToGroundStates.keySet().size());
 
 		// Initialize reward matrix.
 		HashMap<GroundedAction, double[][]> rewardMatrix = new HashMap<GroundedAction, double[][]>();
-		for (Action a : inputD.getActions()) {
+		for (Action a : groundD.getActions()) {
 			GroundedAction ga = a.getAssociatedGroundedAction();
 			rewardMatrix.put(ga, new double[toReturn.getNumNodes()][toReturn.getNumNodes()]);
 		}
@@ -110,14 +148,14 @@ public abstract class StateAbstractor {
 		//Set up new transitions and rewards in abstracted MDP.
 		for (int abstractStateIndex = 0; abstractStateIndex < toReturn.getNumNodes(); abstractStateIndex++) {
 			for (int otherAbstractStateIndex = 0; otherAbstractStateIndex < toReturn.getNumNodes(); otherAbstractStateIndex++) {
-				for (int actionIndex = 0; actionIndex < inputD.getActions().size(); actionIndex++) {
-					GroundedAction currGA = inputD.getActions().get(actionIndex).getAssociatedGroundedAction();
+				for (int actionIndex = 0; actionIndex < groundD.getActions().size(); actionIndex++) {
+					GroundedAction currGA = groundD.getActions().get(actionIndex).getAssociatedGroundedAction();
 					double transitionProbability = 0.0;
 					//Loop over ground states.
 					for (State groundState : abstractStateIndexToGroundStates.get(abstractStateIndex)) {
 						double numStatesInCluster = abstractStateIndexToGroundStates.get(abstractStateIndex).size();
 						for (State otherGroundedState : abstractStateIndexToGroundStates.get(otherAbstractStateIndex)) {
-							double weightOfGroundState = getSteadyStateWeighting(inputD, groundState, abstractStateIndexToGroundStates.get(abstractStateIndex), hf, initialState, rf, tf);
+							double weightOfGroundState = getSteadyStateWeighting(groundD, groundState, abstractStateIndexToGroundStates.get(abstractStateIndex), hf, initialState, groundRF, groundTF);
 
 							//Add to transition prob based on weighting scheme.
 							double transitionProbInGroundState = 0;
@@ -134,34 +172,35 @@ public abstract class StateAbstractor {
 							transitionProbability += weightOfGroundState*transitionProbInGroundState;
 
 							//Add to rewards
-							double groundReward = rf.reward(groundState, currGA, otherGroundedState);
+							double groundReward = groundRF.reward(groundState, currGA, otherGroundedState);
 							rewardMatrix.get(currGA)[abstractStateIndex][otherAbstractStateIndex] += weightOfGroundState*groundReward;
 						}
 					}
-						if (transitionProbability != 0) toReturn.setTransition(abstractStateIndex, actionIndex, otherAbstractStateIndex, transitionProbability);
+					if (transitionProbability != 0) toReturn.setTransition(abstractStateIndex, actionIndex, otherAbstractStateIndex, transitionProbability);
 				}
 			}
 		}
-		this.rf = new abstractRewardMatrix(rewardMatrix);
-
-		// Set up mapping from ground MDP states to abstract MDP states (used later to get ground policy).
-		this.groundToAbstractState = new HashMap<Integer, Integer>();
-		for (Integer abstractStateIndex : abstractStateIndexToGroundStates.keySet()) {
-			List<State> groundStates = abstractStateIndexToGroundStates.get(abstractStateIndex);
-			for (State sg : groundStates) {
-				Integer sgInt = GraphDefinedDomain.getNodeId(sg);
-				this.groundToAbstractState.put(sgInt, abstractStateIndex);
-			}
-		}
+		this.aRF = new abstractRewardMatrix(rewardMatrix);
 		
 		return toReturn;
 	}
-	
+
 	private HashMap<HashableState, Double> steadyStateMapping = null;
-	private double getSteadyStateWeighting(Domain d, State s, List<State> allStatesInCluster, HashableStateFactory hf, State initialState, RewardFunction rf, TerminalFunction tf) {
+	/**
+	 * A helper for setting up the TF and RF. Used to weight ground states which contribute to an abstract state.
+	 * @param d
+	 * @param s
+	 * @param allStatesInCluster
+	 * @param hf
+	 * @param initialState
+	 * @param rf
+	 * @param tf
+	 * @return
+	 */
+	private double getSteadyStateWeighting(Domain d, State s, List<State> allStatesInCluster, HashableStateFactory hf, State initialState, RewardFunction groundRF, TerminalFunction groundTF) {
 		HashableState hs = hf.hashState(s);
 		if (steadyStateMapping == null) {
-			setUpSteadyStateMapping(d, initialState, tf, rf, hf);
+			setUpSteadyStateMapping(d, initialState, groundTF, groundRF, hf);
 		}
 		double totalProbMassOfGroundStatesInCluster = 0.0;
 		for (State stateInCluster : allStatesInCluster) {
@@ -171,45 +210,45 @@ public abstract class StateAbstractor {
 		double toReturn = steadyStateMapping.getOrDefault(hs, new Double(0))/totalProbMassOfGroundStatesInCluster;
 		if (totalProbMassOfGroundStatesInCluster == 0.0) return 1.0/allStatesInCluster.size(); //Return uniform weighting if probability is 0 for all
 		System.out.println(toReturn);
-				
+
 		return toReturn;
 	}
-	
+
 	private void setUpSteadyStateMapping(Domain d, State initialState, TerminalFunction tf, RewardFunction rf, HashableStateFactory hf) {
-			this.steadyStateMapping = new HashMap<HashableState, Double>();
-			ValueIteration VI = new ValueIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations);
-			GreedyQPolicy pol = VI.planFromState(initialState);
-			//Perform rollouts
-			int numRollouts = 100;
-			int maxNumSteps = 1000;
-			double totalNumberOfStatesVisited = 0;
-			for (int i = 0; i < numRollouts; i++) {
-				EpisodeAnalysis ea = pol.evaluateBehavior(initialState, rf, maxNumSteps);
-				//Increment states visited
-				for (State s : ea.stateSequence) {
-					HashableState hs = hf.hashState(s);
-					Double oldValue = steadyStateMapping.getOrDefault(hs, new Double(0));
-					steadyStateMapping.put(hs, (oldValue+1));
-					totalNumberOfStatesVisited += 1;
-				}
+		this.steadyStateMapping = new HashMap<HashableState, Double>();
+		ValueIteration VI = new ValueIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations);
+		GreedyQPolicy pol = VI.planFromState(initialState);
+		//Perform rollouts
+		int numRollouts = 100;
+		int maxNumSteps = 1000;
+		double totalNumberOfStatesVisited = 0;
+		for (int i = 0; i < numRollouts; i++) {
+			EpisodeAnalysis ea = pol.evaluateBehavior(initialState, rf, maxNumSteps);
+			//Increment states visited
+			for (State s : ea.stateSequence) {
+				HashableState hs = hf.hashState(s);
+				Double oldValue = steadyStateMapping.getOrDefault(hs, new Double(0));
+				steadyStateMapping.put(hs, (oldValue+1));
+				totalNumberOfStatesVisited += 1;
 			}
-			//Normalize by sum
-			for (Entry<HashableState, Double> kvPair : steadyStateMapping.entrySet()) {
-				double normValue = kvPair.getValue()/totalNumberOfStatesVisited;
-				if (totalNumberOfStatesVisited == 0.0) {
-					normValue = 0.0;
-				}
-				steadyStateMapping.put(kvPair.getKey(), normValue);
+		}
+		//Normalize by sum
+		for (Entry<HashableState, Double> kvPair : steadyStateMapping.entrySet()) {
+			double normValue = kvPair.getValue()/totalNumberOfStatesVisited;
+			if (totalNumberOfStatesVisited == 0.0) {
+				normValue = 0.0;
 			}
-			
+			steadyStateMapping.put(kvPair.getKey(), normValue);
+		}
+
 	}
-	
+
 	public State getAbstractInitialState(Domain abstractDomain, State groundInitialState) {
 		int groundIndex = GraphDefinedDomain.getNodeId(groundInitialState);
 		int abstractInitialStateIndex = this.groundToAbstractState.get(groundIndex);
 		return GraphDefinedDomain.getState(abstractDomain, abstractInitialStateIndex);
 	}
-	
+
 	/**
 	 * Uses VI to solve for optimal policy in abstract state, then
 	 * returns the policy for ground MDP as the abstract policy dictates.
@@ -218,14 +257,14 @@ public abstract class StateAbstractor {
 	public Policy getPolicyForGroundMDP(GreedyQPolicy abstractPolicy, Domain abstractDomain, Domain groundDomain) {
 		return new PolicyForGroundMDP(this.groundToAbstractState, abstractPolicy, groundDomain, abstractDomain);
 	}
-	
+
 	private class PolicyForGroundMDP extends Policy {
-		
+
 		private HashMap<Integer, Integer> groundToAbstract; // Using integers b/c states don't hash w/o factory
 		private GreedyQPolicy abstractPolicy;
 		private Domain aD;
 		private Domain gD;
-		
+
 		public PolicyForGroundMDP(HashMap<Integer, Integer> groundToAbstract, GreedyQPolicy abstractPolicy, Domain gD, Domain aD) {
 			this.groundToAbstract= groundToAbstract;
 			this.abstractPolicy = abstractPolicy;
@@ -256,7 +295,7 @@ public abstract class StateAbstractor {
 		public boolean isDefinedFor(State s) {
 			return true;
 		}
-		
+
 	}
 
 	/**
@@ -264,7 +303,7 @@ public abstract class StateAbstractor {
 	 * @return the abstract reward function that results from collapsing the input MDP
 	 */
 	public RewardFunction getRewardFunction() {
-		return this.rf;
+		return this.aRF;
 	}
 
 	/**
@@ -287,7 +326,7 @@ public abstract class StateAbstractor {
 			return toReturn;
 		}
 	}
-	
+
 	public List<Integer> getGroundIndicesFromAbstractIndex(int abstractIndex) {
 		return this.abstractIndexToGroundIndex.get(abstractIndex);
 	}
