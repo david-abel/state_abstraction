@@ -158,27 +158,28 @@ public abstract class StateAbstractor {
 		for (int abstractStateIndex = 0; abstractStateIndex < toReturn.getNumNodes(); abstractStateIndex++) {
 			double numStatesInCluster = abstractStateIndexToGroundStates.get(abstractStateIndex).size();
 
-				//Loop over ground states in the current abstract state.
-				for (State groundState : abstractStateIndexToGroundStates.get(abstractStateIndex)) {
-					double weightOfGroundState = 1.0/numStatesInCluster; //getSteadyStateWeighting(groundD, groundState, abstractStateIndexToGroundStates.get(abstractStateIndex), hf, initialState, groundRF, groundTF);
+			//Loop over ground states in the current abstract state.
+			for (State groundState : abstractStateIndexToGroundStates.get(abstractStateIndex)) {
+				double weightOfGroundState = getSteadyStateWeighting(groundD, groundState, abstractStateIndexToGroundStates.get(abstractStateIndex), hf, initialState, groundRF, groundTF);
 
-					//Loop over actions.
-					for (int actionIndex = 0; actionIndex < groundD.getActions().size(); actionIndex++) {
-						//Add to transition matrix.
-						GroundedAction currGA = groundD.getActions().get(actionIndex).getAssociatedGroundedAction();
-						List<TransitionProbability> gsgaTransitions = currGA.getTransitions(groundState);
-						for (TransitionProbability tp : gsgaTransitions) {
-							double toAdd = weightOfGroundState*tp.p;
-							int abstractStateIndexOfArrivedInState = this.groundToAbstractState.get(GraphDefinedDomain.getNodeId(tp.s));
-							transitionMatrix.get(actionIndex)[abstractStateIndex][abstractStateIndexOfArrivedInState] += toAdd;
-						}
+				//Loop over actions.
+				for (int actionIndex = 0; actionIndex < groundD.getActions().size(); actionIndex++) {
+					//Add to transition matrix.
+					GroundedAction currGA = groundD.getActions().get(actionIndex).getAssociatedGroundedAction();
+					List<TransitionProbability> gsgaTransitions = currGA.getTransitions(groundState);
+					for (TransitionProbability tp : gsgaTransitions) {
+						double toAdd = weightOfGroundState*tp.p;
+						int abstractStateIndexOfArrivedInState = this.groundToAbstractState.get(GraphDefinedDomain.getNodeId(tp.s));
+						transitionMatrix.get(actionIndex)[abstractStateIndex][abstractStateIndexOfArrivedInState] += toAdd;
+					}
 
-
-						//Loop over other abstract states.
-						for (int otherAbstractStateIndex = 0; otherAbstractStateIndex < toReturn.getNumNodes(); otherAbstractStateIndex++) {
+					//Loop over other abstract states.
+					for (int otherAbstractStateIndex = 0; otherAbstractStateIndex < toReturn.getNumNodes(); otherAbstractStateIndex++) {
 
 						//Loop over ground states for the other abstract state.
 						for (State otherGroundedState : abstractStateIndexToGroundStates.get(otherAbstractStateIndex)) {
+
+//							double weightOfOtherGroundState = getSteadyStateWeighting(groundD, otherGroundedState, abstractStateIndexToGroundStates.get(otherAbstractStateIndex), hf, initialState, groundRF, groundTF);
 
 							//Add to rewards.
 							double groundReward = groundRF.reward(groundState, currGA, otherGroundedState);

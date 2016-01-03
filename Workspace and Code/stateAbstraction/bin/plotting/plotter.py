@@ -55,7 +55,7 @@ def plot(xData, yData, yAxisLabel, taskName, scatter=False, xAxisLabel="Epsilon"
 	        'size'   : 15}
 
 	matplotlib.rc('font', **font)
-	plt.xlim([0, max(xData)])
+	plt.xlim([min(0,min(xData)), max(xData)])
 	plt.ylim([0, max(yData) + 5.0])
 	plt.xlabel(xAxisLabel)
 	plt.ylabel(yAxisLabel)
