@@ -69,7 +69,12 @@ public class GraphStreamVisualizer {
 		this.d = d;
 	}
 
-	public void render() {	
+	/**
+	 * 
+	 * @param sa null if isAbstract=false
+	 * @param isAbstract if isAbstract will label each node with its ground state indices 
+	 */
+	public void render(StateAbstractor sa, boolean isAbstract) {	
 		//Use advanced viewer
 		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 
@@ -77,10 +82,15 @@ public class GraphStreamVisualizer {
 		graph.addAttribute("ui.stylesheet", styleSheet);
 		Domain dom = this.d;
 
+		// Set what each state node is filled in with
 		for (int stateIndex = 0; stateIndex < numStates; stateIndex++) {
 			//Add nodes for each state.
 			Node node = graph.addNode(Integer.toString(stateIndex));
-			node.addAttribute("ui.label", Integer.toString(stateIndex));
+			String label = Integer.toString(stateIndex);
+			if (isAbstract) {
+				label = sa.getGroundIndicesFromAbstractIndex(stateIndex).toString();
+			}
+			node.addAttribute("ui.label", label);
 		}
 
 
@@ -145,7 +155,7 @@ public class GraphStreamVisualizer {
 
 		// Abstract MDP VI with a PhiQ* for abstraction
 		TerminalFunction tfa = new NullTermination();
-		double epsilon = 10;
+		double epsilon = 1;
 		qValueGenerator qGen = new qValueGenerator(d, rf, gInitialState, new NullTermination());
 		StateAbstractor qPhi = new PhiSAReal(qGen, epsilon, d.getActions());
 		HashableStateFactory hfA = new SimpleHashableStateFactory();
@@ -164,9 +174,9 @@ public class GraphStreamVisualizer {
 		System.out.println("Value of initial state using abstract MDP: " + PI.value(gInitialState) + " vs value actual value of " + vi.value(gInitialState));
 
 		GraphStreamVisualizer test = new GraphStreamVisualizer(d, n, rf);
-		test.render();
+		test.render(null, false);
 		GraphStreamVisualizer test2 = new GraphStreamVisualizer(absD, aVi.getAllStates().size(), rfA);
-		test2.render();
+		test2.render(qPhi, true);
 //		
 //		addExplorer(absD, rfA, tf, aInitialState);
 	}

@@ -70,9 +70,9 @@ public class CreateVisuals {
 
 		// Visualize.
 		GraphStreamVisualizer groundMDPVisualizer = new GraphStreamVisualizer(graphDomain, vi.getAllStates().size(), graphRF);
-		groundMDPVisualizer.render();
+		groundMDPVisualizer.render(null, false);
 		GraphStreamVisualizer abstractMDPVisualizer = new GraphStreamVisualizer(abstractDomain, aVi.getAllStates().size(), abstractRF);
-		abstractMDPVisualizer.render();
+		abstractMDPVisualizer.render(qPhi, true);
 	}
 	
 	/**

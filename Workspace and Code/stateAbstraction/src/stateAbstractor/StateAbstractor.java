@@ -31,6 +31,7 @@ public abstract class StateAbstractor {
 
 	private RewardFunction rf;
 	private HashMap<Integer, Integer> groundToAbstractState;
+	private HashMap<Integer, List<Integer>> abstractIndexToGroundIndex;
 
 	/**
 	 * 
@@ -80,6 +81,19 @@ public abstract class StateAbstractor {
 
 		for (int abstractStateIndex = 0; abstractStateIndex < clusters.size(); abstractStateIndex++) {
 			abstractStateIndexToGroundStates.put(abstractStateIndex, clusters.get(abstractStateIndex));
+		}
+		
+		//Setup map from abstract state index to ground indices.
+		this.abstractIndexToGroundIndex = new HashMap<Integer, List<Integer>>();
+		for (int abstractStateIndex = 0; abstractStateIndex < clusters.size(); abstractStateIndex++) {
+			List<Integer> groundStateIndices = new ArrayList<Integer>();
+			
+			for (State groundState : abstractStateIndexToGroundStates.get(abstractStateIndex)) {
+				Integer groundStateIndex = GraphDefinedDomain.getNodeId(groundState);
+				groundStateIndices.add(groundStateIndex);
+			}
+			Collections.sort(groundStateIndices);
+			this.abstractIndexToGroundIndex.put(abstractStateIndex, groundStateIndices);
 		}
 
 
@@ -272,6 +286,10 @@ public abstract class StateAbstractor {
 			double toReturn = rewardMatrix.get(a)[sIndex][sPrimeIndex];
 			return toReturn;
 		}
+	}
+	
+	public List<Integer> getGroundIndicesFromAbstractIndex(int abstractIndex) {
+		return this.abstractIndexToGroundIndex.get(abstractIndex);
 	}
 
 
