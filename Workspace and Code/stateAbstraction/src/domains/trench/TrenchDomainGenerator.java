@@ -336,10 +336,10 @@ public class TrenchDomainGenerator implements DomainGenerator {
 
 			// Are they at goal location?
 			if(ax == this.goalX && ay == this.goalY){
-				return 100.;
+				return 1;
 			}
 
-			return -1;
+			return 0;
 		}
 	}
 
