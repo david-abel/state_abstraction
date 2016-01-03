@@ -100,7 +100,7 @@ public class CreateVisuals {
 	public static void main(String[] args) {
 		
 		// Change the text here to switch between visuals.
-		String domainToVisualize = "TRENCH"; // One of "TRENCH", "UPWORLD", "NCHAIN", or add your own.
+		String domainToVisualize = "TAXI"; // One of "TRENCH", "UPWORLD", "NCHAIN", "TAXI" or add your own.
 		double epsilon = .05;
 		
 		if (domainToVisualize == "TRENCH") {

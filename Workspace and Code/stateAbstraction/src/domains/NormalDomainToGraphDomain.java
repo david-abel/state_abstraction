@@ -1,5 +1,7 @@
 package domains;
 
+import graphStateAbstractionTest.VIParams;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +28,7 @@ public class NormalDomainToGraphDomain {
 	public int initStateID;
 	public HashMap<Integer, State> graphIndexToNonGraphState;
 	public HashMap<Integer, Action> graphActionIndexToNonGraphAction;
-	
+
 	public NormalDomainToGraphDomain(DomainGenerator tg, TerminalFunction originalTF, RewardFunction originalRF, State initState) {
 		this.domainGen = tg;
 		this.oldDomainTF = originalTF;
@@ -36,73 +38,70 @@ public class NormalDomainToGraphDomain {
 		this.graphIndexToNonGraphState = new HashMap<Integer, State>();
 		this.graphActionIndexToNonGraphAction = new HashMap<Integer, Action>();
 	}
-	
-	
+
+
 	public GraphDefinedDomain createGraphDomain() {
 		// Get all states and actions.
-		List<State> allStates = getAllStates();
+		List<State> allNonGraphStates = getAllNonGraphStates();
 		List<Action> allActions = this.oldDomain.getActions();
-		
+
 		// Create GraphDefinedDomain.
-		GraphDefinedDomain gd = new GraphDefinedDomain(allStates.size());
-		
+		GraphDefinedDomain gd = new GraphDefinedDomain(allNonGraphStates.size());
+
 		// Set Transitions.
-		setTransitionsAndFindGoalStates(allStates, allActions, gd);
-		
+		setTransitionsAndFindGoalStates(allNonGraphStates, allActions, gd);
+
 		// Set initial state.
-		initStateID = allStates.indexOf(this.oldDomainInitialState);
+		initStateID = allNonGraphStates.indexOf(this.oldDomainInitialState);
 
 		return gd;
 	}
-	
-	private void setTransitionsAndFindGoalStates(List<State> allStates, List<Action> allActions, GraphDefinedDomain gd) {
-		
+
+	private void setTransitionsAndFindGoalStates(List<State> allNonGraphStates, List<Action> allActions, GraphDefinedDomain gd) {
+
 		// Loop over each state and set transitions in the graph.
-		for (int stateIndex = 0; stateIndex < allStates.size(); stateIndex++) {
-			this.graphIndexToNonGraphState.put(stateIndex, allStates.get(stateIndex));
+		for (int stateIndex = 0; stateIndex < allNonGraphStates.size(); stateIndex++) {
+			this.graphIndexToNonGraphState.put(stateIndex, allNonGraphStates.get(stateIndex));
 
 			// Loop over each action to determine effects of the action.
 			for (int actionIndex = 0; actionIndex < allActions.size(); actionIndex++) {
 				this.graphActionIndexToNonGraphAction.put(actionIndex, allActions.get(actionIndex));
-				
+
 				// Find S, A, S'.
 				GroundedAction ga = allActions.get(actionIndex).getAssociatedGroundedAction();
-				State nextState = ga.executeIn(allStates.get(stateIndex));
-				int nextStateNodeID = allStates.indexOf(nextState);
-				
+				State nextState = ga.executeIn(allNonGraphStates.get(stateIndex));
+				int nextStateNodeID = allNonGraphStates.indexOf(nextState);
 
-				if (this.oldDomainTF.isTerminal(allStates.get(stateIndex))) {
+
+				if (this.oldDomainTF.isTerminal(allNonGraphStates.get(stateIndex))) {
 					// Set terminal transition.
 					gd.setTransition(stateIndex, actionIndex, stateIndex, 1.0);
 				}
 				else {
 					// Set non-terminal transition.
 					gd.setTransition(stateIndex, actionIndex, nextStateNodeID, 1.0);
-					
 				}
-				
+
 			}
-			
-			
+
+
 		}
 	}
-	
-	private List<State> getAllStates() {
-		
+
+	private List<State> getAllNonGraphStates() {
+
 		// Set initial state and reward function.
 		State initialState = this.oldDomainInitialState;
 		RewardFunction rf = this.oldDomainRF;
-		
+
 		// These parameters do *not* matter. Just need to run VI to compute all the reachable states.
-		double gamma = 0.99;
 		int numRollouts = 1;
-		double minDelta = 1.0;
-		
+
 		// Run VI.
-		ValueIteration vi = new ValueIteration(this.oldDomain, rf, oldDomainTF, gamma, new SimpleHashableStateFactory(), minDelta, numRollouts);
+		ValueIteration vi = new ValueIteration(this.oldDomain, rf, oldDomainTF, VIParams.gamma, new SimpleHashableStateFactory(), VIParams.maxDelta, numRollouts);
 		GreedyQPolicy policy = vi.planFromState(initialState);
-		
+
 		return vi.getAllStates();
 	}
-	
+
 }
