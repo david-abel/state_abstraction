@@ -59,7 +59,6 @@ public class NormalDomainToGraphDomain {
 	}
 
 	private void setTransitionsAndFindGoalStates(List<State> allNonGraphStates, List<Action> allActions, GraphDefinedDomain gd) {
-		int numSPrimeTerminal = 0;
 		
 		// Loop over each state and set transitions in the graph.
 		for (int stateIndex = 0; stateIndex < allNonGraphStates.size(); stateIndex++) {
@@ -81,12 +80,10 @@ public class NormalDomainToGraphDomain {
 					for (TransitionProbability tp : tps) {
 						// Set non-terminal transitions.
 						gd.setTransition(stateIndex, actionIndex, allNonGraphStates.indexOf(tp.s), tp.p);
-						if (this.oldDomainTF.isTerminal(tp.s)) numSPrimeTerminal++;
 					}
 				}
 			}
 		}
-		System.out.println("SprimeTerminal: " + numSPrimeTerminal);
 	}
 
 	private List<State> getAllNonGraphStates() {

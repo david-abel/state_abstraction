@@ -774,38 +774,18 @@ public class TaxiDomainGenerator implements DomainGenerator {
 
 		@Override
 		public double reward(State s, GroundedAction a, State sprime) {
-			List<ObjectInstance> allPassengers = sprime.getObjectsOfClass(PASSENGERCLASS);
-			
-			// Check to see if all passengers are in their goal locations.
-			int numPassengersInPlace = 0;
-			for(ObjectInstance passenger : allPassengers) {
-				int xLoc = passenger.getIntValForAttribute(XATT);
-				int yLoc = passenger.getIntValForAttribute(YATT);
-				int agentDestType = passenger.getIntValForAttribute(LOCATIONATT);
-				List<ObjectInstance> goalLocations = sprime.getObjectsOfClass(LOCATIONCLASS);
-				for (ObjectInstance goalLoc :goalLocations) {
-						int goalX = goalLoc.getIntValForAttribute(XATT);
-						int goalY = goalLoc.getIntValForAttribute(YATT);
-						if (xLoc == goalX && yLoc == goalY && goalLoc.getIntValForAttribute(LOCATIONATT) == agentDestType) {
-							numPassengersInPlace++;
-						}
-					}
+			List<ObjectInstance> passengers = sprime.getObjectsOfClass(PASSENGERCLASS);
+			for (ObjectInstance passenger: passengers) {
+				if (passenger.getIntValForAttribute(INTAXIATT) == 1 || !TaxiTF.passengerAtLocation(passenger, sprime)) return 0;
 			}
-			
-			if (numPassengersInPlace == allPassengers.size()) {
-				// If all passengers in their destinates, return positive reward.
-				return 1;
-			}
-			else {
-				return 0;
-			}
+			return 1.0;
 		}
 		
 	}
 
 	public static class TaxiTF implements TerminalFunction {
 
-		private boolean passengerAtLocation(ObjectInstance passenger, State state) {
+		private static boolean passengerAtLocation(ObjectInstance passenger, State state) {
 			int xLoc = passenger.getIntValForAttribute(XATT);
 			int yLoc = passenger.getIntValForAttribute(YATT);
 			int agentDestType = passenger.getIntValForAttribute(LOCATIONATT);

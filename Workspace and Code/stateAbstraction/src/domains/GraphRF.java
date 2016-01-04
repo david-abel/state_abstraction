@@ -40,15 +40,17 @@ public class GraphRF implements RewardFunction {
 		State nonGraphState = this.graphIndexToNonGraphState.get(stateIndex);
 		int sprimeIndex = GraphDefinedDomain.getNodeId(sprime);
 		Action nonGraphAction = this.graphActionIndexToNonGraphAction.get(graphDomain.getActions().indexOf(a.action));
+		State nonGraphSPrime = this.graphIndexToNonGraphState.get(sprimeIndex);
 		
 		// Terminal is non-zero absorbing.
 		if (this.nonGraphTF.isTerminal(nonGraphState)) return 0;
 		
 		//Otherwise just return what the old RF would return.
-		return this.nonGraphRF.reward(
+		double rewardToReturn = this.nonGraphRF.reward(
 				nonGraphState, 
 				nonGraphAction.getAssociatedGroundedAction(), 
-				this.graphIndexToNonGraphState.get(sprimeIndex));
+				nonGraphSPrime);
+		return rewardToReturn;
 	}
 
 }
