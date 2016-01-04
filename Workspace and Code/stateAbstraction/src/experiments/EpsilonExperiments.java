@@ -23,6 +23,7 @@ import domains.GraphRF;
 import domains.GraphTF;
 import domains.NormalDomainToGraphDomain;
 import domains.nchain.NChainGenerator;
+import domains.randommdp.RandomMDPGenerator;
 import domains.taxi.TaxiDomainGenerator;
 import domains.trench.TrenchDomainGenerator;
 import domains.upworld.UpWorldGenerator;
@@ -39,8 +40,8 @@ public class EpsilonExperiments {
 	
 	// Iterate over epsilon and compute the number of states.
 	final static double startEpsilon = 0.0;
-	final static double endEpsilon = 10;
-	final static double epsilonIncrement = 0.5;
+	final static double endEpsilon = 0.5;
+	final static double epsilonIncrement = 0.01;
 	
 	/**
 	 * Given a DomainGenerator + RF + TF + initState, this method generates abstract MDPs subject to different epsilons, and prints the results.
@@ -92,13 +93,15 @@ public class EpsilonExperiments {
 		}
 	}
 	
-	public static void compressAndGenEpsilonResults(DomainGenerator gen, TerminalFunction tf, RewardFunction rf, State initialState, String taskName) {
+	public static void convertAndGenEpsilonResults(DomainGenerator gen, TerminalFunction tf, RewardFunction rf, State initialState, String taskName) {
 		// Convert to graph domain.
 		NormalDomainToGraphDomain graphMaker = new NormalDomainToGraphDomain(gen, tf, rf, initialState);
 		GraphDefinedDomain graphDefinedDomain = graphMaker.createGraphDomain();
 		Domain d = graphDefinedDomain.generateDomain();
 		RewardFunction graphRF = new GraphRF(d, rf, tf, graphMaker.graphIndexToNonGraphState, graphMaker.graphActionIndexToNonGraphAction);
 		State initGraphState = GraphDefinedDomain.getState(d, graphMaker.initStateID);
+		
+		// Run experiments.
 		generateEpsilonResults(graphDefinedDomain, graphRF, initGraphState, taskName);
 	}
 	
@@ -108,14 +111,12 @@ public class EpsilonExperiments {
 		
 		// Create trench domain.
 		int height = 3;
-		int width = 3;
+		int width = 2;
 		TrenchDomainGenerator trenchGen = new TrenchDomainGenerator(height, width);
 		TerminalFunction trenchTF = new TrenchDomainGenerator.TrenchTF(height - 1, width - 1);
 		RewardFunction trenchRF = new TrenchDomainGenerator.TrenchRF(height - 1, width - 1);
 		Domain oldTrenchDomain = trenchGen.generateDomain();
 		State initialTrenchState = trenchGen.getInitialState(oldTrenchDomain);
-//		resultsFile = resultsFile + "trench/";
-//		
 		
 		// Create taxi domain.
 		TaxiDomainGenerator taxiGen = new TaxiDomainGenerator();
@@ -132,32 +133,44 @@ public class EpsilonExperiments {
 		State initialUpWorldState = GraphDefinedDomain.getState(upWorldDomain, 0);
 		RewardFunction upWorldRF = new UpWorldGenerator.UpWorldRF();
 		
-		
 		// Create nchain domain.
 		int numStates = 50;
 		GraphDefinedDomain nChainGen = NChainGenerator.getNStateChain(numStates);
 		Domain nChainDomain = nChainGen.generateDomain();
 		State initialNChainState = GraphDefinedDomain.getState(nChainDomain, 0);
 		RewardFunction nChainRF = new NChainGenerator.nStateChainRF(numStates);
+		
+		// Create random domain.
+		int numRandStates = 1000;
+		int numRandActions = 3;
+		GraphDefinedDomain randGen = RandomMDPGenerator.getRandomMDP(numRandStates, numRandActions);
+		Domain randDomain = randGen.generateDomain();
+		State initialRandState = RandomMDPGenerator.getInitialState(randDomain);
+		RewardFunction randRF = new RandomMDPGenerator.RandomMDPRF(numRandStates);
 
-		String task = "TAXI"; // NCHAIN, TRENCH, TAXI, UPWORLD		
+		String task = "RANDOM"; // NCHAIN, TRENCH, TAXI, UPWORLD, RANDOM		
 		
 		if (task == "ALL") {
 			generateEpsilonResults(nChainGen, nChainRF, initialNChainState, "nchain");
-			compressAndGenEpsilonResults(trenchGen, trenchTF, trenchRF, initialTrenchState, "trench");
-			compressAndGenEpsilonResults(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi");
+			convertAndGenEpsilonResults(trenchGen, trenchTF, trenchRF, initialTrenchState, "trench");
+			convertAndGenEpsilonResults(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi");
 			generateEpsilonResults(upWorldGen, upWorldRF, initialUpWorldState, "upworld");
+			generateEpsilonResults(randGen, randRF, initialRandState, "random");
 		}
 		if (task == "NCHAIN") {
 			generateEpsilonResults(nChainGen, nChainRF, initialNChainState, "nchain");
 		}
 		else if (task == "TRENCH") {
-			compressAndGenEpsilonResults(trenchGen, trenchTF, trenchRF, initialTrenchState, "trench");
+			convertAndGenEpsilonResults(trenchGen, trenchTF, trenchRF, initialTrenchState, "trench");
 		}
 		else if (task == "TAXI") {
-			compressAndGenEpsilonResults(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi");
+			convertAndGenEpsilonResults(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi");
+		}
+		else if (task == "RANDOM") {
+			generateEpsilonResults(randGen, randRF, initialRandState, "random");
 		}
 		else {
+//			TerminalFunction upWorldTF = new UpWorldGenerator.UpWorldTF(upWorldHeight);
 			generateEpsilonResults(upWorldGen, upWorldRF, initialUpWorldState, "upworld");
 		}
 		

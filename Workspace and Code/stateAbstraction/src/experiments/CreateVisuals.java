@@ -16,7 +16,6 @@ import burlap.oomdp.core.Domain;
 import burlap.oomdp.core.TerminalFunction;
 import burlap.oomdp.core.states.State;
 import burlap.oomdp.singleagent.RewardFunction;
-import burlap.oomdp.statehashing.HashableStateFactory;
 import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 import domains.GraphRF;
 import domains.NormalDomainToGraphDomain;

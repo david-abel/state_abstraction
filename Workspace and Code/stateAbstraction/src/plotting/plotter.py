@@ -44,7 +44,7 @@ def plot(xData, yData, yAxisLabel, taskName, scatter=False, xAxisLabel="Epsilon"
 		
 
 		for i in xrange(len(xData)):
-			plt.scatter(xData[i], yData[i], s=(epsilons[i]**2+1)*20, alpha=0.5)
+			plt.scatter(xData[i], yData[i], s=(epsilons[i]**4+1)*20, alpha=0.5)
 
 		
 	else: 

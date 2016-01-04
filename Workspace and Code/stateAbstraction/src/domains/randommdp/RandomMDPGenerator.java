@@ -1,8 +1,9 @@
-package graphStateAbstractionTest;
+package domains.randommdp;
 
 import java.util.Random;
 
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
+import burlap.oomdp.core.Domain;
 import burlap.oomdp.core.states.State;
 import burlap.oomdp.singleagent.GroundedAction;
 import burlap.oomdp.singleagent.RewardFunction;
@@ -30,6 +31,10 @@ public class RandomMDPGenerator {
 
 		return dg;
 	}	
+	
+	public static State getInitialState(Domain d) {
+		return GraphDefinedDomain.getState(d, 0);
+	}
 
 	/**
 	 * n State chain reward function -- returns 10 if action 1 is taken in the last state, 2 if

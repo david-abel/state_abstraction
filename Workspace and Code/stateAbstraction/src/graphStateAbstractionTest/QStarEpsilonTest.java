@@ -3,11 +3,6 @@ package graphStateAbstractionTest;
 import java.util.ArrayList;
 import java.util.List;
 
-import domains.GraphRF;
-import domains.trench.TrenchDomainToGraphDomain;
-import domains.trench.TrenchDomainGenerator;
-import domains.trench.TrenchDomainGenerator.TrenchRF;
-import domains.trench.TrenchDomainGenerator.TrenchTF;
 import stateAbstractor.PhiSAReal;
 import stateAbstractor.StateAbstractor;
 import SARealGenerators.qValueGenerator;
@@ -16,10 +11,7 @@ import burlap.behavior.policy.Policy;
 import burlap.behavior.singleagent.EpisodeAnalysis;
 import burlap.behavior.singleagent.planning.stochastic.policyiteration.PolicyIteration;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
-import burlap.debugtools.DPrint;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
-import burlap.oomdp.auxiliary.DomainGenerator;
-import burlap.oomdp.auxiliary.common.NullTermination;
 import burlap.oomdp.core.Domain;
 import burlap.oomdp.core.TerminalFunction;
 import burlap.oomdp.core.states.State;
@@ -83,7 +75,7 @@ public class QStarEpsilonTest {
 			PolicyIteration PI = new PolicyIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations, 1);
 			PI.setPolicyToEvaluate(groundPolicy);
 			PI.planFromState(initGraphState);
-			double valueOfInitGroundState = PI.value(initGraphState);
+			double valueOfInitStateGroundPolicy = PI.value(initGraphState);
 			
 			// Abstract MDP VI with a PhiQ* for abstraction
 			qValueGenerator qGen = new qValueGenerator(d, rf, initGraphState, tf);
@@ -95,23 +87,38 @@ public class QStarEpsilonTest {
 
 			State aInitialState =  qPhi.getAbstractInitialState(absD, initGraphState);
 			GreedyQPolicy abstractPolicy = aVi.planFromState(aInitialState);	
-
+			
+			
+			
 			//Gather up values for this test iteration
 			int numAbstractStates = aVi.getAllStates().size();
 			System.out.println("Num abstract states (eps): " + numAbstractStates + " (" + epsilon + ")");
 
 			Policy groundPolicyFromAbstractPolicy = qPhi.getPolicyForGroundMDP(abstractPolicy, absD, d);
-			PolicyIteration abstractPI = new PolicyIteration(d, rf, tf, VIParams.gamma, hf, VIParams.maxDelta, VIParams.maxIterations, 1);
+			PolicyIteration abstractPI = new PolicyIteration(d, rf, tf, VIParams.gamma, new SimpleHashableStateFactory(), VIParams.maxDelta, VIParams.maxIterations, 1);
 			abstractPI.setPolicyToEvaluate(groundPolicyFromAbstractPolicy);
 			GreedyQPolicy pol = abstractPI.planFromState(initGraphState);
-			System.out.println("QStarEpsilonTest: Reward seq of abstract pol in ground MDP: " + pol.evaluateBehavior(initGraphState, rf, 100).rewardSequence);
-			double valueOfInitAbstractState = abstractPI.value(initGraphState);
+			
+			
+			EpisodeAnalysis ea = pol.evaluateBehavior(initGraphState, rf, 20000);
+			List<Double> rewards = ea.rewardSequence;
+			
+			Double val = 0.0;
+			if(rewards.contains(1.0)) {
+				val = Math.pow(VIParams.gamma, rewards.indexOf(1.0));
+				System.out.println("LOC OF 1.0: " + rewards.indexOf(1.0));
+				List<State> stateSeq = ea.stateSequence;
+				System.out.println("LAST STATE: " + stateSeq.get(stateSeq.size() - 1));
+			}
+			
+			
+			double valueOfInitStateAbstractPolicy = abstractPI.value(initGraphState);
 
-			System.out.println("\tVal of abstract init: " + valueOfInitAbstractState);
-			System.out.println("\tVal of ground init: " + valueOfInitGroundState + "\n");
+			System.out.println("\tVal of abstract init: " + valueOfInitStateAbstractPolicy);
+			System.out.println("\tVal of ground init: " + valueOfInitStateGroundPolicy + "\n");
 			
 			
-			EpsilonToNumStatesTuple toAdd = new EpsilonToNumStatesTuple(epsilon, numAbstractStates, valueOfInitGroundState, valueOfInitAbstractState);
+			EpsilonToNumStatesTuple toAdd = new EpsilonToNumStatesTuple(epsilon, numAbstractStates, valueOfInitStateGroundPolicy, valueOfInitStateAbstractPolicy);
 			toReturn.add(toAdd);
 
 		}

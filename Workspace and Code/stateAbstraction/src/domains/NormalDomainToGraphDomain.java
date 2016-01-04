@@ -27,6 +27,7 @@ public class NormalDomainToGraphDomain {
 	State oldDomainInitialState;
 	Domain oldDomain;
 	public int initStateID;
+	public List<Integer> terminalStates = new ArrayList<Integer>();
 	public HashMap<Integer, State> graphIndexToNonGraphState;
 	public HashMap<Integer, Action> graphActionIndexToNonGraphAction;
 
@@ -72,6 +73,9 @@ public class NormalDomainToGraphDomain {
 				GroundedAction ga = allActions.get(actionIndex).getAssociatedGroundedAction();
 
 				if (this.oldDomainTF.isTerminal(allNonGraphStates.get(stateIndex))) {
+					
+					terminalStates.add(stateIndex);
+					
 					// Set terminal transition.
 					gd.setTransition(stateIndex, actionIndex, stateIndex, 1.0);
 				}
