@@ -59,6 +59,7 @@ public class NormalDomainToGraphDomain {
 	}
 
 	private void setTransitionsAndFindGoalStates(List<State> allNonGraphStates, List<Action> allActions, GraphDefinedDomain gd) {
+		int numSPrimeTerminal = 0;
 		
 		// Loop over each state and set transitions in the graph.
 		for (int stateIndex = 0; stateIndex < allNonGraphStates.size(); stateIndex++) {
@@ -80,10 +81,12 @@ public class NormalDomainToGraphDomain {
 					for (TransitionProbability tp : tps) {
 						// Set non-terminal transitions.
 						gd.setTransition(stateIndex, actionIndex, allNonGraphStates.indexOf(tp.s), tp.p);
+						if (this.oldDomainTF.isTerminal(tp.s)) numSPrimeTerminal++;
 					}
 				}
 			}
 		}
+		System.out.println("SprimeTerminal: " + numSPrimeTerminal);
 	}
 
 	private List<State> getAllNonGraphStates() {
@@ -93,6 +96,7 @@ public class NormalDomainToGraphDomain {
 
 		// Run VI.
 		ValueIteration vi = new ValueIteration(this.oldDomain, this.oldDomainRF, oldDomainTF, VIParams.gamma, new SimpleHashableStateFactory(), VIParams.maxDelta, numRollouts);
+		vi.toggleReachabiltiyTerminalStatePruning(true);
 		GreedyQPolicy policy = vi.planFromState(this.oldDomainInitialState);
 
 		return vi.getAllStates();
