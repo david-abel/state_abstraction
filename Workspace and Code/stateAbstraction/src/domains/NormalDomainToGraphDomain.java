@@ -12,6 +12,7 @@ import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.oomdp.auxiliary.DomainGenerator;
 import burlap.oomdp.core.Domain;
 import burlap.oomdp.core.TerminalFunction;
+import burlap.oomdp.core.TransitionProbability;
 import burlap.oomdp.core.states.State;
 import burlap.oomdp.singleagent.Action;
 import burlap.oomdp.singleagent.GroundedAction;
@@ -69,22 +70,19 @@ public class NormalDomainToGraphDomain {
 
 				// Find S, A, S'.
 				GroundedAction ga = allActions.get(actionIndex).getAssociatedGroundedAction();
-				State nextState = ga.executeIn(allNonGraphStates.get(stateIndex));
-				int nextStateNodeID = allNonGraphStates.indexOf(nextState);
-
 
 				if (this.oldDomainTF.isTerminal(allNonGraphStates.get(stateIndex))) {
 					// Set terminal transition.
 					gd.setTransition(stateIndex, actionIndex, stateIndex, 1.0);
 				}
 				else {
-					// Set non-terminal transition.
-					gd.setTransition(stateIndex, actionIndex, nextStateNodeID, 1.0);
+					List<TransitionProbability> tps = ga.getTransitions(allNonGraphStates.get(stateIndex));
+					for (TransitionProbability tp : tps) {
+						// Set non-terminal transitions.
+						gd.setTransition(stateIndex, actionIndex, allNonGraphStates.indexOf(tp.s), tp.p);
+					}
 				}
-
 			}
-
-
 		}
 	}
 
