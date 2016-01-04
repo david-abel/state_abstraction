@@ -52,13 +52,13 @@ public class NormalDomainToGraphDomain {
 		setTransitionsAndFindGoalStates(allNonGraphStates, allActions, gd);
 
 		// Set initial state.
-		initStateID = allNonGraphStates.indexOf(this.oldDomainInitialState);
+		this.initStateID = allNonGraphStates.indexOf(this.oldDomainInitialState);
 
 		return gd;
 	}
 
 	private void setTransitionsAndFindGoalStates(List<State> allNonGraphStates, List<Action> allActions, GraphDefinedDomain gd) {
-
+		
 		// Loop over each state and set transitions in the graph.
 		for (int stateIndex = 0; stateIndex < allNonGraphStates.size(); stateIndex++) {
 			this.graphIndexToNonGraphState.put(stateIndex, allNonGraphStates.get(stateIndex));
@@ -72,34 +72,32 @@ public class NormalDomainToGraphDomain {
 				State nextState = ga.executeIn(allNonGraphStates.get(stateIndex));
 				int nextStateNodeID = allNonGraphStates.indexOf(nextState);
 
-
 				if (this.oldDomainTF.isTerminal(allNonGraphStates.get(stateIndex))) {
 					// Set terminal transition.
 					gd.setTransition(stateIndex, actionIndex, stateIndex, 1.0);
 				}
 				else {
+					
+					if(this.oldDomainTF.isTerminal(nextState)) {
+						System.out.println("EVER TRUE?");
+					}
+					
+					
 					// Set non-terminal transition.
 					gd.setTransition(stateIndex, actionIndex, nextStateNodeID, 1.0);
 				}
-
 			}
-
-
 		}
 	}
 
 	private List<State> getAllNonGraphStates() {
 
-		// Set initial state and reward function.
-		State initialState = this.oldDomainInitialState;
-		RewardFunction rf = this.oldDomainRF;
-
 		// These parameters do *not* matter. Just need to run VI to compute all the reachable states.
 		int numRollouts = 1;
 
 		// Run VI.
-		ValueIteration vi = new ValueIteration(this.oldDomain, rf, oldDomainTF, VIParams.gamma, new SimpleHashableStateFactory(), VIParams.maxDelta, numRollouts);
-		GreedyQPolicy policy = vi.planFromState(initialState);
+		ValueIteration vi = new ValueIteration(this.oldDomain, this.oldDomainRF, oldDomainTF, VIParams.gamma, new SimpleHashableStateFactory(), VIParams.maxDelta, numRollouts);
+		GreedyQPolicy policy = vi.planFromState(this.oldDomainInitialState);
 
 		return vi.getAllStates();
 	}
