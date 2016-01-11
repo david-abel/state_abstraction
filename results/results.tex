@@ -90,27 +90,59 @@ Consequently, from the below $\phi_Q^*$ results, we conclude that:
 % Subsection: phi_Q^* Results
 \section{$\phi_{Q^*}$ Results}
 
-We know:
+We consider a non-temporally homogenized MDP parameterized by T, such that for the first T time steps the MDP is defined as the abstract MDP, and after T time steps, the MDP becomes identical to the ground MDP.
+
+We proceed by induction on T.
+
+\elem{Base:}
+
+When T = 0, we show that:
 \begin{equation}
-\forall_{s,a} : | Q^{\pi^*_M}(s,a) - Q^{\pi^*_{M'}}(s,a)| \leq \epsilon
-\label{eq:phi_q_assumption}
+|V^{\pi_G^S}(s) - V_0(s)| \leq \epsilon
 \end{equation}
 
-Since `max' is a non-expansion, we know:
+Trivial, since $V_0 = V^{\pi_G^S}(s)$.
+
+\elem{Inductive:}
+
+IH: Suppose $|V^{\pi_G^*}(s) - V_T(s)| \leq \sum_{t=o}^T \epsilon \gamma^t$.
+
+WTS: $|V^{\pi_G^*}(s) - V_{T+1}(s)| \leq \sum_{t=o}^{T+1} \epsilon \gamma^t$.
+
+\begin{align*}
+V_{T+1}(s) &= \max_a \left[R_{T+1}(s,a) + \gamma \sum_s' T_{T+1}(s,a,s')V_T(s')\right] \\
+&\leq \max_a \left[R_{T+1}(s,a) + \gamma \sum_s' T_{T+1}(s,a,s')\left(V_0(s) + \sum_{t=0}^T\epsilon\gamma^t \right) \right] \\
+&= \gamma\left(\sum_{t=0}^T\epsilon\gamma^T\right) + \max_a \left[R_{T+1}(s,a) + \gamma \sum_s' T_{T+1}(s,a,s')V_0(s') \right] \\
+&= \gamma\left(\sum_{t=0}^T\epsilon\gamma^T\right) + \max_a \left[\sum_{g \in s} R_{G}(g,a)\omega(g) + \gamma \sum_s' \sum_{g \in s}T_G(g,a,s')\omega(g)V_0(s') \right] \\
+&= \gamma\left(\sum_{t=0}^T\epsilon\gamma^T\right) + \epsilon + \left(\max_a Q_G(s,a)\right) \\
+&= \sum_{t=0}^{T+1} \epsilon \gamma^{T+1} + \max_a Q^{\pi_G^*}(s,a) \\
+&= \frac{\epsilon}{1-\gamma} + V^{\pi_G^*}(s) \\
+\end{align*}
 \begin{equation}
-\forall_s : |\max_a Q^{\pi^*_M}(s,a) - \max_{a'} Q^{\pi^*_{M'}}(s,a')| \leq \max_b | Q^{\pi^*_M}(s,b) - Q^{\pi^*_{M'}}(s,b)|
+\therefore |V^{\pi_G^*}(s) - V_{T+1}(s)| \leq | V^{\pi_G^*}(s) - \frac{\epsilon}{1-\gamma} + V^{\pi_G^*}(s)| = \frac{\epsilon}{1-\gamma} \qed
 \end{equation}
 
-From Equation~\ref{eq:phi_q_assumption}, we know:
-\begin{equation}
-\forall_s : |\max_a Q^{\pi^*_M}(s,a) - \max_{a'} Q^{\pi^*_{M'}}(s,a')| \leq \max_b | Q^{\pi^*_M}(s,b) - Q^{\pi^*_{M'}}(s,b)| \leq \epsilon
-\end{equation}
-
-But since $\forall_\pi : V^{\pi} = \max_a Q^\pi(s,a)$, we conclude:
-\begin{equation}
-\forall_s : |V^{\pi^*_M}(s) - V^{\pi^*_{M'}}(s)| \leq \epsilon
-\end{equation}
-\qed
+%We know:
+%\begin{equation}
+%\forall_{s_1,s_2,a} : \phi_{Q^*}(s_1) = \phi_{Q^*}(s_2) \rightarrow | Q^{\pi^*_M}(s_1,a) - Q^{\pi^*_{M}}(s_2,a)| \leq \epsilon
+%\label{eq:phi_q_assumption}
+%\end{equation}
+%
+%Since `max' is a non-expansion, we know:
+%\begin{equation}
+%\forall_s : |\max_a Q^{\pi^*_M}(s,a) - \max_{a'} Q^{\pi^*_{M'}}(s,a')| \leq \max_b | Q^{\pi^*_M}(s,b) - Q^{\pi^*_{M'}}(s,b)|
+%\end{equation}
+%
+%From Equation~\ref{eq:phi_q_assumption}, we know:
+%\begin{equation}
+%\forall_s : |\max_a Q^{\pi^*_M}(s,a) - \max_{a'} Q^{\pi^*_{M'}}(s,a')| \leq \max_b | Q^{\pi^*_M}(s,b) - Q^{\pi^*_{M'}}(s,b)| \leq \epsilon
+%\end{equation}
+%
+%But since $\forall_\pi : V^{\pi} = \max_a Q^\pi(s,a)$, we conclude:
+%\begin{equation}
+%\forall_s : |V^{\pi^*_M}(s) - V^{\pi^*_{M'}}(s)| \leq \epsilon
+%\end{equation}
+%\qed
 
 \newpage
 % Subsection: phi_D Results
@@ -217,6 +249,18 @@ From our previous $Q^*$ results, we conclude \qed
 %\end{equation}
 %
 %Where $g^{-1}(\epsilon)$ is (1) well defined, (2) at most a polynomial function of epsilon. If the above properties don't get us there, what would?
+
+\section{BOOP}
+
+\thm{Theorem}{1}{There are three pairs of functions, $\langle \phi_1, f_1 \rangle$, $\langle \phi_2, f_2 \rangle$, and $\langle \phi_3, f_3 \rangle$ such that:
+\begin{equation*}
+\forall_{s_1, s_2 \in S_M} : \phi_{i}(s_1) = \phi_{i}(s_2) \rightarrow \forall_a :  |f_i(s_1,a) - f_i(s_2,a)| \leq \epsilon
+\end{equation*}
+
+Where, the MDP resulting from the abstracted state space, $A$, when solved, provides the policy $\pi^*_A$, such that:
+\begin{equation*}
+\forall_{s \in S_M} : | V^{\pi^*_M}(s) - V^{\pi^*_{A}}(s) | \leq poly(\epsilon)
+\end{equation*}}
 
 \newpage
 % Subsection: phi_a^* Results
