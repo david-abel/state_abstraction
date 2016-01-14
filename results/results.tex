@@ -54,8 +54,8 @@ f(Q(s,a)) > f(Q(s,a_2)) \rightarrow Q(s,a_1) > Q(s,a_2)
 \end{equation}
 
 \newpage
-% Subsection: phi_m Results
-\section{$\phi_{m}$ Results}
+% SECTION PHI MODEL RESULTS
+\section{$\phi_{model}$ Results}
 
 Let the maximum upper bound between optimal behavior in the noisy and ground MDP be called $B_s$.
 
@@ -94,6 +94,7 @@ We consider a non-temporally homogenized MDP parameterized by T, such that for t
 
 We proceed by induction on T.
 
+% Base Case
 \elem{Base:}
 
 When T = 0, we show that:
@@ -103,6 +104,7 @@ When T = 0, we show that:
 
 Trivial, since $V_0 = V^{\pi_G^S}(s)$.
 
+% Inductive Case
 \elem{Inductive:}
 
 IH: Suppose $|V^{\pi_G^*}(s) - V_T(s)| \leq \sum_{t=o}^T \epsilon \gamma^t$.
@@ -160,12 +162,12 @@ g(s,a) = \frac{Q(s,a)}{\sum_j Q(s,a_j)}
 
 And:
 \begin{equation}
-|\sum_j Q(s_1,a_j) - Q(s_2,a_j) | \leq k\epsilon
+\forall_{s_1, s_2 \in \mathcal{S}_G} : \phi_{Mult}(s_1) = \phi_{Mult}(s_2) \rightarrow |\sum_j Q(s_1,a_j) - Q(s_2,a_j) | \leq k\epsilon
 \end{equation}
 
 So:
 \begin{equation}
-\forall_{s_1,s_2} \forall_a : | \frac{Q(s_1,a)}{\sum_j Q(s_1,a_j)} - \frac{Q(s_2,a)}{\sum_j Q(s_2,a_j)} | \leq \epsilon
+\forall_{s_1,s_2} \forall_a : \phi_{Mult}(s_1) = \phi_{Mult}(s_2) \rightarrow | \frac{Q(s_1,a)}{\sum_j Q(s_1,a_j)} - \frac{Q(s_2,a)}{\sum_j Q(s_2,a_j)} | \leq \epsilon
 \end{equation}
 
 Let:
@@ -176,41 +178,41 @@ D_1 &= \sum_j Q(s_1,a_j) &D_2 &= \sum_j Q(s_2,a_j)
 
 So:
 \begin{equation}
-\forall_{s_1,s_2} \forall_a : | \frac{Q(s_1,a)}{D_1} - \frac{Q(s_2,a)}{D_2} | \leq \epsilon
+\forall_{s_1,s_2} \forall_a : | \frac{Q_1}{D_1} - \frac{Q_2}{D_2} | \leq \epsilon
 \end{equation}
 
 Therefore:
 \begin{align*}
 -\epsilon \leq \frac{Q_1}{D_1} - \frac{Q_1}{D_2} \leq \epsilon \\
--\epsilon \leq \frac{Q_1}{D_1} - \frac{Q_1}{D_1 \pm k\epsilon} \leq \epsilon \\
+-\epsilon \leq \frac{Q_1}{D_1} - \frac{Q_1}{D_1 \pm k\epsilon} \leq \epsilon
 \end{align*}
 
 % Plus Case
 \encircle{+}
 \begin{align*}
--\epsilon &\leq \frac{Q_1}{D_1} - \frac{Q_1}{D_1 \pm k\epsilon} \leq \epsilon \\
+-\epsilon &\leq \frac{Q_1}{D_1} - \frac{Q_2}{D_1 + k\epsilon} \leq \epsilon \\
+-\epsilon &\leq \frac{Q_1 (D_1 + k\epsilon)}{D_1(D_1 + k\epsilon)} - \frac{Q_2 D_1}{D_1 (D_1 + k\epsilon)} \leq \epsilon \\
 -\epsilon &\leq \frac{Q_1 D_1 + Q_1 k \epsilon - Q_2 D_1}{D_1^2 + D_1 k \epsilon} \leq \epsilon \\
 -\epsilon &\leq \frac{D_1 (Q_1 + \frac{Q_1 k \epsilon}{D_1} - Q_2)}{D_1 (D_1 + k \epsilon)} \leq \epsilon \\
 -\epsilon &\leq \frac{Q_1 + \frac{Q_1 k \epsilon}{D_1} - Q_2}{D_1 + k \epsilon} \leq \epsilon \\
--\epsilon*(D_1 + k \epsilon) &\leq Q_1 + \frac{Q_1 k \epsilon}{D_1} - Q_2 \leq \epsilon*(D_1 + k \epsilon) \\
+-\epsilon*(D_1 + k \epsilon) &\leq Q_1 + \frac{Q_1 k \epsilon}{D_1} - Q_2 \leq \epsilon*(D_1 + k \epsilon)
 \end{align*}
 
 Let: $A = \frac{Q_1 k \epsilon}{D_1}$:
 \begin{align*}
 -\epsilon*(D_1 + k \epsilon) - A &\leq Q_1 - Q_2 \leq \epsilon*(D_1 + k \epsilon) - A \\
--\epsilon D_1 - k \epsilon^2 - A &\leq Q_1 - Q_2 \leq \epsilon D_1 + k \epsilon^2 - A \\
--\epsilon D_1 - k \epsilon^2 - A &\leq Q_1 - Q_2 \leq \epsilon D_1 + k \epsilon^2
+-\epsilon D_1 - k \epsilon^2 - A &\leq Q_1 - Q_2 \leq \epsilon D_1 + k \epsilon^2 - A
 \end{align*}
 
 
 % Minus Case
 \encircle{-}
 \begin{align*}
--\epsilon &\leq \frac{Q_1}{D_1} - \frac{Q_1}{D_1 \pm k\epsilon} \leq \epsilon \\
--\epsilon &\leq \frac{Q_1 D_1 - Q_1 k \epsilon - Q_2 D_1}{D_1^2 - D_1 k \epsilon} \leq \epsilon \\
+-\epsilon &\leq \frac{Q_1}{D_1} - \frac{Q_2}{D_1 - k\epsilon} \leq \epsilon \\
+-\epsilon &\leq \frac{Q_1 (D_1 - k\epsilon)}{D_1(D_1 - k\epsilon)} - \frac{Q_2 D_1}{D_1 (D_1 - k\epsilon)} \leq \epsilon \\
 -\epsilon &\leq \frac{D_1 (Q_1 - \frac{Q_1 k \epsilon}{D_1} - Q_2)}{D_1 (D_1 - k \epsilon)} \leq \epsilon \\
 -\epsilon &\leq \frac{Q_1 - \frac{Q_1 k \epsilon}{D_1} - Q_2}{D_1 - k \epsilon} \leq \epsilon \\
--\epsilon*(D_1 - k \epsilon) &\leq Q_1 - \frac{Q_1 k \epsilon}{D_1} - Q_2 \leq \epsilon*(D_1 - k \epsilon) \\
+-\epsilon*(D_1 - k \epsilon) &\leq Q_1 - \frac{Q_1 k \epsilon}{D_1} - Q_2 \leq \epsilon*(D_1 - k \epsilon)
 \end{align*}
 
 Let: $A = \frac{Q_1 k \epsilon}{D_1}$:
@@ -224,6 +226,18 @@ Let: $A = \frac{Q_1 k \epsilon}{D_1}$:
 \therefore |Q_1 - Q_2| \leq \epsilon D_1 + k \epsilon^2 + A \qed
 \end{equation}
 
+
+
+\newpage
+% SECTION: PHI_BOLTZMANN RESULTS
+\section{$\phi_{Bolt}$ Results}
+
+
+
+
+
+
+% Theorem statement for H2R talk.
 \newpage
 \thm{Theorem}{1}{There are three pairs of functions, $\langle \phi_1, f_1 \rangle$, $\langle \phi_2, f_2 \rangle$, and $\langle \phi_3, f_3 \rangle$ such that:
 \begin{equation*}
@@ -234,11 +248,6 @@ Where, the MDP resulting from the abstracted state space, $A$, when solved, prov
 \begin{equation*}
 \forall_{s \in S_M} : | V^{\pi^*_M}(s) - V^{\pi^*_{A}}(s) | \leq poly(\epsilon)
 \end{equation*}}
-
-\newpage
-% Subsection: phi_a^* Results
-\section{$\phi_{a^*}$ Results}
-
 
 
 
