@@ -17,19 +17,32 @@ Recall, there is a ground MDP $M$ we want to solve. We homogenize to an MDP $M'$
 
 For each approximate $\phi$ type, we want to show, $\forall_{\epsilon} : \epsilon \in [0 : \infty)$
 \begin{equation}
-\forall_{s,a} : | V^{\pi^*_M}(s) - V^{\pi^*_{M'}}(s) | \leq \epsilon
+\forall_{s,a} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq poly(\epsilon)
 \end{equation}
 
 We consider four $\phi$ types:
-% phi model
 \begin{align*}
+% Phi Q*
+\encircle{\text{ $\phi_{Q^*}$ }}\ & : \phi_{Q^*}(s_1) = \phi_{Q^*}(s_2) \rightarrow \forall_a |Q^*(s_1,a) - Q^*(s_2,a)| \leq \epsilon \\
+% Phi Model
 \encircle{\text{ $\phi_m$ }}\ & : \phi_{m}(s_1) = \phi_m(s_2) \rightarrow \forall_a |\mathcal{R}(s_1,a) - \mathcal{R}(s_2,a)| \leq \epsilon \ \wedge\ 
 \forall_{a,s' \in \phi^{-1}(\bar{s})} | \mathcal{T}(s_1,a,s') - \mathcal{T}(s_2,a,s') | \leq \epsilon \\
-\encircle{\text{ $\phi_{Q^*}$ }}\ & : \phi_{Q^*}(s_1) = \phi_{Q^*}(s_2) \rightarrow \forall_a |Q^*(s_1,a) - Q^*(s_2,a)| \leq \epsilon \\
-\encircle{\text{ $\phi_{D}$ }}\ & : \phi_D(s_1) = \phi_D(s_2) \rightarrow \Delta \left( \Pr_{a \in \mathcal{A}}(a \mid s_1) \mid\mid \Pr_{a \in \mathcal{A}}(a \mid s_2) \right) \leq \epsilon \\
-\encircle{\text{ $\phi_{a^*}$ }}\ & : \phi_{a^*}(s_1) = \phi_{a^*}(s_2) \rightarrow \argmax_a Q^*(s_1,a) = \argmax_a Q^*(s_2, a) \wedge |\max_a Q^*(s_1,a) - \max_a Q^*(s_2,a)| \leq \epsilon  \\
+% Phi Multinomial
+\encircle{\text{ $\phi_{mult}$ }}\ & : \phi_{mult}(s_1) = \phi_{mult}(s_2) \rightarrow \forall_{i \in [0:|\mathcal{A}| - 1]} | g(s_1, a_i) - g(s_2, a_i) | \leq \epsilon \\
+% Phi Boltzmann
+\encircle{\text{ $\phi_{bolt}$ }}\ & : \phi_{mult}(s_1) = \phi_{mult}(s_2) \rightarrow \forall_{i \in [0:|\mathcal{A}| - 1]} | B(s_1, a_i) - B(s_2, a_i) | \leq \epsilon
 \end{align*}
 
+Where:
+\begin{align}
+g(s,a) &= \frac{Q(s,a)}{\sum_j Q(s,a_j)} \\
+B(s,a) &= \frac{e^{Q(s,a)}}{\sum_j e^{Q(s,a_j)}}
+\end{align}
+
+
+\newpage
+% SECTION: NOTES
+\section{Misc. Notes}
 \elem{NOTE:} Instead of performing the abstraction w.r.t. $\phi$, our new strategy is to, given an MDP $M$ (and possibly some other information, $\kappa$), apply a function $H$ to create $M'$, for which all of the old $\phi$ functions may operate.
 
 Specifically:
