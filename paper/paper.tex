@@ -42,7 +42,7 @@
 
 % --- ABSTRACT ---
 \begin{abstract}
-The combinatorial explosion that plagues planning and reinforcement-learning algorithms can be reversed using abstraction. For instance, prohibitively difficult task representations can be condensed so that solutions are tractably computable. In this work, we investigate a theoretical framework for approximate state abstraction that preserves near optimal behavior. Reinforcement learning agents using these abstractions may treat experiences that resemble each other as equivalent, and generalize knowledge to novel scenarios based on prior experiences. We present theoretical guarantees of the quality of value functions derived from three classes of approximate state abstraction. Additionally, we empirically evaluate the relationship between the degree of approximation and the degree of abstraction achieved, as well as the tradeoff between approximation magnitude and optimality of behavior.
+The combinatorial explosion that plagues planning and reinforcement-learning algorithms can be reversed using abstraction. For instance, prohibitively difficult task representations can be condensed so that solutions are tractably computable. In this work, we investigate a theoretical framework for approximate state abstraction that preserves near optimal behavior. Reinforcement learning agents using these abstractions may treat experiences that resemble each other as equivalent, and generalize knowledge to novel scenarios based on prior experiences. We present theoretical guarantees of the quality of value functions derived from four classes of approximate state abstraction. Additionally, we empirically evaluate the relationship between the degree of approximation and the degree of abstraction achieved, as well as the tradeoff between approximation magnitude and optimality of behavior.
 \end{abstract}
 
 % Set of actions within epsilon (Q*) is the same for two states? Better than boltzmann.
@@ -67,6 +67,42 @@ The combinatorial explosion that plagues planning and reinforcement-learning alg
 
 % Lihong/Walsh/Littman: Towards a unified theory...
 Citation test~\cite{li2006towards}
+
+\begin{itemize}
+\item ALisp~\cite{andre2002state}
+
+Programming language for enabling abstraction.
+
+\item Aggregation in DP~\cite{Bean2011}
+
+Assumes the MDP is a DAG. Only does shortest path.
+
+\item New Operators for RL~\cite{Bellemare2015}
+
+Comes up with an approximate Bellman Operator. Not sure how it's related yet.
+
+\item DP with Factored Representations~\cite{Boutilier2000}
+
+Uses decision trees and DBNs to represent MDPs. Does state aggregation. Theorem 4.4 should be looked at in more detail.
+
+\item {\bf Model reduction techniques for nearly optimal MDP solutions}~\cite{dean1997model}
+
+$\epsilon$-homogeneity: groups together states that behave approximately the same under all or some subset of policies.
+
+Bounded Parameter MDP: family of MDP with upper and lower bounds on T. Find policies approximately optimal w.r.t. original MDP.
+% Also covers model minimization..
+
+\item Abstraction selection~\cite{jiang2015abstraction}
+
+\item State abstraction discovery from irrelevant state variables~\cite{jong2005state}
+
+\item Selecting the state rep in RL~\cite{maillard2011selecting}
+
+\item Near optimal state reps~\cite{ortner2014selecting}
+
+\item SMDP homomorphisms~\cite{ravindran2003smdp}
+
+\end{itemize}
 
 % Nan/Lihong
 
