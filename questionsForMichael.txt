@@ -1,0 +1,4 @@
+Questions to ask Michael about presentation of paper
+----------------------------------------------------
+1. Assume same normalizing constant or sum of Qs is bounded for Phi_boltz and Phi_multi
+2. Which proofs should we actually present -- which are just appendix math
