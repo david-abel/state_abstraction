@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import domains.taxi.GetPassengerOptionMaker;
 import burlap.behavior.policy.GreedyQPolicy;
+import burlap.behavior.singleagent.options.Option;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.oomdp.auxiliary.DomainGenerator;
@@ -61,6 +63,7 @@ public class NormalDomainToGraphDomain {
 
 	private void setTransitionsAndFindGoalStates(List<State> allNonGraphStates, List<Action> allActions, GraphDefinedDomain gd) {
 		
+
 		// Loop over each state and set transitions in the graph.
 		for (int stateIndex = 0; stateIndex < allNonGraphStates.size(); stateIndex++) {
 			this.graphIndexToNonGraphState.put(stateIndex, allNonGraphStates.get(stateIndex));

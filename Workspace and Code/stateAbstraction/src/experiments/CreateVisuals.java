@@ -1,5 +1,8 @@
 package experiments;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import graphStateAbstractionTest.VIParams;
 import graphStreamVisualizer.GraphStreamVisualizer;
 import stateAbstractor.PhiSAReal;
@@ -7,6 +10,7 @@ import stateAbstractor.StateAbstractor;
 import SARealGenerators.qValueGenerator;
 import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.policy.Policy;
+import burlap.behavior.singleagent.options.Option;
 import burlap.behavior.singleagent.planning.stochastic.policyiteration.PolicyIteration;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
@@ -20,6 +24,7 @@ import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 import domains.GraphRF;
 import domains.NormalDomainToGraphDomain;
 import domains.nchain.NChainGenerator;
+import domains.taxi.GetPassengerOptionMaker;
 import domains.taxi.TaxiDomainGenerator;
 import domains.trench.TrenchDomainGenerator;
 import domains.upworld.UpWorldGenerator;
@@ -99,8 +104,8 @@ public class CreateVisuals {
 	public static void main(String[] args) {
 		
 		// Change the text here to switch between visuals.
-		String domainToVisualize = "TAXI"; // One of "TRENCH", "UPWORLD", "NCHAIN", "TAXI" or add your own.
-		double epsilon = .05;
+		String domainToVisualize = "UPWORLD"; // One of "TRENCH", "UPWORLD", "NCHAIN", "TAXI" or add your own.
+		double epsilon = .01;
 		
 		if (domainToVisualize == "TRENCH") {
 			// Create trench domain.

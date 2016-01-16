@@ -7,9 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import burlap.behavior.policy.Policy;
+import burlap.behavior.policy.Policy.ActionProb;
+import burlap.behavior.singleagent.options.DeterministicTerminationOption;
+import burlap.behavior.singleagent.options.Option;
 import burlap.oomdp.core.objects.MutableObjectInstance;
 import burlap.oomdp.core.objects.ObjectInstance;
 import burlap.oomdp.auxiliary.DomainGenerator;
+import burlap.oomdp.auxiliary.stateconditiontest.StateConditionTest;
 import burlap.oomdp.core.*;
 import burlap.oomdp.core.Attribute.AttributeType;
 import burlap.oomdp.core.states.MutableState;
@@ -84,9 +89,9 @@ public class TaxiDomainGenerator implements DomainGenerator {
 	@Override
 	public Domain generateDomain() {
 				
-				
 		Domain domain = new SADomain();
 
+		// Attributes.
 		Attribute xAtt = new Attribute(domain, XATT, AttributeType.DISC);
 		xAtt.setDiscValuesForRange(0, maxX, 1);
 
@@ -110,8 +115,6 @@ public class TaxiDomainGenerator implements DomainGenerator {
 		Attribute wallOffsetAtt = new Attribute(domain, WALLOFFSETATT, AttributeType.DISC);
 		wallOffsetAtt.setDiscValuesForRange(0, Math.max(this.maxX, this.maxY)+1, 1);
 
-
-
 		Attribute locationAtt = new Attribute(domain, LOCATIONATT, AttributeType.DISC);
 		List<String> locationTypes = new ArrayList<String>();
 		locationTypes.add("fuel");
@@ -130,6 +133,8 @@ public class TaxiDomainGenerator implements DomainGenerator {
 			beenPickedupAtt = new Attribute(domain, BEENPICKEDUPATT, AttributeType.BOOLEAN);
 		}
 
+		
+		// Objects.
 		ObjectClass taxi = new ObjectClass(domain, TAXICLASS);
 		taxi.addAttribute(xAtt);
 		taxi.addAttribute(yAtt);
@@ -162,7 +167,7 @@ public class TaxiDomainGenerator implements DomainGenerator {
 		verticalWall.addAttribute(wallOffsetAtt);
 
 
-
+		// Actions.
 		new MoveAction(NORTHACTION, domain, 0, 1);
 		new MoveAction(SOUTHACTION, domain, 0, -1);
 		new MoveAction(EASTACTION, domain, 1, 0);
@@ -172,8 +177,7 @@ public class TaxiDomainGenerator implements DomainGenerator {
 		if(this.includeFuel){
 			new FillupAction(domain);
 		}
-
-		
+				
 		//ADD PFS
 		new TaxiDomainGenerator.wallNorth(WALLNORTHPF, domain, "");
 		new TaxiDomainGenerator.wallEast(WALLEASTPF, domain, "");
@@ -748,6 +752,15 @@ public class TaxiDomainGenerator implements DomainGenerator {
 		return false;
 	}
 
+	public static List<Option> getOptions(Domain domain) {
+		Option getPassengerOpt = GetPassengerOptionMaker.makeGetPassengerOption(domain);
+
+		List<Option> allOptions = new ArrayList<Option>();
+		
+		allOptions.add(getPassengerOpt);
+		
+		return allOptions;
+	}
 
 
 

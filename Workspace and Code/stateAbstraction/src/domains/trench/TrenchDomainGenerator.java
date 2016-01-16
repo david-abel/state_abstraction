@@ -1,12 +1,11 @@
 package domains.trench;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import domains.GraphRF;
-import domains.GraphTF;
-import domains.NormalDomainToGraphDomain;
 import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.singleagent.EpisodeAnalysis;
+import burlap.behavior.singleagent.options.Option;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.oomdp.auxiliary.DomainGenerator;
@@ -25,6 +24,8 @@ import burlap.oomdp.singleagent.RewardFunction;
 import burlap.oomdp.singleagent.SADomain;
 import burlap.oomdp.singleagent.common.SimpleAction.SimpleDeterministicAction;
 import burlap.oomdp.statehashing.SimpleHashableStateFactory;
+import domains.GraphRF;
+import domains.NormalDomainToGraphDomain;
 
 
 public class TrenchDomainGenerator implements DomainGenerator {

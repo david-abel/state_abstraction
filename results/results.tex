@@ -13,14 +13,16 @@
 \maketitle
 \section{Results}
 
-Recall, there is a ground MDP $M$ we want to solve. We homogenize to an MDP $M'$, and apply $\phi$ to $M'$ to get an abstract MDP $A$.
+Recall, there is a ground MDP $G$ we want to solve. Using an abstraction function, $\phi$, we create an abstract MDP $A$.
 
-For each approximate $\phi$ type, we want to show, $\forall_{\epsilon} : \epsilon \in [0 : \infty)$
+In some cases, we create a homogenized MDP $H$, and apply $\phi$ to $H$ to get an abstract MDP $A$.
+
+For each approximate $\phi$ type, we show that using the abstract MDPs solution in the ground has bounded error, that is, $\forall_{\epsilon} : \epsilon \in [0 : \infty)$
 \begin{equation}
 \forall_{s,a} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq poly(\epsilon)
 \end{equation}
 
-We consider four $\phi$ types:
+We consider five $\phi$ types:
 \begin{align*}
 % Phi Q*
 \encircle{\text{ $\phi_{Q^*}$ }}\ & : \phi_{Q^*}(s_1) = \phi_{Q^*}(s_2) \rightarrow \forall_a |Q^*(s_1,a) - Q^*(s_2,a)| \leq \epsilon \\
@@ -30,7 +32,9 @@ We consider four $\phi$ types:
 % Phi Multinomial
 \encircle{\text{ $\phi_{mult}$ }}\ & : \phi_{mult}(s_1) = \phi_{mult}(s_2) \rightarrow \forall_{i \in [0:|\mathcal{A}| - 1]} | g(s_1, a_i) - g(s_2, a_i) | \leq \epsilon \\
 % Phi Boltzmann
-\encircle{\text{ $\phi_{bolt}$ }}\ & : \phi_{mult}(s_1) = \phi_{mult}(s_2) \rightarrow \forall_{i \in [0:|\mathcal{A}| - 1]} | B(s_1, a_i) - B(s_2, a_i) | \leq \epsilon
+\encircle{\text{ $\phi_{bolt}$ }}\ & : \phi_{mult}(s_1) = \phi_{mult}(s_2) \rightarrow \forall_{i \in [0:|\mathcal{A}| - 1]} | B(s_1, a_i) - B(s_2, a_i) | \leq \epsilon \\
+% Phi a^*
+\encircle{\text{ $\phi_{a^*}$}}\ & : \phi_{a^*}(s_1) = \phi_{a^*}(s_2) \rightarrow |Q^*(s_1,a_1^*) - Q^*(s_2,a_2^*) | \leq \epsilon \wedge a_1^* = a_2^*
 \end{align*}
 
 Where:
@@ -285,114 +289,69 @@ Using the approximation $1 + x \approx e^x$ to estimate $e^{Q_1}$, we incur exac
 \end{align*}
 
 
+Cases:
 
-
-
-
-
-For brevity, let:
-\begin{align*}
-\sum Q_x &= \sum_i Q_{x,i} \\
-\sum k_x &= \sum_i k_{x,i} \\
-\end{align*}
+% + Case
+\encircle{+}
 
 \begin{align*}
--\epsilon &\leq \frac{1 + Q_1 + k_1}{|A| + \sum Q_1 +  \sum k_1} - \frac{1 + Q_2 + k_2}{|A| + \sum Q_2 + \sum k_2}  \leq \epsilon \\
--\epsilon &\leq \frac{1 + Q_1 + k_1}{|A| + \sum Q_1 +  \sum k_1} - \frac{1 + Q_2 + k_2}{|A| + \sum Q_1 + \sum k_2 \pm \varepsilon_2}  \leq \epsilon \\
+- \epsilon \leq \frac{1 + Q_1 + k_1}{D_1} - \frac{1 + Q_2 + k_2}{D_1 + \varepsilon_2} &\leq \epsilon \\
+- \epsilon \leq \frac{(1 + Q_1 + k_1)(D_1 + \varepsilon_2)}{D_1(D_1 + \varepsilon_2)} - \frac{(D_1)(1 + Q_2 + k_2)}{D_1(D_1 + \varepsilon_2)} &\leq \epsilon \\
+- \epsilon \leq \frac{D_1 + \varepsilon_2 + Q_1D_1 + Q_1\varepsilon_2 + k_1D_1 + k_1\varepsilon_2}{D_1(D_1 + \varepsilon_2)} - \frac{D_1 + D_1Q_2 + D_1k_2}{D_1(D_1 + \varepsilon_2)} &\leq \epsilon \\
+- \epsilon \leq \frac{D_1 + \varepsilon_2 + Q_1D_1 + Q_1\varepsilon_2 + k_1D_1 + k_1\varepsilon_2 - D_1 - D_1Q_2 - D_1k_2}{D_1(D_1 + \varepsilon_2)} &\leq \epsilon \\
+- \epsilon \leq \frac{\varepsilon_2 + Q_1D_1 + Q_1\varepsilon_2 + k_1D_1 + k_1\varepsilon_2 - D_1Q_2 - D_1k_2}{D_1(D_1 + \varepsilon_2)} &\leq \epsilon \\
+- \epsilon \leq \frac{D_1 ( \varepsilon_2/D_1 + Q_1 + Q_1\varepsilon_2/D_1 + k_1 + k_1\varepsilon_2/D_1 - Q_2 - k_2)}{D_1(D_1 + \varepsilon_2)} &\leq \epsilon \\
+- \epsilon \leq \frac{\varepsilon_2/D_1 + Q_1 + Q_1\varepsilon_2/D_1 + k_1 + k_1\varepsilon_2/D_1 - Q_2 - k_2}{D_1 + \varepsilon_2} &\leq \epsilon \\
+- \epsilon \leq \frac{\varepsilon_2(\frac{1 + Q_1 + k_1}{D_1}) + Q_1 + k_1 - Q_2 - k_2}{D_1 + \varepsilon_2} &\leq \epsilon \\
+- \epsilon*(D_1 + \varepsilon_2) \leq \varepsilon_2(\frac{1 + Q_1 + k_1}{D_1}) + Q_1 - Q_2 + k_1 - k_2 &\leq \epsilon*(D_1 + \varepsilon_2) \\
+- \epsilon*(D_1 + \varepsilon_2) - k_1 + k_2  \leq \varepsilon_2(\frac{1 + Q_1 + k_1}{D_1}) + Q_1 - Q_2 &\leq \epsilon*(D_1 + \varepsilon_2) - k_1 + k_2
+\end{align*}
+Let: $A = \varepsilon_2(\frac{1 + Q_1 + k_1}{D_1})$
+\begin{align*}
+- \epsilon*(D_1 + \varepsilon_2) - k_1 + k_2  \leq A + Q_1 - Q_2 &\leq \epsilon*(D_1 + \varepsilon_2) - k_1 + k_2 \\
+- \epsilon*(D_1 + \varepsilon_2) - k_1 + k_2 - A  \leq Q_1 - Q_2 &\leq \epsilon*(D_1 + \varepsilon_2) - k_1 + k_2 - A \\
+- \epsilon*(D_1 + \varepsilon_2) - A  \leq Q_1 - Q_2 &\leq \epsilon*(D_1 + \varepsilon_2) - A
 \end{align*}
 
-Let:
-\begin{equation*}
-D_1 = |A| + \sum Q_1
-\end{equation*}
+% - Case
+\encircle{-}
+\begin{align*}
+- \epsilon \leq \frac{1 + Q_1 + k_1}{D_1} - \frac{1 + Q_2 + k_2}{D_1 - \varepsilon_2} &\leq \epsilon \\
+- \epsilon \leq \frac{(1 + Q_1 + k_1)(D_1 - \varepsilon_2)}{D_1(D_1 - \varepsilon_2)} - \frac{(D_1)(1 + Q_2 + k_2)}{D_1(D_1 - \varepsilon_2)} &\leq \epsilon \\
+- \epsilon \leq \frac{D_1 - \varepsilon_2 + Q_1D_1 - Q_1\varepsilon_2 + k_1D_1 - k_1\varepsilon_2}{D_1(D_1 - \varepsilon_2)} - \frac{D_1 + D_1Q_2 + D_1k_2}{D_1(D_1 - \varepsilon_2)} &\leq \epsilon \\
+- \epsilon \leq \frac{D_1 - \varepsilon_2 + Q_1D_1 - Q_1\varepsilon_2 + k_1D_1 - k_1\varepsilon_2 - D_1 - D_1Q_2 - D_1k_2}{D_1(D_1 - \varepsilon_2)} &\leq \epsilon \\
+- \epsilon \leq \frac{- \varepsilon_2 + Q_1D_1 - Q_1\varepsilon_2 + k_1D_1 - k_1\varepsilon_2 - D_1Q_2 - D_1k_2}{D_1(D_1 - \varepsilon_2)} &\leq \epsilon \\
+- \epsilon \leq \frac{D_1 ( -\varepsilon_2/D_1 + Q_1 - Q_1\varepsilon_2/D_1 + k_1 - k_1\varepsilon_2/D_1 - Q_2 - k_2)}{D_1(D_1 - \varepsilon_2)} &\leq \epsilon \\
+- \epsilon \leq \frac{-\varepsilon_2/D_1 + Q_1 - Q_1\varepsilon_2/D_1 + k_1 - k_1\varepsilon_2/D_1 - Q_2 - k_2}{D_1 - \varepsilon_2} &\leq \epsilon \\
+- \epsilon \leq \frac{\varepsilon_2(\frac{-1 - Q_1 - k_1}{D_1}) + Q_1 + k_1 - Q_2 - k_2}{D_1 - \varepsilon_2} &\leq \epsilon \\
+- \epsilon*(D_1 - \varepsilon_2) \leq \varepsilon_2(\frac{-1 - Q_1 - k_1}{D_1}) + Q_1 - Q_2 + k_1 - k_2 &\leq \epsilon*(D_1 - \varepsilon_2) \\
+- \epsilon*(D_1 - \varepsilon_2) - k_1 + k_2  \leq \varepsilon_2(\frac{-1 - Q_1 - k_1}{D_1}) + Q_1 - Q_2 &\leq \epsilon*(D_1 - \varepsilon_2) - k_1 + k_2
+\end{align*}
+
+Let: $A = \varepsilon_2(\frac{1 + Q_1 + k_1}{D_1})$
 
 \begin{align*}
--\epsilon &\leq \frac{1 + Q_1 + k_1}{D_1 +  \sum k_1} - \frac{1 + Q_2 + k_2}{D_1 + \sum k_2 \pm \varepsilon_2}  \leq \epsilon \\
-% By bounds imposed from epsilon_2 on our sums of k_i's
--\epsilon &\leq \frac{1 + Q_1 + k_1}{D_1 +  \sum k_1} - \frac{1 + Q_2 + k_2}{D_1 + \left[ \left(\sum k_1\right) \pm \varepsilon_2\right] \pm \varepsilon_2}  \leq \epsilon \\
+- \epsilon*(D_1 - \varepsilon_2) - k_1 + k_2  \leq Q_1 - Q_2 \leq \epsilon*(D_1 - \varepsilon_2) - k_1 + k_2 + A \\
+- \epsilon*(D_1 - \varepsilon_2) - k_1 + k_2 + A  \leq Q_1 - Q_2 \leq \epsilon*(D_1 - \varepsilon_2) - k_1 + k_2 + A \\
+- \epsilon*(D_1 - \varepsilon_2) + A  \leq Q_1 - Q_2 \leq \epsilon*(D_1 - \varepsilon_2) + A
 \end{align*}
 
-Four cases:
-\begin{enumerate}
-\item First $\pm$ is plus, second is plus
-\item First $\pm$ is plus, second is minus
-\item First $\pm$ is minus, second is plus
-\item First $\pm$ is minus, second is minus
-\end{enumerate}
-
-Case 2 and 3 are equal, and since both cancel.
-
-% Case 1
-\encircle{Case 1:}
-
-\begin{align*}
--\epsilon &\leq \frac{1 + Q_1 + k_1}{D_1 +  \sum k_1} - \frac{1 + Q_2 + k_2}{D_1 + \left[ \left(\sum k_1\right) + \varepsilon_2\right] + \varepsilon_2}  \leq \epsilon \\
--\epsilon &\leq \frac{1 + Q_1 + k_1}{D_1 +  \sum k_1} - \frac{1 + Q_2 + k_2}{D_1 + \sum k_1 + 2\varepsilon_2}  \leq \epsilon
-\end{align*}
-
-Let $D' = D_1 + \sum k_1$
-
-\begin{align*}
--\epsilon &\leq \frac{1 + Q_1 + k_1}{D'} - \frac{1 + Q_2 + k_2}{D' + 2\varepsilon_2}  \leq \epsilon \\
--\epsilon &\leq \frac{(1 + Q_1 + k_1)(D' + 2\varepsilon_2)}{D'(D' + 2\varepsilon_2)} - \frac{(1 + Q_2 + k_2)D'}{D'(D' + 2\varepsilon_2)}  \leq \epsilon \\
--\epsilon &\leq \frac{D' + 2\varepsilon_2 + Q_1D' + Q_12\varepsilon_2 + k_1D' + k_1 2\varepsilon_2}{D'(D' + 2\varepsilon_2)} - \frac{D' + D'Q_2 + D'k_2}{D'(D' + 2\varepsilon_2)}  \leq \\
--\epsilon &\leq \frac{D' + 2\varepsilon_2 + Q_1D' + Q_12\varepsilon_2 + k_1D' + k_1 2\varepsilon_2 - D' - D'Q_2 - D'k_2}{D'(D' + 2\varepsilon_2)}  \leq \epsilon \\
--\epsilon &\leq \frac{D'(2\varepsilon_2 / D' + Q_1 + Q_12\varepsilon_2/D' + k_1 + k_1 2\varepsilon_2 / D'  - Q_2 - k_2)}{D'(D' + 2\varepsilon_2)}  \leq \epsilon \\
--\epsilon &\leq \frac{2\varepsilon_2 (\frac{1 + k_1 + Q_1}{D'}) + Q_1 + k_1 - Q_2 - k_2}{D' + 2\varepsilon_2}  \leq \epsilon \\
--\epsilon*(D' + 2\varepsilon_2) &\leq 2\varepsilon_2 \left(\frac{1 + k_1 + Q_1}{D'}\right) + Q_1 + k_1 - Q_2 - k_2 \leq \epsilon*(D' + 2\varepsilon_2) \\
--\epsilon*(D' + 2\varepsilon_2) - k_1 + k_2 &\leq 2\varepsilon_2 \left(\frac{1 + k_1 + Q_1}{D'}\right) + Q_1 - Q_2 \leq \epsilon*(D' + 2\varepsilon_2) - k_1 + k_2 \\
-\end{align*}
-
-Let $A = 2\varepsilon_2 \frac{1 + k_1 + Q_1}{D'}$:
-\begin{align*}
--\epsilon*(D' + 2\varepsilon_2) - k_1 + k_2 &\leq A + Q_1 - Q_2 \leq \epsilon*(D' + 2\varepsilon_2) - k_1 + k_2 \\
--\epsilon*(D' + 2\varepsilon_2) - k_1 + k_2 - A &\leq Q_1 - Q_2 \leq \epsilon*(D' + 2\varepsilon_2) - k_1 + k_2 - A \hspace{4mm}\checked
-\end{align*}
-\vspace{4mm}
+\begin{equation}
+\therefore |Q_1 - Q_2| \leq \epsilon(D_1 + \varepsilon_2) + A
+\end{equation}
 
 
-% Cases 2 and 3
-\encircle{Case(s): 2 and 3}
 
-\begin{align*}
--\epsilon &\leq \frac{1 + Q_1 + k_1}{D_1 +  \sum k_1} - \frac{1 + Q_2 + k_2}{D_1 + \sum k_1} \leq \epsilon \\
--\epsilon &\leq \frac{1 + Q_1 + k_1 - 1 - Q_2 - k_2}{D_1 +  \sum k_1}  \leq \epsilon \\
--\epsilon &\leq \frac{Q_1 - Q_2 + k_1 - k_2}{D_1 +  \sum k_1}  \leq \epsilon \\
--\epsilon*(D_1 +  \sum k_1) &\leq Q_1 - Q_2 + k_1 - k_2  \leq \epsilon*(D_1 +  \sum k_1) \\
--\epsilon*(D_1 +  \sum k_1) - k_1 + k_2 &\leq Q_1 - Q_2  \leq \epsilon*(D_1 +  \sum k_1) - k_1 + k_2 \hspace{4mm}\checked
-\end{align*}
+\newpage
+% SECTION: Phi_a^*
+\section{$\phi_{a^*}$}
 
+% Phi a^*
+\begin{equation}
+\encircle{\text{ $\phi_{a^*}$}}\ : \phi_{a^*}(s_1) = \phi_{a^*}(s_2) \rightarrow |Q^*(s_1,a_1^*) - Q^*(s_2,a_2^*) | \leq \epsilon \wedge a_1^* = a_2^*
+\end{equation}
 
-% Case 4
-\encircle{Case 4:}
-
-
-\begin{align*}
--\epsilon &\leq \frac{1 + Q_1 + k_1}{D_1 +  \sum k_1} - \frac{1 + Q_2 + k_2}{D_1 + \left[ \left(\sum k_1\right) - \varepsilon_2\right] - \varepsilon_2}  \leq \epsilon \\
--\epsilon &\leq \frac{1 + Q_1 + k_1}{D_1 +  \sum k_1} - \frac{1 + Q_2 + k_2}{D_1 + \sum k_1 - 2\varepsilon_2}  \leq \epsilon
-\end{align*}
-
-Let $D' = D_1 + \sum k_1$
-
-\begin{align*}
--\epsilon &\leq \frac{1 + Q_1 + k_1}{D'} - \frac{1 + Q_2 + k_2}{D' - 2\varepsilon_2}  \leq \epsilon \\
--\epsilon &\leq \frac{(1 + Q_1 + k_1)(D' - 2\varepsilon_2)}{D'(D' - 2\varepsilon_2)} - \frac{D'(1 + Q_2 + k_2)}{D'(D' - 2\varepsilon_2)}  \leq \epsilon \\
--\epsilon &\leq \frac{D' - 2\varepsilon_2 + Q_1D' - Q_12\varepsilon_2 + k_1D' - k_1 2\varepsilon_2}{D'(D' - 2\varepsilon_2)} - \frac{D' + D'Q_2 + D'k_2}{D'(D' - 2\varepsilon_2)}  \leq \\
--\epsilon &\leq \frac{D' - 2\varepsilon_2 + Q_1D' - Q_12\varepsilon_2 + k_1D' - k_1 2\varepsilon_2 - D' - D'Q_2 - D'k_2}{D'(D' - 2\varepsilon_2)}  \leq \epsilon \\
--\epsilon &\leq \frac{D'(-2\varepsilon_2 / D' + Q_1 - Q_12\varepsilon_2/D' + k_1 - k_1 2\varepsilon_2 / D'  - Q_2 - k_2)}{D'(D' - 2\varepsilon_2)}  \leq \epsilon \\
--\epsilon &\leq \frac{2\varepsilon_2 (\frac{-1 - k_1 - Q_1}{D'}) + Q_1 + k_1 - Q_2 - k_2}{D' + 2\varepsilon_2}  \leq \epsilon \\
--\epsilon*(D' + 2\varepsilon_2) &\leq 2\varepsilon_2 (\frac{-1 - k_1 - Q_1}{D'}) + Q_1 + k_1 - Q_2 - k_2  \leq \epsilon*(D' + 2\varepsilon_2) \\
--\epsilon*(D' + 2\varepsilon_2) - k_1 + k_2 &\leq 2\varepsilon_2 (\frac{-1 - k_1 - Q_1}{D'}) + Q_1 - Q_2 \leq \epsilon*(D' + 2\varepsilon_2) - k_1 + k_2 \\
-\end{align*}
-
-Let $A = 2\varepsilon_2 (\frac{1 + k_1 + Q_1}{D'})$
-
-\begin{align*}
--\epsilon*(D' + 2\varepsilon_2) - k_1 + k_2 &\leq -A + Q_1 - Q_2 \leq \epsilon*(D' + 2\varepsilon_2) - k_1 + k_2 \\
--\epsilon*(D' + 2\varepsilon_2) - k_1 + k_2 + A &\leq + Q_1 - Q_2 \leq \epsilon*(D' + 2\varepsilon_2) - k_1 + k_2 + A \\
-\end{align*}
-
-
+Same argument as $\phi_{Q^*}$. \qed
 
 % Theorem statement for H2R talk.
 \newpage
