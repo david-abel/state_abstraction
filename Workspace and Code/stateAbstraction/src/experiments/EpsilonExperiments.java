@@ -1,7 +1,8 @@
 package experiments;
 
-import graphStateAbstractionTest.QStarEpsilonTest;
-import graphStateAbstractionTest.QStarEpsilonTest.EpsilonToNumStatesTuple;
+import graphStateAbstractionTest.AStarEpsilonTest;
+import graphStateAbstractionTest.VIParams;
+import graphStateAbstractionTest.EpsilonToNumStatesTuple;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,6 +12,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import burlap.behavior.policy.Policy;
+import burlap.behavior.policy.RandomPolicy;
+import burlap.behavior.singleagent.options.Option;
+import burlap.behavior.singleagent.planning.stochastic.policyiteration.PolicyIteration;
 import burlap.debugtools.DPrint;
 import burlap.domain.singleagent.graphdefined.GraphDefinedDomain;
 import burlap.oomdp.auxiliary.DomainGenerator;
@@ -19,11 +24,12 @@ import burlap.oomdp.core.Domain;
 import burlap.oomdp.core.TerminalFunction;
 import burlap.oomdp.core.states.State;
 import burlap.oomdp.singleagent.RewardFunction;
+import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 import domains.GraphRF;
-import domains.GraphTF;
 import domains.NormalDomainToGraphDomain;
 import domains.nchain.NChainGenerator;
 import domains.randommdp.RandomMDPGenerator;
+import domains.taxi.GetPassengerOptionMaker;
 import domains.taxi.TaxiDomainGenerator;
 import domains.trench.TrenchDomainGenerator;
 import domains.upworld.UpWorldGenerator;
@@ -40,7 +46,7 @@ public class EpsilonExperiments {
 	
 	// Iterate over epsilon and compute the number of states.
 	final static double startEpsilon = 0.0;
-	final static double endEpsilon = 0.5;
+	final static double endEpsilon = 0.1;
 	final static double epsilonIncrement = 0.01;
 	
 	/**
@@ -53,22 +59,40 @@ public class EpsilonExperiments {
 	 */
 	public static void generateEpsilonResults(GraphDefinedDomain graphDefinedDomain, RewardFunction graphRF, State initGraphState, String taskName) {
 		
-		List<EpsilonToNumStatesTuple> epsilonAndNumStatesPairs = QStarEpsilonTest.testQPhiStateReduction(graphDefinedDomain, graphRF, new NullTermination(), initGraphState, startEpsilon, endEpsilon, epsilonIncrement);
+//		List<EpsilonToNumStatesTuple> epsilonAndNumStatesPairs = QStarEpsilonTest.testQPhiStateReduction(graphDefinedDomain, graphRF, new NullTermination(), initGraphState, startEpsilon, endEpsilon, epsilonIncrement);
+		List<EpsilonToNumStatesTuple> epsilonAndNumStatesPairs = AStarEpsilonTest.testAStarPhiStateReduction(graphDefinedDomain, graphRF, new NullTermination(), initGraphState, startEpsilon, endEpsilon, epsilonIncrement);
 		
 		List<Double> epsilons = new ArrayList<Double>();
 		List<Integer> numStates = new ArrayList<Integer>();
 		
 		clearOldResultsFile(taskName);
 		
+		Double randomPolValue = computeValueOfRandomPolicy(graphDefinedDomain, graphRF, initGraphState);
+		
+		System.out.println("RAND\t" + randomPolValue);
+		
+		writeDataPointToFile("RAND\t" + randomPolValue.toString(), taskName);
+		
 		System.out.println("results: ");
 		for (EpsilonToNumStatesTuple x : epsilonAndNumStatesPairs) {
 			epsilons.add(x.getEpsilon());
 			numStates.add(x.getNumStates());
-			writeDataPointToFile(x, taskName);
+			writeDataPointToFile(x.toString(), taskName);
 			System.out.println(x);
 		}
 		
 		// Now make the plot...
+	}
+	
+	private static Double computeValueOfRandomPolicy(GraphDefinedDomain graphDefineddomain, RewardFunction rf, State initState) {
+		Domain d = graphDefineddomain.generateDomain();
+		Policy randPolc = new RandomPolicy(d);
+		
+		PolicyIteration PI = new PolicyIteration(d, rf, new NullTermination(), VIParams.gamma, new SimpleHashableStateFactory(), VIParams.maxDelta, VIParams.maxIterations, 1);
+		PI.setPolicyToEvaluate(randPolc);
+		PI.planFromState(initState);
+		
+		return PI.value(initState);
 	}
 	
 	private static void clearOldResultsFile(String taskName) {
@@ -83,7 +107,7 @@ public class EpsilonExperiments {
 		}
 	}
 	
-	private static void writeDataPointToFile(EpsilonToNumStatesTuple x, String taskName) {
+	private static void writeDataPointToFile(String x, String taskName) {
 		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(resultsDir + "/" + taskName + "/" + taskName + ".results", true)))) {
 			out.println(x);  
 		}
@@ -124,6 +148,7 @@ public class EpsilonExperiments {
 		RewardFunction taxiRF = new TaxiDomainGenerator.TaxiRF();
 		Domain oldTaxiDomain = taxiGen.generateDomain();
 		State initialTaxiState = taxiGen.getInitialState(oldTaxiDomain);
+		List<Option> taxiOptions = taxiGen.getOptions(oldTaxiDomain);
 		
 		// Create upworld domain.
 		int upWorldHeight = 10;
@@ -142,13 +167,15 @@ public class EpsilonExperiments {
 		
 		// Create random domain.
 		int numRandStates = 1000;
+
 		int numRandActions = 3;
 		GraphDefinedDomain randGen = RandomMDPGenerator.getRandomMDP(numRandStates, numRandActions);
 		Domain randDomain = randGen.generateDomain();
 		State initialRandState = RandomMDPGenerator.getInitialState(randDomain);
 		RewardFunction randRF = new RandomMDPGenerator.RandomMDPRF(numRandStates);
-
-		String task = "RANDOM"; // NCHAIN, TRENCH, TAXI, UPWORLD, RANDOM		
+		
+		
+		String task = "TRENCH"; // NCHAIN, TRENCH, TAXI, UPWORLD, RANDOM		
 		
 		if (task == "ALL") {
 			generateEpsilonResults(nChainGen, nChainRF, initialNChainState, "nchain");
