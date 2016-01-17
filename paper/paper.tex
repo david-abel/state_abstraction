@@ -83,20 +83,31 @@ The combinatorial explosion that plagues planning and reinforcement-learning alg
 \section{Related Work}
 
 % Lihong/Walsh/Littman: Towards a unified theory...
-Citation test~\cite{li2006towards}
 
 \begin{itemize}
 \item ALisp~\cite{andre2002state}
 
-Programming language for enabling abstraction.
+\citep{andre2002state} investigate the notion of {\it safe} state abstraction through a programming language called ALISP that can be used to specify hierarchical abstractions to reinforcement learning agents, enabling agents to ignore irrelevant parts of the state. The primary contribution of this work is the development of ALISP, and the decomposition of the Bellman equation into a form that enables safe planning algorithms using the abstractions from ALISP. Critically, our work differs in that our primary aim is to achieve understanding of what methods of abstraction in reinforcement learning can maintain bounded error solutions, while ALISP investigates one particular means of abstraction for use in planning, using partial programs.
 
 \item Aggregation in DP~\cite{Bean2011}
 
-Assumes the MDP is a DAG. Only does shortest path.
+~\citep{Bean2011} develop an an algorithm (SADA) that performs aggregation on planning tasks that can be structured as a DAG, and conducts analysis on this process, achieving bounded error on the problem resulting from the aggregation. Our work differs in that the scope of aggregation and analysis is novel, and we make no assumptions about the structure of the underlying task. Lastly, we consider the reinforcement learning setting, as opposed to planning.
+
+\item {\bf Approximate equivalence of MDP}~\cite{even2003approximate}
+
+
+
+Does epsilon equivalence of MDPs and proves bounds of value of the optimal policy in the ground versus the abstract.
+
+\item {\bf Does approximate aggregation and then UCRL}~\cite{ortner2013adaptive}
+
+Very similar to our overall goal: learn an abstraction function online using confidence bounds as the epsilon. Wowza. Only uses the whole model similarity business though. Seems to be the case for all of the approximate aggregation work (just does the bisimulation or $\epsilon-homogeneity$)
+
 
 \item New Operators for RL~\cite{Bellemare2015}
 
 Comes up with an approximate Bellman Operator. Not sure how it's related yet.
+
 
 \item DP with Factored Representations~\cite{Boutilier2000}
 
@@ -110,6 +121,9 @@ Bounded Parameter MDP: family of MDP with upper and lower bounds on T. Find poli
 % Also covers model minimization..
 
 \item Abstraction selection~\cite{jiang2015abstraction}
+
+
+
 
 \item State abstraction discovery from irrelevant state variables~\cite{jong2005state}
 
