@@ -95,9 +95,7 @@ The combinatorial explosion that plagues planning and reinforcement-learning alg
 
 \item {\bf Approximate equivalence of MDP}~\cite{even2003approximate}
 
-
-
-Does epsilon equivalence of MDPs and proves bounds of value of the optimal policy in the ground versus the abstract.
+A number of works consider abstractions related to transition model similarity, or both transition model and reward function similarity with the aim of reducing the state space size required for planning and learning~\cite{even2003approximate,ortner2013adaptive,dean1997model,Boutilier2000}. This work is closely in line with our own in that we seek abstractions that may inform a reduced, abstract MDP, the solution to which has bounded error in the original MDP. However, we extend these results by considering broader classes of abstraction beyond the model similarity, or $\epsilon-homogeneity$, first introduced by ~\cite{dean1997model}.
 
 \item {\bf Does approximate aggregation and then UCRL}~\cite{ortner2013adaptive}
 
@@ -109,25 +107,17 @@ Very similar to our overall goal: learn an abstraction function online using con
 Comes up with an approximate Bellman Operator. Not sure how it's related yet.
 
 
-\item DP with Factored Representations~\cite{Boutilier2000}
-
-Uses decision trees and DBNs to represent MDPs. Does state aggregation. Theorem 4.4 should be looked at in more detail.
-
-\item {\bf Model reduction techniques for nearly optimal MDP solutions}~\cite{dean1997model}
-
-$\epsilon$-homogeneity: groups together states that behave approximately the same under all or some subset of policies.
-
-Bounded Parameter MDP: family of MDP with upper and lower bounds on T. Find policies approximately optimal w.r.t. original MDP.
-% Also covers model minimization..
-
 \item Abstraction selection~\cite{jiang2015abstraction}
 
-
-
+~\cite{jiang2015abstraction} investigate the question of choosing between two abstractions during learning. They provide analysis for an online approach to identifying the better abstraction. 
 
 \item State abstraction discovery from irrelevant state variables~\cite{jong2005state}
 
+
+
 \item Selecting the state rep in RL~\cite{maillard2011selecting}
+
+
 
 \item Near optimal state reps~\cite{ortner2014selecting}
 
