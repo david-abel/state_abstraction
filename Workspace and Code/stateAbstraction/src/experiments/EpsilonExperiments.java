@@ -129,6 +129,18 @@ public class EpsilonExperiments {
 		generateEpsilonResults(graphDefinedDomain, graphRF, initGraphState, taskName);
 	}
 	
+	public static void convertAndGenEpsilonResultsOptions(DomainGenerator gen, TerminalFunction tf, RewardFunction rf, State initialState, String taskName, List<Option> options) {
+		// Convert to graph domain.
+		NormalDomainToGraphDomain graphMaker = new NormalDomainToGraphDomain(gen, tf, rf, initialState);
+		GraphDefinedDomain graphDefinedDomain = graphMaker.createGraphDomain(options);
+		Domain d = graphDefinedDomain.generateDomain();
+		RewardFunction graphRF = new GraphRF(d, rf, tf, graphMaker.graphIndexToNonGraphState, graphMaker.graphActionIndexToNonGraphAction);
+		State initGraphState = GraphDefinedDomain.getState(d, graphMaker.initStateID);
+		
+		// Run experiments.
+		generateEpsilonResults(graphDefinedDomain, graphRF, initGraphState, taskName);
+	}
+	
 	public static void main(String[] args) {
 
 		DPrint.toggleUniversal(false);
@@ -174,8 +186,7 @@ public class EpsilonExperiments {
 		State initialRandState = RandomMDPGenerator.getInitialState(randDomain);
 		RewardFunction randRF = new RandomMDPGenerator.RandomMDPRF(numRandStates);
 		
-		
-		String task = "TRENCH"; // NCHAIN, TRENCH, TAXI, UPWORLD, RANDOM		
+		String task = "TAXI"; // NCHAIN, TRENCH, TAXI, UPWORLD, RANDOM		
 		
 		if (task == "ALL") {
 			generateEpsilonResults(nChainGen, nChainRF, initialNChainState, "nchain");
@@ -191,7 +202,7 @@ public class EpsilonExperiments {
 			convertAndGenEpsilonResults(trenchGen, trenchTF, trenchRF, initialTrenchState, "trench");
 		}
 		else if (task == "TAXI") {
-			convertAndGenEpsilonResults(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi");
+			convertAndGenEpsilonResultsOptions(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi", taxiOptions);
 		}
 		else if (task == "RANDOM") {
 			generateEpsilonResults(randGen, randRF, initialRandState, "random");

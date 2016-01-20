@@ -38,7 +38,7 @@ public class GetPassengerOptionMaker {
 
 		//now that we have the parts of our option, instantiate it
 		DeterministicTerminationOption option = new DeterministicTerminationOption("getPassengerOption", optionPolicy, new IsTaxiEmptySCT(), new IsTaxiFullSCT());
-		option.setExpectationHashingFactory(new SimpleHashableStateFactory());
+//		option.setExpectationHashingFactory(new SimpleHashableStateFactory());
 		
 		return option;
 	}

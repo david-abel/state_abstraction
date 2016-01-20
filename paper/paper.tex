@@ -116,62 +116,59 @@ The states in the abstract MDP are constructed by applying a state aggregation s
 % --- SECTION: Related Work ---
 \section{Related Work}
 
+% Approximate abstraction work.
+%Dean: 
+%\begin{itemize}
+%\item \citep{dean1997model} Does abstraction with model equality.
+%\item \citep{dean1997modelmin} Does approximate abstraction with model similarity.
+%\end{itemize}
+%
+%Boutilier:
+%\begin{itemize}
+%\item ~\citep{dearden1997abstraction} Abstraction: a similar ish bound with a similar is agenda.
+%\item ~\citep{Boutilier2000} Stochastic DP: tree based policies, sort of bound thingies.
+%\end{itemize}
+%
+%Even~\cite{even2003approximate}: COLT paper on different metrics
+%
+%Ortner:
+%\begin{itemize}
+%\item ~\cite{ortner2013adaptive}: Uses Dean results to do UCRL online learning of abstraction. 
+%\item ~\cite{odalric2013optimal}: Learn which abstraction to use online (similar to the Nan paper)
+%\end{itemize}
+
+
+\subsection{Approximate State Abstraction}
+\citep{dean1997modelmin} investigates partitioning an MDP's state space into $\epsilon$-homogenous blocks, which are defined as clusters of states whose transition model and reward function are within $\epsilon$ of each other. They provide bounds on the error incurred as a result of using the optimal policy defined over these blocks in the original MDP. This method of abstraction is effectively characterized as a function belonging to the approximate class $\phi_{model}$.
+Several approaches build on the notion of $\epsilon$-homogeneity. ~\citep{even2003approximate} analyze different distant metrics used in the process of identifying $\epsilon$-homogenous partitions. ~\cite{ortner2013adaptive} develops an algorithm for learning partitions in an on line setting by taking advantage of the confidence bounds for $T$ and $R$ provided by UCRL~\cite{auer2009near}.
+
+%Prior work considers abstractions related to transition model similarity, or both transition model and reward function similarity with the aim of reducing the state space size required for planning and learning while still achieving a bounded error solution~\cite{even2003approximate,ortner2013adaptive,Boutilier2000}. All of this work is closely in line with our own agenda; they investigate rules for abstractions that may inform a reduced, abstract MDP, the solution to which has bounded error in the original MDP. However, all prior results explore model similarity abstraction rules, whereas we consider several broader classes of approximate abstraction. Furthermore, our results depend on no assumptions regarding the structure of the MDPs in which we apply our abstraction, and generalize to both the reinforcement learning or the planning setting, while many previous approaches require simplifying assumptions about the space of MDPs\dnote{a comment about what assumptions are made would be nice}, or only work target planning.
+
+\subsection{Specific Abstraction Algorithms}
+Many previous works have targeted the creation of algorithms that enable state abstraction for MDPs. \citep{andre2002state} investigates a method for state abstraction in hierarchical reinforcement learning leveraging a programming language called ALISP that promotes the notion of {\it safe} state abstraction. Agents programmed using ALISP can ignore irrelevant parts of the state, achieving abstraction that maintains optimality. ~\cite{dietterich2000hierarchical} develops the MAXQ algorithm, a framework for composing tasks into an abstracted hierarchy. \citep{jong2005state} introduce a method called {\it policy-irrelevance}, in which agents identify (online) which state variables may be safely ignored in a factored MDP, and consequently achieve state abstraction. The agent will learn to ignore state variables that don't impact optimal behavior, and is consequently contained within the approximate $\phi_{a^*}$ work. For a full survey of algorithms that leverage state abstraction in recent reinforcement learning literature, see~\cite{li2006towards}.
+
+
+% Other? Selecting abstractions
+%\subsection{Selecting Abstractions}
+%\citep{jiang2015abstraction} investigate the question of choosing between two abstractions during learning. They provide analysis for an online approach to identifying the better abstraction. 
+
+% Defining 
+
+% Critically, our work differs from these in that our primary aim is to achieve understanding of what methods of abstraction in reinforcement learning can maintain bounded error solutions, while these focus on particular strategies that fit within our framework.
+
 % Lihong/Walsh/Littman: Towards a unified theory...
-Citation test~\cite{li2006towards}
 
-\begin{itemize}
-\item ALisp~\cite{andre2002state}
-
-Programming language for enabling abstraction.
-
-\item Aggregation in DP~\cite{Bean2011}
-
-Assumes the MDP is a DAG. Only does shortest path.
-
-\item New Operators for RL~\cite{Bellemare2015}
-
-Comes up with an approximate Bellman Operator. Not sure how it's related yet.
-
-\item DP with Factored Representations~\cite{Boutilier2000}
-
-Uses decision trees and DBNs to represent MDPs. Does state aggregation. Theorem 4.4 should be looked at in more detail.
-
-\item {\bf Model reduction techniques for nearly optimal MDP solutions}~\cite{dean1997model}
-
-$\epsilon$-homogeneity: groups together states that behave approximately the same under all or some subset of policies.
-
-Bounded Parameter MDP: family of MDP with upper and lower bounds on T. Find policies approximately optimal w.r.t. original MDP.
-% Also covers model minimization..
-
-\item Abstraction selection~\cite{jiang2015abstraction}
-
-\item State abstraction discovery from irrelevant state variables~\cite{jong2005state}
-
-\item Selecting the state rep in RL~\cite{maillard2011selecting}
-
-\item Near optimal state reps~\cite{ortner2014selecting}
-
-\item SMDP homomorphisms~\cite{ravindran2003smdp}
-
-\end{itemize}
-
-% Nan/Lihong
-
-% Approximate bisimulation
-
-% David Silver: Options/State Abstraction?
-
-% Russell? PHAM/HAM/ALisp
-
-% Konidaris? Options induce symbolic representation on continuous state space
-
-% Littman: Relocatable Action Models
-
-% Stone: State Abstraction Discovery from Irrelevant State Vars
-
-% Others...
-
-
+%\begin{itemize}
+%\item {\bf Approximate equivalence of MDP}~\cite{even2003approximate}
+%\item ALisp~\cite{andre2002state}
+%\item Aggregation in DP~\cite{Bean2011}
+%\item {\bf Does approximate aggregation and then UCRL}~\cite{ortner2013adaptive}
+%Very similar to our overall goal: learn an abstraction function online using confidence bounds as the epsilon. Wowza. Only uses the whole model similarity business though. Seems to be the case for all of the approximate aggregation work (just does the bisimulation or $\epsilon-homogeneity$)
+%
+%\item Selecting the state rep in RL~\cite{maillard2011selecting}
+%\item Near optimal state reps~\cite{ortner2014selecting}
+%\item SMDP homomorphisms~\cite{ravindran2003smdp}
+%\end{itemize}
 
 
 % --- SECTION: State Abstraction ---
@@ -181,9 +178,12 @@ Bounded Parameter MDP: family of MDP with upper and lower bounds on T. Find poli
 
 % One theorem, each separate phi is its own lemma.
 
+% Proof of Q^*
+
+% Possibly a lemma for NP-Completeness of the minimal such phi for all abstractions (was a result for model in previous cases).
 
 % Subsections for proofs for each phi
-\dnote{Insert lemma for each phi as their subsection}
+\dnote{Insert lemma for each phi as their subsection, maybe with proof sketch but likely just dump in appendix.}
 
 % Subsection: 
 
@@ -202,7 +202,14 @@ Bounded Parameter MDP: family of MDP with upper and lower bounds on T. Find poli
 % Subsection: Other Abstractions
 \subsection{Other Abstractions}
 
-% Discussion of other abstractions we looked into
+We note that one natural way of approximating $\phi_{a^*}$ from ~\cite{li2006towards}, in which states that are compressed together share optimal actions and the Q values of these actions are within $\varepsilon$ is ultimately equivalent to the crisp abstraction $\phi_{\pi^*}$, in states that are compressed share an optimal action. A true approximation of $\phi_{a^*}$ ought to also approximate the optimality of each action. Given the degree of compression achievable under $\phi_{a^*}$, especially with temporally extended actions, we foresee this approximate form of abstraction as being of great interest, and plan to investigate it in future work.
+
+We are {\it not} going to provide results for $\phi_{\pi^*}$, since relaxing equality of optimal actions doesn't mean anything.
+
+Additionally, we are {\it not} going to provide results for $\phi_{Q^\pi}$, since as Lihong's paper notes, ``It is an open question how to find $Q^\pi$ irrelevance abstractions without enumerating all possible policies, they do not give results. Furthermore, an MDP for which this is true is an awfully weird MDP...
+
+Lastly, we are interested in a generalization of $\phi_{mult}$  and $\phi_{bolt}$ that handles a broader space of distributions over Q values.
+
 
 % Some abstractions DON'T preserve a meaningful notion of optimality.
 
