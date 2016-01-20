@@ -2,4 +2,5 @@ Questions to ask Michael about presentation of paper
 ----------------------------------------------------
 1. Assume same normalizing constant or sum of Qs is bounded for Phi_boltz and Phi_multi
 2. Which proofs should we actually present -- which are just appendix math
-3. Q* proof more generally works if V(s) for all ground states are within epsilon. Present more general version or no?
+3. Q* proof more generally works if V(s) for all ground states are within epsilon. Present more general version or no? 
+4. Options
