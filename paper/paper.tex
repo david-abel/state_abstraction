@@ -76,7 +76,7 @@ Thus, a key research interest of planning and RL has been leveraging abstraction
 
 In this work we demonstrate that aggregation of states on the basis of various approximately equal criteria incur bounded error.  Relaxing the aggregation criteria from equality of quantities to epsilon-closeness offers two benefits. First, state aggregation algorithms that satisfy these criteria employ the sort of knowledge which we might reasonably a planning or learning algorithm to approximate without fully solving the MDP. Second, because the state aggregation criteria are relaxed to approximate equality, methods which employ approximate equality are able to tune the aggressiveness of state aggregation all the while incuring bounded error.
 	
-\enote{QUICK SUMMARY OF PAPER PARAGRAPH}
+\enote{ADD QUICK SUMMARY OF PAPER PARAGRAPH}
 
 %\begin{itemize}
 %\item Solving MDPs is P-Complete, where the dominant factor is $|\mathcal{S}|$.
@@ -95,7 +95,7 @@ In this work we demonstrate that aggregation of states on the basis of various a
 \subsection{\acp{MDP} and Sequential Decision Making}
 A \ac{MDP} is a five-tuple: $\langle \mathcal{S}, \mathcal{A}, \mathcal{T}, \mathcal{R}, \gamma \rangle$: $\mathcal{S}$ is a finite state space; $\mathcal{A}$ is the set of actions available to the agent; $\mathcal{T}$ denotes $\mathcal{T}(s' \mid s,a)$, the probability of an agent applying action $a \in \mathcal{A}$ in state $s \in \mathcal{S}$ and arriving in $s' \in \mathcal{S}$; $\mathcal{R}(s)$ denotes the reward received by the agent arriving in state $s$; $\gamma \in [0, 1]$ is a discount  factor that defines how much the agent prefers immediate rewards over future rewards.
 
-The goal of an agent in an \ac{MDP} is to solve for a policy that maps states to actions: $\pi: \mathcal{S} \rightarrow \mathcal{A}$. In particular, the agent wants to solve for the policy that maximizes its expected discounted reward from any state. This goal policy is denoted $\pi^*$. We denote the expected discounted reward for following policy $\pi$ from state $s$ as the value of the state under that policy, $V(s)^\pi$. We similarly denote the expected discounted reward for taking action $a \in \mathcal{A}$ and then following policy $\pi$ from state $s$ forever after as $Q^\pi(s,a)$. Lastly, we denote the value and $Q$ functions under the optimal policy as $V^*$ and $Q^*$ respectively.
+The goal of an agent in an \ac{MDP} is to solve for a policy that maps states to actions: $\pi: \mathcal{S} \rightarrow \mathcal{A}$. In particular, the agent wants to solve for the policy that maximizes its expected discounted reward from any state. This goal policy is denoted $\pi^*$. We denote the expected discounted reward for following policy $\pi$ from state $s$ as the value of the state under that policy, $V(s)^\pi$. We similarly denote the expected discounted reward for taking action $a \in \mathcal{A}$ and then following policy $\pi$ from state $s$ forever after as $Q^\pi(s,a)$. Lastly, we denote the value and $Q$ functions under the optimal policy as $V^*$ and $Q^*$ respectively. \enote{Add citation -- either Littman review paper or Sutton/Barto}
 
 %Lihong Section
 \subsection{Abstraction Notation}
