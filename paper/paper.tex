@@ -4,6 +4,7 @@
 \usepackage{subfigure} 
 \usepackage{natbib}
 \usepackage{algorithm}
+\usepackage{amsmath}
 \usepackage{algorithmic}
 \usepackage{subfigure}
 \usepackage{hyperref}
@@ -16,6 +17,8 @@
 
 % --- Notation Commands ---
 \newcommand{\ep}{\widetilde \phi}
+\newcommand\defn[1]{{\bf Definition:} #1}
+
 
 % --- Note Commands ---
 \usepackage{color}
@@ -125,23 +128,44 @@ For:
 s, s' \in \mathcal{S}_A
 \end{equation}
 
+% Abstract policy using in ground.
+In general we are interested in how policies defined over the abstract MDP perform in the ground MDP. To leverage a policy defined in the abstract in the ground, we map a ground state into the abstract state space, and query the abstract policy for behavior. Specifically:
+\begin{equation}
+\pi_A(s) = \pi_A(\phi(s)),\ s \in \mathcal{S}_G
+\end{equation}
+
+We evaluate the value of the abstract policy in the ground MDP by following the abstract policy:
+\begin{equation}
+V^{\pi_A}(s) = \mathcal{R}_G(s,\pi_A(a)) + \gamma \sum_{s' \in \mathcal{S}_G} \mathcal{T}_G(s,\pi_A(a),s')V^{\pi_A}(s')
+\end{equation}
 
 
+\subsection{Exact Abstraction Framework}
 
+\citep{li2006towards} develop a framework for state abstraction in \acp{MDP}, the notation for which is defined in the previous section. Here we survey their main results that we extend to the framework of approximate abstraction.
 
-% Quick MDP blurb?
+In particular, they define the following five classes of state abstractors, inspired by existing methods for state abstraction in \acp{MDP}. For brevity, we include those which we build upon directly (see their paper for full details).
 
-% Phi notation
+\defn{A $Q^*$-irrelevance abstraction, $\phi_{Q^*}$, is such that:
+\begin{equation}
+\phi_{Q^*}(s_1) = \phi_{Q^*}(s_2) \longrightarrow \forall a\ \left(Q^*(s_1,a) = Q^*(s_2,a)\right)
+\end{equation}
+}
 
-% Evluation of Abstract MDP
-
-% Abstract MDP, Ground MDP, Homogenizing Gun
-
-% Previous state aggregation stuff? Or should be in related work?
+\defn{A model-irrelevance abstraction, $\phi_{model}$, is such that:
+\begin{multline}
+\phi_{model}(s_1) = \phi_{model}(s_2) \rightarrow \forall a\ \mathcal{R}_G(s_1,a) = \mathcal{R}_G(s_2,a) \\
+\end{multline}
+And:
+\begin{multline}
+\phi_{model}(s_1) = \phi_{model}(s_2) \rightarrow \\ \forall a \sum_{s' \in \phi^{-1}(\phi(s_1))} \mathcal{T}_G(s_1,a,s') =\sum_{s' \in \phi^{-1}(\phi(s_2))} \mathcal{T}_G(s_2,a,s') \\
+\end{multline}
+}
 
 
 % --- SECTION: Related Work ---
 \section{Related Work}
+
 
 % Approximate abstraction work.
 %Dean: 
