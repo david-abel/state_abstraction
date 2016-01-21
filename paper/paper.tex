@@ -65,11 +65,11 @@ The combinatorial explosion that plagues planning and \ac{RL} algorithms can be 
 
 % --- SECTION: Introduction ---
 \section{Introduction}
-Abstraction is a fundamental tool of intelligent agent seeking to compute over only the salient features of its environment. However, the knowledge available to an agent at any given moment is typically approximate and so agents are faced with the challenge of deciding when their knowledge is sufficiently accurate to form the basis of abstraction. This work focuses on characterizing what ``sufficiently accurate" information for abstraction amounts to in the context of planning and \ac{RL} in \acp{MDP}.
+Abstraction is a fundamental tool of intelligent agents seeking to reason about only the salient features of its environment. However, the knowledge available to an agent at any given moment is typically approximate and so agents are faced with the challenge of deciding when their knowledge is sufficiently accurate to form the basis of abstraction. This work focuses on characterizing what ``sufficiently accurate" information for abstraction amounts to in the context of planning and \ac{RL} in \acp{MDP}.
 
-Solving for optimal behavior in \acp{MDP} in a planning setting is known to be P-Complete in the size of the state space CITE MICHAEL COMPLEXITY PAPER. Similarly, many \ac{RL} algorithms for solving MDPs are known to require a number of samples polynomial in the size of the state space CITE SOME SAMPLE COMPLEXITY PAPER. Although polynomial runtime or sample complexity is often what one hopes, due to Bellman's so-called curse of dimensionality the state space of an MDP often grows super-polynomially with the number of variables that characterize the domain. Thus, polynomial behavior in state space size is not necessarily the \enote{bee's knees}. For instance, a robot involved in a pick and place task might be able employ planning algorithms to solve for how to manipulate some objects into a desired configuration in time polynomial in the number of states, but the number of states it must consider to do so grows exponentially with the number of objects it plans over CITE DABE ICAPS.
+Solving for optimal behavior in \acp{MDP} in a planning setting is known to be P-Complete in the size of the state space~\cite{littman1995complexity,papadimitriou1987complexity}. Similarly, many \ac{RL} algorithms for solving MDPs are known to require a number of samples polynomial in the size of the state space~\cite{strehl2009reinforcement}. Although polynomial runtime or sample complexity is often what one hopes, due to Bellman's so-called curse of dimensionality the state space of an MDP often grows super-polynomially with the number of variables that characterize the domain. Thus, polynomial behavior in state space size is not necessarily the \enote{bee's knees}. For instance, a robot involved in a pick and place task might be able employ planning algorithms to solve for how to manipulate some objects into a desired configuration in time polynomial in the number of states, but the number of states it must consider to do so grows exponentially with the number of objects it plans over CITE DABE ICAPS.
 
-Thus, a key research interest of planning and RL has been leveraging abstraction as means of grappling with large state spaces (CITE VARIOUS ABSTRACTION JOANT). These methods are characterized by reducing \textit{ground} MDPs with large state spaces to \textit{abstract} MDPs with smaller state spaces by aggregating states with similar values of interest. Existing work has characterized how aggregation of states with equal values of particular quantities fully maintain optimality CITE LIHONG. However, exactly solving for these quantities is itself computationally taxing and sometimes as difficult as solving for optimal behavior in the ground MDP, thereby defeating the purpose of abstraction.
+Thus, a key research interest of planning and RL has been leveraging abstraction as means of grappling with large state spaces~\cite{andre2002state,jong2005state,dietterich2000hierarchical,Bean2011}. These methods are characterized by reducing \textit{ground} MDPs with large state spaces to \textit{abstract} MDPs with smaller state spaces by aggregating states with similar values of interest. Existing work has characterized how aggregation of states with equal values of particular quantities fully maintain optimality~\cite{li2006towards,dean1997modelmin}. However, exactly solving for these quantities is itself computationally taxing and sometimes as difficult as solving for optimal behavior in the ground MDP, thereby defeating the purpose of abstraction.
 
 In this work we demonstrate that aggregation of states on the basis of various approximately equal criteria incur bounded error.  Relaxing the aggregation criteria from equality of quantities to epsilon-closeness offers two benefits. First, state aggregation algorithms that satisfy these criteria employ the sort of knowledge which we might reasonably a planning or learning algorithm to approximate without fully solving the MDP. Second, because the state aggregation criteria are relaxed to approximate equality, methods which employ approximate equality are able to tune the aggressiveness of state aggregation all the while incuring bounded error.
 	
@@ -97,9 +97,36 @@ The goal of an agent in an \ac{MDP} is to solve for a policy that maps states to
 %Lihong Section
 \subsection{Abstraction Notation}
 We build upon the notation used by \cite{li2006towards} \enote{This should probably say more}.
-We understand an abstraction as a mapping from a ground MDP $M_G$ to an abstract MDP $M_A$ using a state aggregation scheme. $M_G = \langle \mathcal{S}_G, \mathcal{A}, \mathcal{T}_G, \mathcal{R}_G, \gamma \rangle$ and $M_A = \langle \mathcal{S}_A, \mathcal{A}, \mathcal{T}_A, \mathcal{R}_A, \gamma \rangle$. 
 
-The states in the abstract MDP are constructed by applying a state aggregation scheme, $\phi$, to the states in the ground MDP. $\mathcal{S}_A$
+We understand an abstraction as a mapping from a ground MDP $M_G$ to an abstract MDP $M_A$ using a state aggregation scheme. $M_G = \langle \mathcal{S}_G, \mathcal{A}, \mathcal{T}_G, \mathcal{R}_G, \gamma \rangle$ and $M_A = \langle \mathcal{S}_A, \mathcal{A}, \mathcal{T}_A, \mathcal{R}_A, \gamma \rangle$.
+
+% States
+The states in the abstract MDP are constructed by applying a state aggregation scheme, $\phi$, to the states in the ground MDP, $\mathcal{S}_A$. More specifically, $\phi$ maps a state in the ground MDP to a state in the abstract MDP.
+\begin{equation}
+\mathcal{S}_A = \{ \phi(s) \mid s \in \mathcal{S}_G\}
+\end{equation}
+
+Intuitively, the abstract reward function and abstract transition dynamics for each abstract state are a weighted combination of the rewards and transitions for each ground state in the partition. We make now assumptions about the weighting scheme, except that the weighting is a convex combination across all states in partition.
+
+% Reward
+The abstract reward function $\mathcal{R}_A(s,a)$ is a weighted sum of the rewards of each of the ground states that map to the abstract state:
+\begin{equation}
+\mathcal{R}_A(s,a) = \sum_{g \in \phi(s), s \in \mathcal{S}_G} \mathcal{R}_G(g,a) \omega(g) 
+\end{equation}
+
+
+% Transition
+The abstract transition function $\mathcal{T}_A(s,a,s')$ is a weighted sum of the transitions of each of the ground states that map to the abstract state:
+\begin{equation}
+\mathcal{T}_A(s,a,s') = \sum_{g \in \phi^{-1}(s)} \sum_{g' \in \phi^{-1}(s')} \mathcal{T}_G(g,a,g') \omega(g) 
+\end{equation}
+For:
+\begin{equation}
+s, s' \in \mathcal{S}_A
+\end{equation}
+
+
+
 
 
 % Quick MDP blurb?
@@ -139,7 +166,7 @@ The states in the abstract MDP are constructed by applying a state aggregation s
 
 
 \subsection{Approximate State Abstraction}
-\citep{dean1997modelmin} investigates partitioning an MDP's state space into $\epsilon$-homogenous blocks, which are defined as clusters of states whose transition model and reward function are within $\epsilon$ of each other. They provide bounds on the error incurred as a result of using the optimal policy defined over these blocks in the original MDP. This method of abstraction is effectively characterized as a function belonging to the approximate class $\phi_{model}$.
+\citep{dean1997model} investigates partitioning an MDP's state space into $\epsilon$-homogenous blocks, which are defined as clusters of states whose transition model and reward function are within $\epsilon$ of each other. They provide bounds on the error incurred as a result of using the optimal policy defined over these blocks in the original MDP. This method of abstraction is effectively characterized as a function belonging to the approximate class $\phi_{model}$.
 Several approaches build on the notion of $\epsilon$-homogeneity. ~\citep{even2003approximate} analyze different distant metrics used in the process of identifying $\epsilon$-homogenous partitions. ~\cite{ortner2013adaptive} develops an algorithm for learning partitions in an on line setting by taking advantage of the confidence bounds for $T$ and $R$ provided by UCRL~\cite{auer2009near}.
 
 %Prior work considers abstractions related to transition model similarity, or both transition model and reward function similarity with the aim of reducing the state space size required for planning and learning while still achieving a bounded error solution~\cite{even2003approximate,ortner2013adaptive,Boutilier2000}. All of this work is closely in line with our own agenda; they investigate rules for abstractions that may inform a reduced, abstract MDP, the solution to which has bounded error in the original MDP. However, all prior results explore model similarity abstraction rules, whereas we consider several broader classes of approximate abstraction. Furthermore, our results depend on no assumptions regarding the structure of the MDPs in which we apply our abstraction, and generalize to both the reinforcement learning or the planning setting, while many previous approaches require simplifying assumptions about the space of MDPs\dnote{a comment about what assumptions are made would be nice}, or only work target planning.
