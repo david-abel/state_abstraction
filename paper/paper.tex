@@ -52,7 +52,6 @@
 \begin{acronym}
 \acro{MDP}{Markov Decision Process}
 \acrodefplural{MDP}[MDPs]{Markov Decision Processes}
-
 \acro{RL}{reinforcement learning}
 \acrodefplural{RL}{RL}{Reinforcement learning}
 \end{acronym}
@@ -60,33 +59,26 @@
 
 % --- ABSTRACT ---
 \begin{abstract}
-The combinatorial explosion that plagues planning and \ac{RL} algorithms can be overcome using abstraction. For instance, prohibitively difficult task representations can be condensed so that solutions are tractably computable. In this work, we investigate a theoretical framework for approximate state abstraction that achieves high degrees of compressing while preserving near optimal behavior. \acp{RL} agents using these abstractions may treat experiences that resemble each other as equivalent, and generalize knowledge to novel scenarios based on prior experiences. We present theoretical guarantees of the quality of value functions derived from four classes of approximate state abstraction. Additionally, we empirically evaluate the relationship between the degree of approximation and the degree of abstraction achieved in a variety of tasks, as well as the tradeoff between approximation magnitude and optimality of behavior.
+The combinatorial explosion that plagues planning and \ac{RL} algorithms can be overcome using abstraction. For instance, prohibitively difficult task representations can be condensed, preserving essential information such that solutions are tractably computable. In this work, we investigate a theoretical framework for approximate state abstraction that achieves high degrees of compressing while preserving near optimal behavior. \acp{RL} agents using these abstractions treat experiences that resemble each other as equivalent, and generalize knowledge to novel scenarios based on prior experiences. We present theoretical guarantees of the quality of value functions derived from four classes of approximate state abstraction. Additionally, we empirically evaluate the relationship between the degree of approximation and the degree of abstraction achieved in a variety of tasks, as well as the tradeoff between approximation magnitude and optimality of behavior.
 \end{abstract}
-
-% Set of actions within epsilon (Q*) is the same for two states? Better than boltzmann.
 
 
 % --- SECTION: Introduction ---
 \section{Introduction}
-Abstraction plays a fundamental role in learning; it encourages intelligent agents to reason about only the salient features of their environment while ignoring what is irrelevant, consequently enabling agents to solve considerably more complex problems. However, the knowledge available to a learning agent at any given moment is approximate. Thus, agents must determine when their knowledge is sufficiently accurate to form the basis of abstraction. This work characterizes what is ``sufficiently accurate" information for abstraction amounts to in the context of planning and \ac{RL} in \acp{MDP}.
+Abstraction plays a fundamental role in learning. Through abstraction, intelligent agents may reason about only the salient features of their environment while ignoring what is irrelevant, consequently enabling agents to solve considerably more complex problems. However, the knowledge available to a learning agent at any given moment is approximate \dnote{Change this sentence}. Thus, agents must determine when their knowledge is sufficiently accurate to form the basis of abstraction. This work characterizes what is ``sufficiently accurate" information for abstraction amounts to in the context of planning and \ac{RL} in \acp{MDP}.
 
-Solving for optimal behavior in \acp{MDP} in a planning setting is known to be P-Complete in the size of the state space~\cite{littman1995complexity,papadimitriou1987complexity}. Similarly, many \ac{RL} algorithms for solving MDPs are known to require a number of samples polynomial in the size of the state space~\cite{strehl2009reinforcement}. Although polynomial runtime or sample complexity may seem like a reasonable constraint, due to Bellman's so-called curse of dimensionality the size of the state space of an MDP grows super-polynomially with the number of variables that characterize the domain. Thus, polynomial behavior in state space size is not necessarily the \enote{bee's knees}. For instance, a robot involved in a pick and place task might be able employ planning algorithms to solve for how to manipulate some objects into a desired configuration in time polynomial in the number of states, but the number of states it must consider to do so grows exponentially with the number of objects it plans over CITE DABE ICAPS.
+% Abstraction is a good idea b/c MDP has poly comp comp and samp comp in S, but S grows fast.
+Solving for optimal behavior in \acp{MDP} in a planning setting is known to be P-Complete in the size of the state space~\cite{littman1995complexity,papadimitriou1987complexity}. Similarly, many \ac{RL} algorithms for solving \acp{MDP} are known to require a number of samples polynomial in the size of the state space~\cite{strehl2009reinforcement}. Although polynomial runtime or sample complexity may seem like a reasonable constraint, due to Bellman's curse of dimensionality the size of the state space of an \ac{MDP} grows super-polynomially with the number of variables that characterize the domain. Thus, polynomial behavior in state space size often translates to intractability for sufficiently complicated tasks. \dnote{Would prefer a different example} For instance, a robot involved in a pick and place task might be able employ planning algorithms to solve for how to manipulate some objects into a desired configuration in time polynomial in the number of states, but the number of states it must consider to do so grows exponentially with the number of objects it plans over CITE DABE ICAPS.
 
-Thus, a key research agenda for planning and RL has been leveraging abstraction as means of reducing large state spaces~\cite{andre2002state,jong2005state,dietterich2000hierarchical,Bean2011}. These methods are characterized by reducing \textit{ground} MDPs with large state spaces to \textit{abstract} MDPs with smaller state spaces by aggregating states according to some notion of equality or similarity. Existing work has characterized how aggregation of states with equal values of particular quantities fully maintain optimality~\cite{li2006towards,dean1997modelmin}. However, exactly solving for these quantities is itself computationally taxing and sometimes as difficult as solving for optimal behavior in the ground MDP, thereby defeating the purpose of abstraction.
+% Existing work on state abstraction.
+Thus, a key research agenda for planning and RL is leveraging abstraction in order to reduce large state spaces~\cite{andre2002state,jong2005state,dietterich2000hierarchical,Bean2011}. These methods are characterized by reducing \textit{ground} MDPs with large state spaces to \textit{abstract} MDPs with smaller state spaces by aggregating states according to some notion of equality or similarity. Existing work has characterized how aggregation of states with equal values of particular quantities fully maintain optimality~\cite{li2006towards,dean1997modelmin}. However, exactly solving for these quantities is itself computationally taxing and often as difficult as solving for optimal behavior in the ground \ac{MDP}, thereby defeating the purpose of abstraction.
 
-In this work we demonstrate that aggregation of states on the basis of various approximate criteria incur bounded error.  Relaxing the aggregation criteria from equality of quantities to $\varepsilon$-closeness offers two benefits. First, state aggregation algorithms that satisfy these criteria employ the sort of knowledge which we expect a planning or learning algorithm to approximate without fully solving the MDP. Second, because the state aggregation criteria are relaxed to approximate equality, methods which employ approximate equality are able to tune the aggressiveness of state aggregation all the while incurring bounded error.
-	
-\enote{QUICK SUMMARY OF PAPER PARAGRAPH}
+% Approximate abstraction
+In this work we demonstrate that aggregation of states on the basis of various approximate criteria incur only bounded error in the resulting policy. Relaxing the aggregation criteria from equality of quantities to $\varepsilon$-closeness offers two benefits. First, state aggregation algorithms that satisfy these criteria employ the sort of knowledge which we expect a planning or learning algorithm to approximate without fully solving the \ac{MDP}. Second, because the state aggregation criteria are relaxed to approximate equality, methods which employ approximate equality are able to tune the aggressiveness of state aggregation all the while incurring bounded error.
 
-%\begin{itemize}
-%\item Solving MDPs is P-Complete, where the dominant factor is $|\mathcal{S}|$.
-%\item Sample complexity is {\it also} dominated by $|\mathcal{S}|$.
-%\item To make MDPs with large $|\mathcal{S}|$ tractable, we can reduce the MDPs to a simpler form.
-%\item In this work, we show that compressing MDPs in a particular way allows for the transfer of bounded-error solutions between the compressed MDP and ground MDP.
-%\item Q: Why approximate?
-%\item A: Approximate can compress strictly more than compression based on equality
-%\item A: Approximate compression requires the type of knowledge that we could imagine learning (i.e.. approximate knowledge)
-%\end{itemize}
+% Summary	
+This paper is organized as follows. We first introduce the necessary terminology and background of \ac{RL} and state abstraction. We then survey existing approaches in state abstraction as applied to sequential decision making. The following section introduces our four primary results; bounds on the error guaranteed by four classes of approximate state abstraction. We then discuss our experimentation, in which we apply one class of approximate abstraction to a variety of different tasks, visualizing their abstraction and showing the relationship between degrees of compression and error incurred.
+
 
 % --- SECTION: Background ---
 \section{Background}
@@ -261,6 +253,7 @@ Additionally, we are {\it not} going to provide results for $\phi_{Q^\pi}$, sinc
 
 Lastly, we are interested in a generalization of $\phi_{mult}$  and $\phi_{bolt}$ that handles a broader space of distributions over Q values.
 
+We also note that any abstraction that depends only on the reward function, $\mathcal{R}$, can incur unbounded error (or rather, $\textsc{VMax}$).
 
 % Some abstractions DON'T preserve a meaningful notion of optimality.
 
@@ -271,7 +264,7 @@ Lastly, we are interested in a generalization of $\phi_{mult}$  and $\phi_{bolt}
 
 \dnote{For each section, we'll include a plot comparing $\epsilon$ to \# states, and $\epsilon$ to performance. For UpWorld and NChain, we can include visuals of uncompressed and compressed (not useful for trench).}
 
-% Subsection: UpWorld
+% Subsection: UpWorld.
 \subsection{UpWorld}
 
 \dnote{As part of UpWorld we can include the result about the unbounded improvement in sample complexity (small lemma or something?)}
@@ -279,13 +272,13 @@ Lastly, we are interested in a generalization of $\phi_{mult}$  and $\phi_{bolt}
 % Insert visual and/or stats on number of states and performance of VI solving the abstract MDP and evaluating the resulting policy on the original MDP
 
 
-% Subsection: NChain
+% Subsection: NChain.
 \subsection{NChain}
 
 % Insert visual and/or stats on number of states and performance of VI solving the abstract MDP and evaluating the resulting policy on the original MDP
 
 
-% Subsection: Trench
+% Subsection: Trench.
 \subsection{Trench}
 
 % Insert visual and/or stats on number of states and performance of VI solving the abstract MDP and evaluating the resulting policy on the original MDP
@@ -298,6 +291,9 @@ Lastly, we are interested in a generalization of $\phi_{mult}$  and $\phi_{bolt}
 \caption{The Trench Problem}
 \label{fig:trench}
 \end{figure}
+
+% Subsection: Minefield.
+\subsection{Minefield}
 
 
 % --- SECTION: Approximate Abstraction on Example Domains ---
