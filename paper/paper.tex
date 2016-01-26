@@ -53,7 +53,7 @@
 \acro{MDP}{Markov Decision Process}
 \acrodefplural{MDP}[MDPs]{Markov Decision Processes}
 \acro{RL}{reinforcement learning}
-\acrodefplural{RL}{RL}{Reinforcement learning}
+\acrodefplural{RL}{Reinforcement learning}
 \end{acronym}
 
 
@@ -131,7 +131,7 @@ We evaluate the value of the abstract policy in the ground MDP by following the 
 V^{\pi_A}(s) = \mathcal{R}_G(s,\pi_A(a)) + \gamma \sum_{s' \in \mathcal{S}_G} \mathcal{T}_G(s,\pi_A(a),s')V^{\pi_A}(s')
 \end{equation}
 
-
+% Subsection: Exact Abstraction Framework
 \subsection{Exact Abstraction Framework}
 
 \citep{li2006towards} develop a framework for state abstraction in \acp{MDP}, the notation for which is defined in the previous section. Here we survey their main results that we extend to the framework of approximate abstraction.
@@ -217,6 +217,60 @@ Many previous works have targeted the creation of algorithms that enable state a
 % --- SECTION: State Abstraction ---
 \section{Approximate State Abstraction}
 
+
+% INTRO PARAGRAPH, setup + structure
+
+\dnote{Explain the notation so like the $\phi_f$}
+
+\dnote{Tee up other stuff/ideas}
+
+% Main theorem:
+
+\dnote{I wish this theorem used the term approximate somewhere (i.e. was using the same terminology as the intro/abstract)}
+{\bf Theorem 1:} There exist at least four classes of functions on state spaces that induce abstract MDPs such that:
+\begin{equation}
+\forall_{s_1, s_2 \in S_G} \phi_f(s_1) = \phi_f(s_2) \rightarrow \forall_a  |f(s_1,a) - f(s_2,a)| \leq \epsilon
+\end{equation}
+
+Where, the MDP induced by the abstraction function, when solved, provides the policy $\pi^*_A$, such that:
+\begin{equation}
+\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq poly(\epsilon)
+\end{equation}
+
+\dnote{Possible note about what all 4 functions are}
+
+% Subsection: Optimal Q Function
+\subsection{Optimal Q Function: $\phi_{Q^*}$}
+
+
+\dnote{Plan to put full Q proof}
+
+
+% Subsection: Model Similarity
+\subsection{Model Similarity: $\phi_{model}$}
+
+
+\dnote{Proof sketch}
+
+% Subsection: Multinomial over Optimal Q
+\subsection{Multinomial over Optimal Q: $\phi_{mult}$}
+
+\dnote{Proof sketch}
+
+% Subsection: Boltzmann over Optimal Q
+\subsection{Boltzmann over Optimal Q: $\phi_{bolt}$}
+
+\dnote{Comment about similarity to Multinomial.}
+
+\dnote{(Probably put full proofs in appendix if we have room?}
+
+% There are at least four classes of functions:
+% 1 \phi_q^*
+% 2 \phi_model
+% 3 \phi_mult
+% 4 \phi_bolt
+
+
 % Explain each of the Phis
 
 % One theorem, each separate phi is its own lemma.
@@ -225,22 +279,9 @@ Many previous works have targeted the creation of algorithms that enable state a
 
 % Possibly a lemma for NP-Completeness of the minimal such phi for all abstractions (was a result for model in previous cases).
 
-% Subsections for proofs for each phi
-\dnote{Insert lemma for each phi as their subsection, maybe with proof sketch but likely just dump in appendix.}
 
-% Subsection: 
 
-% Subsection: Phi_Q
-\subsection{$\phi_{Q^*}$}
 
-% Subsection: Phi_M
-\subsection{$\phi_{model}$}
-
-% Subsection: Phi_{Mult}
-\subsection{$\phi_{mult}$}
-
-% Subsection: Phi_B
-\subsection{$\phi_{bolt}$}
 
 % Subsection: Other Abstractions
 \subsection{Other Abstractions}
