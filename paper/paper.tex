@@ -134,6 +134,8 @@ We evaluate the value of the abstract policy in the ground MDP by following the 
 V^{\pi_A}(s) = \mathcal{R}_G(s,\pi_A(a)) + \gamma \sum_{s' \in \mathcal{S}_G} \mathcal{T}_G(s,\pi_A(a),s')V^{\pi_A}(s')
 \end{equation}
 
+\enote{Define $V_G$ and $V_A$ (value function in ground and value function in abstract)}
+
 % Subsection: Exact Abstraction Framework
 \subsection{Exact Abstraction Framework}
 
@@ -220,17 +222,8 @@ Many previous works have targeted the creation of algorithms that enable state a
 % --- SECTION: State Abstraction ---
 \section{Approximate State Abstraction}
 
-
-% INTRO PARAGRAPH, setup + structure
-
-\dnote{Tee up other stuff/ideas}
-
-% Main theorem:
-\enote{Add intro-y stuff}
-
-\dnote{I wish this theorem used the term approximate somewhere (i.e. was using the same terminology as the intro/abstract)}
-
-\enote{For clarity define phi TILDE}
+% Intro to approx state abstraction results.
+Here we introduce our formal method for approximate state abstraction, and the related results bounding the error associated with these abstraction methods. In particular, we demonstrate that abstractions based on $Q^*$ similarity, Model similarity (that is, $\mathcal{T}$ and $\mathcal{R}$), and similarity between distributions over $Q^*$, for both multinomial and Boltzmann disibtruions, induce abstract MDPs for which the optimal policy has bounded error in the ground MDP. We now introduce some additional notation to formally discuss these results.
 
 {\bf $\ep_f$ definition:} Given a function $f : \mathcal{S}_G \times \mathcal{A} \rightarrow \mathcal{R}$ and a fixed non-negative $\epsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state abstraction function which satisfies the following for any two ground states $s_1$ and $s_2$: 
 \begin{equation}
@@ -238,35 +231,41 @@ Many previous works have targeted the creation of algorithms that enable state a
 \ep_f(s_1) = \ep_f(s_2) \rightarrow \forall_a \left|f(s_1, a) - f(s_2, a)\right| \leq \epsilon
 \end{equation}
 
-That is, when $\phi_f$ aggregates states, all aggregated states the aggregated states have values of $f$ within $\epsilon$ of one another for all actions.
+That is, when $\phi_f$ aggregates states, all aggregated states have values of $f$ within $\epsilon$ of each other for all actions. Note that for any $f$, there are many such functions that satisfy this criteria.
 
-Note that for any $f$, there are many such functions that satisfy this criteria.
+We now introduce the main result of the paper.
 
 % Theorem 1
-{\bf Theorem 1:} There exist at least four classes of approximate state aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{bolt}}$ and $\ep_{\text{mult}}$ for which the optimal policy in the abstract MDP applied to the ground MDP has error bounded polynomially in $\epsilon$:
+{\bf Theorem 1:} There exist at least four classes of approximate state aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{bolt}}$ and $\ep_{\text{mult}}$ for which the optimal policy in the abstract MDP, applied to the ground MDP, has error bounded polynomially in $\epsilon$:
 \begin{equation}
 \forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq poly(\epsilon)
 \end{equation}
 
 \enote{Consider moving definition of $V^{\pi^*_{A}}(s)$ so it's fresh for reader.}
 
-\dnote{Possible note about what all 4 functions are}
-
 % Subsection:  Similarity of Value = Similar Behavior
-\subsection{Similarity of Value Yields Similar Behaviour}
-\enote{Proof that if values in the abstract and ground are similar then behavior is similar. State that for remainder of lemmas that we prove antecedent of this statement.}
+\subsection{Similarity of Value Yields Similar Behavior}
+
+{\bf Lemma 1:}
+If the value of a state in the ground \ac{MDP} is within $\kappa \in \mathbb{R}$ of the value of the corresponding abstract state, then the value of the ground state under the optimal policy in the abstract \ac{MDP} is within $\kappa$ of the value of the ground state:
+\begin{multline*}
+| V_G(s) - V_A(\phi (s)) | \leq \kappa \rightarrow
+\left| V_G(s) - V_G^{\pi_A^*} \right| \leq \kappa
+\end{multline*}
+
+\textbf{Proof:}
+
 
 % Subsection: Optimal Q Function
 \subsection{Optimal Q Function: $\ep_{Q^*}$}
 
 % Q* Lemma
-Recall that $Q^*$ is a function on $\mathcal{S}_G \times \mathcal{A}$ that satisfies \enote{$Q^*$ definition}. Consequently,  as per Equation $\ref{eq:phi_f}$, $\ep_{Q^*}$ is a type of abstraction that for a fixed $\epsilon$ satisfies:
+Recall that $Q^*$ is a function on $\mathcal{S}_G \times \mathcal{A}$ that satisfies \enote{$Q^*$ definition}. Consequently, by Equation~\ref{eq:phi_f}, $\ep_{Q^*}$ is a type of abstraction that, for a fixed $\epsilon$, satisfies:
 \begin{equation}
 \ep_{Q^*}(s_1) = \ep_{Q^*}(s_2) \rightarrow \forall_a \left|Q^*(s_1, a) - Q^*(s_2, a)\right| \leq \epsilon
 \end{equation}
 
-{\bf Lemma 1:} When $S_A$ is created using a function of the $\ep_{Q^*}$ type:
-
+{\bf Lemma 2:} When $S_A$ is created using a function of the $\ep_{Q^*}$ type:
 \begin{equation}
 \forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{\epsilon}{1-\gamma}
 \end{equation}
@@ -299,8 +298,6 @@ We proceed by induction on $T$ to show that:
 \begin{equation}
 \forall_T |V^{\pi_G^*}(s) - V_T(s)| \leq \sum_{t=0}^{T+1} \epsilon \gamma^t
 \end{equation}
-
-
 
 % Base Case
 \textit{Base Case:}
