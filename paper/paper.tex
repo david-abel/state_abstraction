@@ -86,7 +86,7 @@ This paper is organized as follows. We first introduce the necessary terminology
 
 %MDP/SDM Background and Notation
 \subsection{\acp{MDP} and Sequential Decision Making}
-A \ac{MDP} is a five-tuple: $\langle \mathcal{S}, \mathcal{A}, \mathcal{T}, \mathcal{R}, \gamma \rangle$: $\mathcal{S}$ is a finite state space; $\mathcal{A}$ is the set of actions available to the agent; $\mathcal{T}$ denotes $\mathcal{T}(s' \mid s,a)$, the probability of an agent applying action $a \in \mathcal{A}$ in state $s \in \mathcal{S}$ and arriving in $s' \in \mathcal{S}$; $\mathcal{R}(s)$ denotes the reward received by the agent arriving in state $s$; $\gamma \in [0, 1]$ is a discount  factor that defines how much the agent prefers immediate rewards over future rewards.
+A \ac{MDP} is a five-tuple: $\langle \mathcal{S}, \mathcal{A}, \mathcal{T}, \mathcal{R}, \gamma \rangle$: $\mathcal{S}$ is a finite state space; $\mathcal{A}$ is the set of actions available to the agent; $\mathcal{T}$ denotes $\mathcal{T}(s' \mid s,a)$, the probability of an agent applying action $a \in \mathcal{A}$ in state $s \in \mathcal{S}$ and arriving in $s' \in \mathcal{S}$; $\mathcal{R}(s)$ denotes the reward received by the agent arriving in state $s$; $\gamma \in [0, 1]$ is a discount  factor that defines how much the agent prefers immediate rewards over future rewards. We assume without loss of generality that all reward functions are normalized to $[0,1]$.
 
 The goal of an agent in an \ac{MDP} is to solve for a policy that maps states to actions: $\pi: \mathcal{S} \rightarrow \mathcal{A}$. In particular, the agent wants to solve for the policy that maximizes its expected discounted reward from any state. This goal policy is denoted $\pi^*$. We denote the expected discounted reward for following policy $\pi$ from state $s$ as the value of the state under that policy, $V(s)^\pi$. We similarly denote the expected discounted reward for taking action $a \in \mathcal{A}$ and then following policy $\pi$ from state $s$ forever after as $Q^\pi(s,a)$. Lastly, we denote the value and $Q$ functions under the optimal policy as $V^*$ and $Q^*$ respectively. \enote{Add citation -- either Littman review paper or Sutton/Barto}
 
@@ -104,7 +104,7 @@ The states in the abstract MDP are constructed by applying a state aggregation s
 \mathcal{S}_A = \{ \phi(s) \mid s \in \mathcal{S}_G\}
 \end{equation}
 
-Intuitively, the abstract reward function and abstract transition dynamics for each abstract state are a weighted combination of the rewards and transitions for each ground state in the partition. We make now assumptions about the weighting scheme, except that the weighting is a convex combination across all states in partition.
+Intuitively, the abstract reward function and abstract transition dynamics for each abstract state are a weighted combination of the rewards and transitions for each ground state in the partition. We make no assumptions about the weighting scheme, except that the weighting is a convex combination across all states in the partition.
 
 % Reward
 The abstract reward function $\mathcal{R}_A(s,a)$ is a weighted sum of the rewards of each of the ground states that map to the abstract state:
@@ -223,7 +223,15 @@ Many previous works have targeted the creation of algorithms that enable state a
 \section{Approximate State Abstraction}
 
 % Intro to approx state abstraction results.
-Here we introduce our formal method for approximate state abstraction, and the related results bounding the error associated with these abstraction methods. In particular, we demonstrate that abstractions based on $Q^*$ similarity, Model similarity (that is, $\mathcal{T}$ and $\mathcal{R}$), and similarity between distributions over $Q^*$, for both multinomial and Boltzmann disibtruions, induce abstract MDPs for which the optimal policy has bounded error in the ground MDP. We now introduce some additional notation to formally discuss these results.
+Here we introduce our formal method for approximate state abstraction, and the related results bounding the error associated with these abstraction methods. In particular, we demonstrate that abstractions based on $Q^*$ similarity, Model similarity (that is, $\mathcal{T}$ and $\mathcal{R}$), and similarity between distributions over $Q^*$, for both multinomial and Boltzmann disibtruions, induce abstract MDPs for which the optimal policy has bounded error in the ground MDP.
+
+In general, our proof strategy for each of the included results is as follows:
+\begin{itemize}
+\item First, we relate the values of states in the ground MDP to value of the states in the Abstract MDP
+\item Then, we relate the value of states in the ground MDP to value of the states in the Abstract MDP under the optimal abstract policy.
+\end{itemize}
+
+We now introduce some additional notation to formally discuss these results.
 
 {\bf $\ep_f$ definition:} Given a function $f : \mathcal{S}_G \times \mathcal{A} \rightarrow \mathcal{R}$ and a fixed non-negative $\epsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state abstraction function which satisfies the following for any two ground states $s_1$ and $s_2$: 
 \begin{equation}
@@ -260,7 +268,7 @@ If the value of a state in the ground \ac{MDP} is within $\kappa \in \mathbb{R}$
 \subsection{Optimal Q Function: $\ep_{Q^*}$}
 
 % Q* Lemma
-Recall that $Q^*$ is a function on $\mathcal{S}_G \times \mathcal{A}$ that satisfies \enote{$Q^*$ definition}. Consequently, by Equation~\ref{eq:phi_f}, $\ep_{Q^*}$ is a type of abstraction that, for a fixed $\epsilon$, satisfies:
+Recall that $Q^*$ is a function on $\mathcal{S}_G \times \mathcal{A}$ that satisfies \enote{$Q^*$ definition}. Inspired by the $Q^*$ irrelevance abstraction, we consider the approximate case. By Equation~\ref{eq:phi_f}, $\ep_{Q^*}$ is a type of abstraction that, for a fixed $\epsilon$, satisfies:
 \begin{equation}
 \ep_{Q^*}(s_1) = \ep_{Q^*}(s_2) \rightarrow \forall_a \left|Q^*(s_1, a) - Q^*(s_2, a)\right| \leq \epsilon
 \end{equation}
@@ -343,7 +351,7 @@ Note that as $T \rightarrow \infty$, $V_T$ becomes $V^{\pi_A*}$. Therefore:
 % Subsection: Model Similarity
 \subsection{Model Similarity: $\ep_{model}$}
 
-We let $\phi_{model}$ define a type of abstraction that, for fixed $\epsilon_\mathcal{R}$ and $\epsilon_\mathcal{T}$, satisfies:
+Inspired by the model-irrelevance abstraction, we consider the approximate case. We let $\phi_{model}$ define a type of abstraction that, for fixed $\epsilon_\mathcal{R}$ and $\epsilon_\mathcal{T}$, satisfies:
 \begin{multline}
 \ep_{model}(s_1) = \ep_{model}(s_2) \rightarrow \\
 \forall_a \left|\mathcal{R}(s_1, a) - \mathcal{R}(s_2, a)\right| \leq \epsilon_\mathcal{R}\ \wedge\ \\
@@ -477,6 +485,11 @@ We also note that any abstraction that depends only on the reward function, $\ma
 
 % --- SECTION: Example Domains ---
 \section{Example Domains}
+
+To empirically evaluate our approximate abstractions, we test out the $\ep{Q^*}$ abstraction on a variety of domains. We compare the number of states in the abstract MDP to different values of $\epsilon$, as well as the value difference between the optimal policy in the abstract MDP compared to the ground MDP.
+
+The domains we evaluate in are UpWorld, a contrived version of Grid World, NChain, the classic exploration task form the Bayesian Reinforcement Learning literature, the Trench task, introduced by CITE DABE, and the Taxi Problem, a classic problem discussed in hierarchical Reinforcement tLearning literature.
+
 
 \dnote{For each section, we'll include a plot comparing $\epsilon$ to \# states, and $\epsilon$ to performance. For UpWorld and NChain, we can include visuals of uncompressed and compressed (not useful for trench).}
 
