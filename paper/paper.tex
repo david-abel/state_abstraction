@@ -255,14 +255,62 @@ We now introduce the main result of the paper.
 \subsection{Similarity of Value Yields Similar Behavior}
 
 {\bf Lemma 1:}
-If the value of a state in the ground \ac{MDP} is within $\kappa \in \mathbb{R}$ of the value of the corresponding abstract state, then the value of the ground state under the optimal policy in the abstract \ac{MDP} is within $\kappa$ of the value of the ground state:
+If the value of all states in the ground \ac{MDP} are within $\kappa \in \mathbb{R}$ of the value of their corresponding abstract state, then the value of all ground states under the optimal policy in the abstract \ac{MDP} are within $3 \kappa$ of the value of their corresponding ground states:
 \begin{multline*}
-| V_G(s) - V_A(\phi (s)) | \leq \kappa \rightarrow
-\left| V_G(s) - V_G^{\pi_A^*} \right| \leq \kappa
+\forall_{s\in \mathcal{S}_G} | V_G(s) - V_A(\phi (s)) | \leq \kappa \rightarrow\\
+\forall_{s\in \mathcal{S}_G}\left| V_G(s) - V_G^{\pi_A^*}(s) \right| \leq 3\kappa
 \end{multline*}
 
 \textbf{Proof:}
+Given a state, $s \in \mathcal{S}_G$ by definition:
 
+Assume
+\begin{equation}
+\label{eq:similarValAssum}
+|V_G(s) - V_A(\phi (s)) | \leq \kappa
+\end{equation}
+
+Let $s_A$ stand for $\phi(s)$
+
+
+\begin{align*}
+&V_A(s_A) = \max_a \left| R_A(s_A, a) + \gamma \sum_{s_A' \in \mathcal{S}_A} T_A(s_A, a, s_A') V_A(s'a)   \right| \\
+&\leq \max_a \left| \sum_{g \in s_A} \left[ R_G(g,a) + \gamma  \sum_{g'}T_G(g, a, g')(V_g(g') + \kappa) \right] \right|\\
+\end{align*}
+
+\begin{equation}
+\label{eq:similarValIntResult}
+\leq \gamma \kappa + \sum_{g \in s_A} w(g)V_G(g)
+\end{equation}
+
+Given two ground states, $s_1$ and $s_2$ for which $\phi(s_1) = \phi(s_2)$ we know by Equation \ref{eq:similarValAssum} that 
+\begin{align*}
+V_A(\phi(s_1))-\kappa \leq V_G(s_1) \leq V_A(\phi(s_1))+\kappa
+\end{align*}
+
+and symmetrically that
+\begin{align*}
+V_A(\phi(s_1))-\kappa \leq V_G(s_2) \leq V_A(\phi(s_1))+\kappa
+\end{align*}
+
+By subtraction,
+\begin{align*}
+-2 \kappa \leq V_G(s_1) - V_G(s_2) \leq 2 \kappa \\
+\end{align*}
+
+\begin{equation}
+\label{eq:similarValIntResult2}
+\left|  V_G(s_1) - V_G(s_2) \right| \leq 2\kappa
+\end{equation}
+
+Let $g_{min}$ stand for $\underset{g}{argmin} V_{G}(g)$.
+
+We know by equations \ref{eq:similarValIntResult} and \ref{eq:similarValIntResult2} that
+\begin{align*}
+V_A(s_A) &\leq \gamma \kappa +\sum_{g \in s_A} w(g)(V_G(g_{min})+2\kappa) \\
+&\leq 3\kappa + V_G(g_{min})\\
+V_A(s_A)  -  V_G(g_{min}) &\leq 3 \kappa
+\end{align*}
 
 % Subsection: Optimal Q Function
 \subsection{Optimal Q Function: $\ep_{Q^*}$}
@@ -341,7 +389,7 @@ V_{T}(s) &\leq \frac{\epsilon}{1-\gamma} + V^{\pi_G^*}(s) \\
 |V^{\pi_G^*}(s) - V_{T}(s)| &\leq \frac{\epsilon}{1-\gamma}
 \end{align*}
 
-Note that as $T \rightarrow \infty$, $V_T$ becomes $V^{\pi_A*}$. Therefore:
+As $T \rightarrow \infty$, $V_T$ becomes $V^{\pi_A*}$. Therefore:
 
 \begin{equation}
 |V^{\pi_G^*}(s) - V^{\pi_A^*}(s)| \leq \frac{\epsilon}{1-\gamma}
