@@ -5,6 +5,7 @@
 \usepackage{natbib}
 \usepackage{algorithm}
 \usepackage{amsmath}
+\usepackage{amsfonts}
 \usepackage{algorithmic}
 \usepackage{subfigure}
 \usepackage{hyperref}
@@ -88,6 +89,8 @@ This paper is organized as follows. We first introduce the necessary terminology
 A \ac{MDP} is a five-tuple: $\langle \mathcal{S}, \mathcal{A}, \mathcal{T}, \mathcal{R}, \gamma \rangle$: $\mathcal{S}$ is a finite state space; $\mathcal{A}$ is the set of actions available to the agent; $\mathcal{T}$ denotes $\mathcal{T}(s' \mid s,a)$, the probability of an agent applying action $a \in \mathcal{A}$ in state $s \in \mathcal{S}$ and arriving in $s' \in \mathcal{S}$; $\mathcal{R}(s)$ denotes the reward received by the agent arriving in state $s$; $\gamma \in [0, 1]$ is a discount  factor that defines how much the agent prefers immediate rewards over future rewards.
 
 The goal of an agent in an \ac{MDP} is to solve for a policy that maps states to actions: $\pi: \mathcal{S} \rightarrow \mathcal{A}$. In particular, the agent wants to solve for the policy that maximizes its expected discounted reward from any state. This goal policy is denoted $\pi^*$. We denote the expected discounted reward for following policy $\pi$ from state $s$ as the value of the state under that policy, $V(s)^\pi$. We similarly denote the expected discounted reward for taking action $a \in \mathcal{A}$ and then following policy $\pi$ from state $s$ forever after as $Q^\pi(s,a)$. Lastly, we denote the value and $Q$ functions under the optimal policy as $V^*$ and $Q^*$ respectively. \enote{Add citation -- either Littman review paper or Sutton/Barto}
+
+\enote{Define value of state under a policy}
 
 %Lihong Section
 \subsection{Abstraction Notation}
@@ -220,45 +223,139 @@ Many previous works have targeted the creation of algorithms that enable state a
 
 % INTRO PARAGRAPH, setup + structure
 
-\dnote{Explain the notation so like the $\phi_f$}
-
 \dnote{Tee up other stuff/ideas}
 
 % Main theorem:
+\enote{Add intro-y stuff}
 
 \dnote{I wish this theorem used the term approximate somewhere (i.e. was using the same terminology as the intro/abstract)}
-{\bf Theorem 1:} There exist at least four classes of functions on state spaces that induce abstract MDPs such that:
+
+\enote{For clarity define phi TILDE}
+
+{\bf $\ep_f$ definition:} Given a function $f : \mathcal{S}_G \times \mathcal{A} \rightarrow \mathcal{R}$ and a fixed non-negative $\epsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state abstraction function which satisfies the following for any two ground states $s_1$ and $s_2$: 
 \begin{equation}
-\forall_{s_1, s_2 \in S_G} \phi_f(s_1) = \phi_f(s_2) \rightarrow \forall_a  |f(s_1,a) - f(s_2,a)| \leq \epsilon
+\label{eq:phi_f}
+\ep_f(s_1) = \ep_f(s_2) \rightarrow \forall_a \left|f(s_1, a) - f(s_2, a)\right| \leq \epsilon
 \end{equation}
 
-Where, the MDP induced by the abstraction function, when solved, provides the policy $\pi^*_A$, such that:
+That is, when $\phi_f$ aggregates states, all aggregated states the aggregated states have values of $f$ within $\epsilon$ of one another for all actions.
+
+Note that for any $f$, there are many such functions that satisfy this criteria.
+
+% Theorem 1
+{\bf Theorem 1:} There exist at least four classes of approximate state aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{bolt}}$ and $\ep_{\text{mult}}$ for which the optimal policy in the abstract MDP applied to the ground MDP has error bounded polynomially in $\epsilon$:
 \begin{equation}
 \forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq poly(\epsilon)
 \end{equation}
 
+\enote{Consider moving definition of $V^{\pi^*_{A}}(s)$ so it's fresh for reader.}
+
 \dnote{Possible note about what all 4 functions are}
 
+% Subsection:  Similarity of Value = Similar Behavior
+\subsection{Similarity of Value Yields Similar Behaviour}
+\enote{Proof that if values in the abstract and ground are similar then behavior is similar. State that for remainder of lemmas that we prove antecedent of this statement.}
+
 % Subsection: Optimal Q Function
-\subsection{Optimal Q Function: $\phi_{Q^*}$}
+\subsection{Optimal Q Function: $\ep_{Q^*}$}
+
+% Q* Lemma
+Recall that $Q^*$ is a function on $\mathcal{S}_G \times \mathcal{A}$ that satisfies \enote{$Q^*$ definition}. Consequently,  as per Equation $\ref{eq:phi_f}$, $\ep_{Q^*}$ is a type of abstraction that for a fixed $\epsilon$ satisfies:
+\begin{equation}
+\ep_{Q^*}(s_1) = \ep_{Q^*}(s_2) \rightarrow \forall_a \left|Q^*(s_1, a) - Q^*(s_2, a)\right| \leq \epsilon
+\end{equation}
+
+{\bf Lemma 1:} When $S_A$ is created using a function of the $\ep_{Q^*}$ type:
+
+\begin{equation}
+\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{\epsilon}{1-\gamma}
+\end{equation}
+
+\textbf{Proof:}
+Consider a temporally heterogeneous \ac{MDP}, $M^T$, parameterized by integer $T$, such that for the first $T$ time steps the reward function, transition dynamics and state space are those of the abstract MDP, $M_A$, and after $T$ time steps the reward function, transition dynamics and state spaces are those of the ground MDP, $M_G$. Note that $M^0 = M_G$ and $M^\infty = M_A$.
+
+The value of a state in $M^T$ is defined by:
+\begin{equation}
+V_T(s) = \max_a \left| \mathcal{R}_T(s,a) + \gamma \sum_{s'} \mathcal{T}_T(s,a,s') V_{T-1}(s') \right|
+\end{equation}
+
+Where:
+\begin{equation}
+\mathcal{R}_T = \begin{cases}
+\mathcal{R}_A& T > 0 \\
+\mathcal{R}_G& \text{otherwise} \\
+\end{cases}
+\end{equation}
+
+And similarly:
+\begin{equation}
+\mathcal{T}_T = \begin{cases}
+\mathcal{T}_A& T > 0 \\
+\mathcal{T}_G& \text{otherwise} \\
+\end{cases}
+\end{equation}
+
+We proceed by induction on $T$ to show that:
+\begin{equation}
+\forall_T |V^{\pi_G^*}(s) - V_T(s)| \leq \sum_{t=0}^{T+1} \epsilon \gamma^t
+\end{equation}
 
 
-\dnote{Plan to put full Q proof}
+
+% Base Case
+\textit{Base Case:}
+
+When T = 0, $V^{\pi_G^*}(s) = V_0(s)$, so it trivially follows that:
+\begin{equation}
+|V^{\pi_G^*}(s) - V_0(s)| \leq \epsilon = \sum_{t=0}^{0} \epsilon \gamma^t
+\end{equation}
+
+% Inductive Case
+\textit{Inductive Case:}
+
+We assume as our inductive hypothesis that:
+\begin{equation}
+\forall_s\ V_{T-1}(s) \leq \frac{\epsilon}{1-\gamma} + V^{\pi_G^*}(s)
+\end{equation}
+\begin{align*}
+&\text{By definition of $V_{T}(s)$:}\\
+&V_{T}(s) = \max_a \left[R_{T}(s,a) + \gamma \sum_s' T_{T}(s,a,s')V_{T-1}(s')\right] \\
+&\leq \max_a \left[R_{T}(s,a) + \gamma \sum_s' T_{T}(s,a,s')\left(V_0(s) + \sum_{t=0}^{T-1}\epsilon\gamma^t \right) \right] \\
+&= \gamma\left(\sum_{t=0}^{T-1}\epsilon\gamma^{t}\right) + \\ &\max_a \left[R_{T}(s,a) + \gamma \sum_s' T_{T}(s,a,s')V_0(s') \right] \\
+\end{align*}
+\begin{align*}
+&= \gamma\left(\sum_{t=0}^{T-1}\epsilon\gamma^t\right) + \\ &\max_a \left[\sum_{g \in s} R_{G}(g,a)\omega(g) + \gamma \sum_{s'} \sum_{g \in s}T_G(g,a,s')\omega(g)V_0(s') \right] \\
+&= \gamma\left(\sum_{t=0}^{T-1}\epsilon\gamma^t\right) + \epsilon + \left(\max_a Q_G(s,a)\right) \\
+&= \sum_{t=0}^{T} \epsilon \gamma^{t} + \max_a Q^{\pi_G^*}(s,a) \\
+&= \frac{\epsilon}{1-\gamma} + V^{\pi_G^*}(s) \\
+\end{align*}
+
+Therefore, for all $T$:
+\begin{align*}
+V_{T}(s) &\leq \frac{\epsilon}{1-\gamma} + V^{\pi_G^*}(s) \\
+|V^{\pi_G^*}(s) - V_{T}(s)| &\leq \frac{\epsilon}{1-\gamma}
+\end{align*}
+
+Note that as $T \rightarrow \infty$, $V_T$ becomes $V^{\pi_A*}$. Therefore:
+
+\begin{equation}
+|V^{\pi_G^*}(s) - V^{\pi_A^*}(s)| \leq \frac{\epsilon}{1-\gamma}
+\end{equation}
 
 
 % Subsection: Model Similarity
-\subsection{Model Similarity: $\phi_{model}$}
+\subsection{Model Similarity: $\ep_{model}$}
 
 
 \dnote{Proof sketch}
 
 % Subsection: Multinomial over Optimal Q
-\subsection{Multinomial over Optimal Q: $\phi_{mult}$}
+\subsection{Multinomial over Optimal Q: $\ep_{mult}$}
 
 \dnote{Proof sketch}
 
 % Subsection: Boltzmann over Optimal Q
-\subsection{Boltzmann over Optimal Q: $\phi_{bolt}$}
+\subsection{Boltzmann over Optimal Q: $\ep_{bolt}$}
 
 \dnote{Comment about similarity to Multinomial.}
 
