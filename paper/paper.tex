@@ -343,18 +343,99 @@ Note that as $T \rightarrow \infty$, $V_T$ becomes $V^{\pi_A*}$. Therefore:
 % Subsection: Model Similarity
 \subsection{Model Similarity: $\ep_{model}$}
 
+We let $\phi_{model}$ define a type of abstraction that, for fixed $\epsilon_\mathcal{R}$ and $\epsilon_\mathcal{T}$, satisfies:
+\begin{multline}
+\ep_{model}(s_1) = \ep_{model}(s_2) \rightarrow \\
+\forall_a \left|\mathcal{R}(s_1, a) - \mathcal{R}(s_2, a)\right| \leq \epsilon_\mathcal{R}\ \wedge\ \\
+\forall_{a,s'} \left|\mathcal{T}(s_1, a,s') - \mathcal{T}(s_2, a,s')\right| \leq \epsilon_\mathcal{T}
+\end{multline}
 
-\dnote{Proof sketch}
+{\bf Lemma 3:} When $S_A$ is created using a function of the $\ep_{model}$ type:
+\begin{equation}
+\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{{\epsilon_{\mathcal{R}}} + \gamma |\mathcal{S}|\epsilon_{\mathcal{T}}}{(1-\gamma)^3}
+\end{equation}
+
+{\bf Proof:}
+
+Let the maximum upper bound between optimal behavior in the noisy and ground MDP be called $B_s$.
+
+\begin{align*}
+B_{s} &= \max_{s,a}|Q'(s,a)-Q(s,a)|\\
+%B_{s} &= \max_{s,a}|R'(s,a) - R(s,a) + \gamma \sum_{s'}\left[T'(s,a,s')\max_{a'}Q'(s',a')-T(s,a,s')\max_{a'}Q(s', a')\right]|\\
+&\forall s' \text{ WLOG } T'(s,a,s')\max_{a'}Q'(s',a') \geq T(s,a,s')\max_{a'}Q(s',a')\\
+\end{align*}
+Applying max is a non-expansion:
+\begin{multline}
+=\max_{s,a}(|R'(s,a)-R(s,a)| + \gamma \sum_{s'} \\
+\max_{a'} [(T(s,a,s')+T'(s,a,s')- \\ T(s,a,s'))Q'(s', a')-T(s,a,s')Q(s',a')])
+\end{multline}
+%&\leq \max_{s,a}|R'_s-R_s|+\max_{s,a}\gamma \sum_{s'} \max_{a'} \left[(T(s,a,s')+\epsilon_{\mathcal{T}})Q'(s',a') - T(s,a,s')Q(s',a')\right]\\
+%&\leq \epsilon_{\mathcal{R}}+\max_{s,a}\gamma \sum_{s'} \max_{a'} \left[(T(s,a,s')Q'(s',a')+\epsilon_{\mathcal{T}}Q'(s',a') - T(s,a,s')Q(s',a')\right]\\
+%&\leq \epsilon_{\mathcal{R}} + \max_{s,a} \gamma \sum_{s'} \max_{a'} \left[(T(s,a,s')(Q'(s',a')-Q(s',a'))+\epsilon_{\mathcal{T}}Q'(s',a') \right]\\
+\begin{align*}
+&\leq \epsilon_{\mathcal{R}}+\gamma |\mathcal{S}|\epsilon_{\mathcal{T}}Q'_{\text{max}} + \gamma \sum_{s'}\left[ T(s,a,s') B_s\right]\\
+&\leq \epsilon_{\mathcal{R}} + \gamma B_{s} + \gamma |\mathcal{S}|\epsilon_{\mathcal{T}}Q'_{max}
+\end{align*}
+
+Applying $Q'_{max}=V'_{max} \leq V_{max}=\frac{1}{1-\gamma}$:
+\begin{align*}
+B_{s} &\leq 
+\frac
+{{\epsilon_{\mathcal{R}}} + \gamma |\mathcal{S}|\epsilon_{\mathcal{T}}}
+{(1-\gamma)^2}
+\end{align*}
+
+Therefore:
+\begin{align*}
+\forall_{s,a} : |Q'(s,a) - Q(s,a)| &\leq \max_{s,a}|Q'(s,a)-Q(s,a)| \\
+&\leq  \frac{{\epsilon_{\mathcal{R}}} + \gamma |\mathcal{S}|\epsilon_{\mathcal{T}} }{(1-\gamma)^2}
+\end{align*}
+
+Consequently, from the below $\phi_Q^*$ results, we conclude that:
+\begin{equation}
+\forall_s : |V^{\pi^*_M}(s) - V^{\pi^*_{M'}}(s)| \leq \frac{{\epsilon_{\mathcal{R}}} + \gamma |\mathcal{S}|\epsilon_{\mathcal{T}}}{(1-\gamma)^3}
+\end{equation}
+
 
 % Subsection: Multinomial over Optimal Q
 \subsection{Multinomial over Optimal Q: $\ep_{mult}$}
 
+We let $\phi_{mult}$ define a type of abstraction that, for fixed $\epsilon$ satisfies:
+\begin{multline}
+\ep_{mult}(s_1) = \ep_{mult}(s_2) \rightarrow \\
+\forall_{a} \left|\frac{Q^*(s_1,a)}{\sum_b Q^*(s_1,b)} - \frac{Q^*(s_1,a)}{\sum_b Q^*(s_1,b)}\right| \leq \epsilon
+\end{multline}
+
+\dnote{We also need to add the point about the denominator bound...}
+
+{\bf Lemma 4:} When $S_A$ is created using a function of the $\ep_{mult}$ type:
+\begin{equation}
+\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{\left(\textsc{QMax}|\mathcal{A}| + k \epsilon + k \epsilon^2\right)}{1-\gamma}:
+\end{equation}
+
+{\bf Proof Sketch:}
+
 \dnote{Proof sketch}
+
 
 % Subsection: Boltzmann over Optimal Q
 \subsection{Boltzmann over Optimal Q: $\ep_{bolt}$}
 
-\dnote{Comment about similarity to Multinomial.}
+Similarly to the multinomial abstraction, we let $\phi_{bolt}$ define a type of abstraction that, for fixed $\epsilon$ satisfies:
+\begin{multline}
+\ep_{bolt}(s_1) = \ep_{bolt}(s_2) \rightarrow \\
+\forall_{a} \left|\frac{e^{Q^*(s_1,a)}}{\sum_b e^{Q^*(s_1,b)}} - \frac{e^{Q^*(s_1,a)}}{\sum_b e^{Q^*(s_1,b)}}\right| \leq \epsilon
+\end{multline}
+
+{\bf Lemma 5:} When $S_A$ is created using a function of the $\ep_{bolt}$ type:
+\begin{equation}
+\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{\epsilon(\textsc{QMax}|\mathcal{A}| + k\epsilon) + A}{1-\gamma}:
+\end{equation}
+
+{\bf Proof Sketch:}
+
+\dnote{Proof sketch}
+
 
 \dnote{(Probably put full proofs in appendix if we have room?}
 
