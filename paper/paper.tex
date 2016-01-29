@@ -554,9 +554,9 @@ We also note that any abstraction that depends only on the reward function, $\ma
 % --- SECTION: Example Domains ---
 \section{Example Domains}
 
-To empirically evaluate our approximate abstractions, we test out the $\ep{Q^*}$ abstraction on a variety of domains. We compare the number of states in the abstract MDP to different values of $\epsilon$, as well as the value difference between the optimal policy in the abstract MDP compared to the ground MDP.
+To demonstrate the efficacy of these approximate abstraction functions, we test out functions in the $\ep{Q^*}$ abstraction on a variety of domains. We compare the number of states in the abstract MDP to different values of $\epsilon$, as well as the value difference between the optimal policy in the abstract MDP compared to the ground MDP.
 
-The domains we evaluate in are UpWorld, a contrived version of Grid World, NChain, the classic exploration task form the Bayesian Reinforcement Learning literature, the Trench task, introduced by CITE DABE, and the Taxi Problem, a classic problem discussed in hierarchical Reinforcement tLearning literature.
+The domains we evaluate in are UpWorld, a contrived version of Grid World in which the agent can only move left, right, and up (where up is always optimal, thus the name), 5Chain, the classic exploration task form the Bayesian Reinforcement Learning literature, the goal-based Trench task introduced by CITE DABE, and the Minefield domain. Our code base provides implementations to visualize, abstract, and evaluate arbitrary MDPs to promote further investigation into approximate abstraction.
 
 
 \dnote{For each section, we'll include a plot comparing $\epsilon$ to \# states, and $\epsilon$ to performance. For UpWorld and NChain, we can include visuals of uncompressed and compressed (not useful for trench).}
@@ -564,19 +564,54 @@ The domains we evaluate in are UpWorld, a contrived version of Grid World, NChai
 % Subsection: UpWorld.
 \subsection{UpWorld}
 
-\dnote{As part of UpWorld we can include the result about the unbounded improvement in sample complexity (small lemma or something?)}
+The UpWorld task is an $N\times M$ grid in which the agent starts in the lower left corner. The agent may move left, right, and up. The agent receives positive reward for transitioning to a state at the top of the grid, where moving up in the top cells self transitions. the agent receives 0 reward for all other transitions. Consequently, moving up is always the optimal thing to do, since moving left and right does not change the agent's manhattan distance to positive reward. During experimentation, we set $N=10$, $M=4$. 
+
+% PUT INTO RESULTS One interesting fact about UpWorld is that, if $M$ the width of the grid, is defined to be an arbitrary function of $N$, say $k^N$ for some $k \in \mathbb{Z}$, then optimality preserving abstractions can arbitrarily reduce the sample complexity of the problem.
+
+\begin{figure}
+\subfigure[Ground UpWorld]{
+\includegraphics[width=0.48\columnwidth]{figures/ground_upworld.png}}
+\subfigure[Abstract UpWorld]{
+\includegraphics[width=0.48\columnwidth]{figures/abs_upworld.png}}
+\label{fig:eps-states}
+\caption{Comparison of Original UpWorld MDP and Abstract MDP, under $\epQ$, with $\epsilon=0.5$}
+\end{figure} 
 
 % Insert visual and/or stats on number of states and performance of VI solving the abstract MDP and evaluating the resulting policy on the original MDP
 
 
-% Subsection: NChain.
+% Subsection: 5Chain.
 \subsection{NChain}
 
 % Insert visual and/or stats on number of states and performance of VI solving the abstract MDP and evaluating the resulting policy on the original MDP
 
+\begin{figure}
+\subfigure[Ground NChain]{
+\includegraphics[width=0.48\columnwidth]{figures/ground_nchain.png}}
+\subfigure[Abstract NChain]{
+\includegraphics[width=0.48\columnwidth]{figures/abs_nchain.png}}
+\label{fig:eps-states}
+\caption{Comparison of Original NChain MDP and Abstract MDP, under $\epQ$, with $\epsilon=0.5$}
+\end{figure} 
+
+% Subsection: Minefield.
+\subsection{Minefield}
+
+There is some slip probability associated with movement; when the agent moves left or right, it has probability $x$ of moving up, when the agent moves up, it has probability $\frac{x}{2}$ of moving left, and probability $\frac{x}{2}$ of moving right.
+
+\begin{figure}
+\subfigure[Ground Minefield]{
+\includegraphics[width=0.48\columnwidth]{figures/ground_minefield.png}}
+\subfigure[Abstract Minefield]{
+\includegraphics[width=0.48\columnwidth]{figures/abs_minefield.png}}
+\label{fig:eps-states}
+\caption{Comparison of Original Minefield MDP and Abstract MDP, under $\epQ$, with $\epsilon=1.1$}
+\end{figure} 
 
 % Subsection: Trench.
 \subsection{Trench}
+
+To demonstrate the effects of approximate abstraction on goal-based tasks, we investigate the Trench problem, introduced by \dnote{Cite dabe}.
 
 % Insert visual and/or stats on number of states and performance of VI solving the abstract MDP and evaluating the resulting policy on the original MDP
 
