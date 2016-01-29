@@ -20,6 +20,8 @@
 \newcommand{\ep}{\widetilde \phi}
 \newcommand{\epQ}{\ep_{Q^*}}
 \newcommand\defn[1]{{\bf Definition:} #1}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
 
 
 % --- Note Commands ---
@@ -349,14 +351,6 @@ Since $s_G$ and $s_A$ are arbitrary, we conclude
 \forall_{T, g \in \mathcal{S}_G, a} |Q^{\pi_G^*}(g, a) - Q_T(\epQ(g), a)| \leq \sum_{t=0}^{T} \epsilon \gamma^t
 \end{equation}
 
-
-%\begin{align*}
-%&= \gamma\left(\sum_{t=0}^{T-1}\epsilon\gamma^t\right) + \\ &\max_a \left[\sum_{g \in s} R_{G}(g,a)\omega(g) + \gamma \sum_{s'} \sum_{g \in s}T_G(g,a,s')\omega(g)V_0(s') \right] \\
-%&= \gamma\left(\sum_{t=0}^{T-1}\epsilon\gamma^t\right) + \epsilon + \left(\max_a Q_G(s,a)\right) \\
-%&= \sum_{t=0}^{T} \epsilon \gamma^{t} + \max_a Q^{\pi_G^*}(s,a) \\
-%&= \frac{\epsilon}{1-\gamma} + V^{\pi_G^*}(s) \\
-%\end{align*}
-
 As $T \rightarrow \infty$, $Q_T$ becomes $Q_A$ and $\sum_{t=0}^{T} \epsilon \gamma^t$ becomes $\frac{\epsilon}{1-\gamma}$. Therefore:
 
 \begin{equation}
@@ -364,9 +358,23 @@ As $T \rightarrow \infty$, $Q_T$ becomes $Q_A$ and $\sum_{t=0}^{T} \epsilon \gam
 \forall_{g \in \mathcal{S}_G, a} |Q_G(g, a) - Q_A(\epQ(g), a)| \leq \frac{\epsilon}{1-\gamma}
 \end{equation}
 
-max
 
 Having proved that the Q values in the abstract MDP formed by abstractions of the $\epQ$ type closely resemble those in the ground \ac{MDP}, we now use this result to demonstrate that optimal behavior in the abstract \ac{MDP} is nearly optimal in the ground \ac{MDP}.
+
+Consider a fixed but arbitrary state, $s_G \in \mathcal{S}_G$ and its corresponding abstract state $s_A=\epQ(s_G)$.
+
+Let $a^*_G$ stand for the optimal action for $s_G$: \\
+$a^*_G = \argmin Q_G(s_G, a)$
+
+Let $a^*_A$ stand for the optimal action for $s_A$:\\
+ $a^*_A = \argmin Q_A(s_A, a)$
+
+By Equation \ref{eq:Q*HalfResult} and the definition of $a^*_G$ and $a^*_A$ we know that 
+\begin{align}
+&V_G(s_G) = Q_G(s_G, a^*_G) \leq Q_A(s_G, a^*_G) + \frac{\epsilon}{1-\gamma} \nonumber \\
+\label{eq:Q*OptActionResult}
+&\leq Q_A(s_A, a^*_A) + \frac{\epsilon}{1-\gamma} \leq Q_G(s_A, a^*_A) + \frac{2\epsilon}{1-\gamma}
+\end{align}
 
 Consider the following policy on states in $\mathcal{S}_G$:
 \begin{equation}
@@ -377,44 +385,70 @@ Consider the following policy on states in $\mathcal{S}_G$:
 \end{cases}
 \end{equation}
 
+Again, consider a fixed but arbitrary state, $s_G \in \mathcal{S}_G$
+
+
 \begin{align*}
-\text{Let }Q^{\pi_{A,t}}(g) &= \\
-&R_G(s, \pi_{A,t}(g)) + \gamma \sum_{g'}\mathcal{T}_G(g, a, g')\max_{a'}Q^{\pi_{A,t-1}}(g', a')
+\text{Let }V^{\pi_{A,t}}(s_G) &= \\
+&R_G(s, \pi_{A,t}(s_G)) + \gamma \sum_{{s_G}'}\mathcal{T}_G(s_G, a, {s_G}')V^{\pi_{A,t-1}}({s_G}')
 \end{align*}
 
 where $g, g' \in \mathcal{S}_G$.
 
-
+%Start induction on following the optimal abstract policy
 We now show by induction on $t$ that
 \begin{equation}
-\forall_{t, g \in \mathcal{S}_g, a} Q^{\pi_{A,t}}(g, a) \leq Q^{\pi^*}(g,a) + \sum_{i=0}^{t}\gamma^i \frac{\epsilon}{1-\gamma}
+\forall_{t, g \in \mathcal{S}_g} V^{\pi^*}(g) \leq  V^{\pi_{A,t}}(g) + \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma}
 \end{equation}
+
 
 \textit{Base case: $t=0$}
 
-By definition when $t=0$, $Q^{\pi_{A,t}} = Q^{\pi^*}$ so it trivially follows that
+By definition when $t=0$, $V^{\pi_{A,t}} = V^{\pi^*}$ so it trivially follows that
 \begin{equation}
-\forall_{t, g \in \mathcal{S}_g, a} Q^{\pi_{A,0}}(g, a) \leq Q^{\pi^*}(g,a) + \frac{\epsilon}{1-\gamma}
+V^{\pi^*}(s_G) \leq V^{\pi_{A,0}}(s_G) + \frac{2\epsilon}{1-\gamma}
 \end{equation}
 
 \textit{Inductive case: $t > 0$}
 
 We assume for our inductive hypothesis that
 \begin{equation}
-\forall_{t, g \in \mathcal{S}_g, a} Q^{\pi_{A,t-1}}(g, a) \leq Q^{\pi^*}(g,a) + \sum_{i=0}^{t-1}\gamma^i \frac{\epsilon}{1-\gamma}
+V^{\pi^*}(s_G) \leq V^{\pi_{A,t-1}}(s_G)  + \sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma}
 \end{equation}
 
 By definition 
 \begin{align*}
-&Q^{\pi_{A,t}}(g, a) = R_G(s, \pi_{A,t}(g)) + \gamma \sum_{g'}\mathcal{T}_G(g, a, g')\max_{a'}Q^{\pi_{A,t-1}}(g', a')\\
+&V^{\pi_{A,t}}(s_G) = R_G(s, \pi_{A,t}(s_G)) + \gamma \sum_{g'}\mathcal{T}_G(s_G, a, {s_G}')V^{\pi_{A,t-1}}({s_G}')\\
 &\text{Applying our inductive hypothesis yields}\\
-&Q^{\pi_{A,t}}(g, a) \leq\\
-&R_G(s, \pi_{A,t}(g, a)) + \gamma \sum_{g'}\mathcal{T}_G(g, a, g')\max_{a'}\left(Q^{\pi^*}(g',a') + \sum_{i=0}^{t-1}\gamma^i \frac{\epsilon}{1-\gamma} \right)\\
-&\leq \gamma\sum_{i=0}^{t-1}\gamma^i \frac{\epsilon}{1-\gamma} + R_G(s, \pi_{A,t}(g)) + \gamma \sum_{g'}\mathcal{T}_G(g, a, g')\max_{a'}Q^{\pi^*}(g',a')\\
-&\leq \gamma\sum_{i=0}^{t-1}\gamma^i \frac{\epsilon}{1-\gamma} + Q^{\pi^*}(g, \pi_{A,t} (g))\\
-&\text{Applying Equation \ref{} yields}\\
-&\leq \gamma\sum_{i=0}^{t-1}\gamma^i \frac{\epsilon}{1-\gamma} + Q^{\pi^*}(g, a)\\
+&V^{\pi_{A,t}}(g, a) \geq\\
+&R_G(s, \pi_{A,t}(g, a)) + \gamma \sum_{g'}\mathcal{T}_G(g, a, g')\left(V^{\pi^*}({s_G}') - \sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} \right)\\
+&\geq -\gamma\sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} + R_G(s, \pi_{A,t}(g)) + \gamma \sum_{g'}\mathcal{T}_G(g, a, g')V^{\pi^*}(g')\\
+&\geq -\gamma\sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} + Q^{\pi^*}(g, \pi_{A,t} (g))\\
+&\text{Applying Equation \ref{eq:Q*OptActionResult} yields}\\
+&\geq \gamma\sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} - \frac{2\epsilon}{1-\gamma} + V_{G}(s_G)\\
+&\leq \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma} + V_G(g)\\
+& \text{Thus,}\\
+&V^{\pi^*}(s_G) \leq V^{\pi_{A,t}}(s_G)  + \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma}
 \end{align*}
+
+From our base case and induction we conclude that
+\begin{equation}
+\forall_{t, g \in \mathcal{S}_g} V^{\pi^*}(g) \leq  V^{\pi_{A,t}}(g) + \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma}
+\end{equation}
+
+Note that as $t \rightarrow \infty$, $\sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma} \rightarrow \frac{2\epsilon}{(1-\gamma)^2}$ by the sum of a geometric series and $\pi_{A,t}(s) \rightarrow \pi_A^*(\epQ(s))$.
+
+Thus we conclude,
+\begin{equation*}
+\forall_{g \in \mathcal{S}_g} V^{\pi^*}(g) \leq  V^{\pi_{A}^*}(g) + \frac{2\epsilon}{(1-\gamma)^2}
+\end{equation*}
+
+\begin{equation*}
+\forall_{g \in \mathcal{S}_g} \left | V^{\pi^*}(g) - V^{\pi_{A}^*}(g) \right | \leq  \frac{2\epsilon}{(1-\gamma)^2}
+\end{equation*}
+
+
+
 % Subsection: Model Similarity
 \subsection{Model Similarity: $\ep_{model}$}
 
