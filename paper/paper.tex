@@ -266,100 +266,127 @@ Recall that $Q^*$ is a function on $\mathcal{S}_G \times \mathcal{A}$ that satis
 
 {\bf Lemma 1:} When $S_A$ is created using a function of the $\ep_{Q^*}$ type:
 \begin{equation}
-\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{\epsilon}{(1-\gamma)^2}
+\forall_{s \in S_M} : | V(s) - V^{\pi^*_{A}}(s) | \leq \frac{2\epsilon}{(1-\gamma)^2}
 \end{equation}
 
 \textbf{Proof:}
 We begin by showing that Q values in the abstract \ac{MDP} closely resemble those in the ground \ac{MDP}.
 
-Consider a temporally heterogeneous \ac{MDP}, $M^T$, parameterized by integer $T$, such that for the first $T$ time steps the reward function, transition dynamics and state space are those of the abstract MDP, $M_A$, and after $T$ time steps the reward function, transition dynamics and state spaces are those of the ground MDP, $M_G$. Note that $M^0 = M_G$ and $M^\infty = M_A$.
+Let $Q_G : \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_G : \mathcal{S}_G \rightarrow \mathbb{R}$ denote the Q and value functions in the ground \ac{MDP}.
 
-The value of a state in $M^T$ is defined by:
+Let $Q_A  : \mathcal{S}_A \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_A : \mathcal{S}_A \rightarrow \mathbb{R}$  stand for the Q and value functions in the abstract \ac{MDP}.
+
+Let $X(s) = \{g \in \mathcal{S}_G | \epQ(g) = s\}$.
+
+%Claim 1
+\textbf{Claim 1 -- Q-Values in the abstract MDP, closely resemble those in the ground MDP:}
 \begin{equation}
-V_T(s) = \max_a \left| \mathcal{R}_T(s,a) + \gamma \sum_{s'} \mathcal{T}_T(s,a,s') V_{T-1}(s') \right|
+\label{eq:Q*Claim1}
+\forall_{s_G \in \mathcal{S}_G, a} |Q_G(s_G, a) - Q_A(\epQ(s_G), a)| \leq \frac{\epsilon}{1-\gamma}
 \end{equation}
 
-Similarly, the Q-value of state $s$ in $M^T$ for action $a$ is defined by:
-\begin{equation}
-Q(s, a) = \mathcal{R}_T(s,a) + \gamma \sum_{s'} \mathcal{T}_T(s,a,s') \max_{a'} Q(s',a')
-\end{equation}
+Consider a temporally heterogeneous \ac{MDP}, $M^T = \langle \mathcal{S}_T, \mathcal{A}_G, \mathcal{R}_T, \mathcal{T}_T, \gamma \rangle$, parameterized by integer $T$, such that for the first $T$ time steps the reward function, transition dynamics and state space are those of the abstract MDP, $M_A$, and after $T$ time steps the reward function, transition dynamics and state spaces are those of the ground MDP, $M_G$. 
 
 Where:
 \begin{equation}
-\mathcal{R}_T = \begin{cases}
-\mathcal{R}_A& T > 0 \\
-\mathcal{R}_G& \text{otherwise} \\
+\mathcal{S}_T = \begin{cases}
+\mathcal{S}_G& T \leq 0 \\
+\mathcal{S}_A& \text{o/w} \\
 \end{cases}
 \end{equation}
 
 And:
 \begin{equation}
-\mathcal{T}_T = \begin{cases}
-\mathcal{T}_A& T > 0 \\
-\mathcal{T}_G& \text{otherwise} \\
+\mathcal{R}_T(s,a) = \begin{cases}
+\mathcal{R}_G(s,a)& T \leq 0 \\
+\mathcal{R}_A(s, a)& \text{o/w} \\
 \end{cases}
 \end{equation}
 
-\enote{Add something about weirdness of state spaces changing at $T=1$}
+And:
+\begin{equation}
+\mathcal{T}_T(s,a,s') = \begin{cases}
+\mathcal{T}_G(s,a,s')& T \leq 0 \\
+\underset{{g \in X(s)}}{\sum}\left[w(g)T_G(g, a, s')\right]& T = 1 \\
+\mathcal{T}_A(s,a,s')& \text{o/w} \\
+\end{cases}
+\end{equation}
+
+It follows that the Q-value of a state $s$ in $M^T$ for action $a$ is defined by:
+\begin{equation}
+Q_T(s, a) = 
+\begin{cases}
+	   Q_G(s, a) &  T=0\\
+	   \underset{g \in X(s)}{\sum} \left[ w(g)Q_G(g,a) \right] & T = 1\\
+%	   \mathcal{R}_A(\epQ(s),a) + \gamma \underset{{s_A}' \in \mathcal{S}_A}{\sum} \mathcal{T}_A(\epQ(s),a,{s_A}') \max_{a'} Q_{T-1}({s_A}', a') & \text{o/w}
+\end{cases}
+\end{equation}
+
 
 We proceed by induction on $T$ to show that:
 \begin{equation}
-\forall_{T, g \in \mathcal{S}_G, a} |Q_G(g, a) - Q_T(\epQ(g), a)| \leq \sum_{t=0}^{T+1} \epsilon \gamma^t
+\forall_{T, s_G \in \mathcal{S}_G, a} |Q_0(s_G, a) - Q_T(s_G, a)| \leq \sum_{t=0}^{T-1} \epsilon \gamma^{t}
 \end{equation}
 
-% Base Case
-\textit{Base Case:}
+% Base Case t=0
+\textit{Base Case: $T = 0$}
 
-\enote{Fix this -- state spaces are the same for this case}
+When T = 0, $Q_T = Q_0$, so the result trivially follows.
 
-When T = 0, $Q^{\pi_G^*} = Q_0$, so it trivially follows that:
-\begin{equation}
-\forall_{g\in \mathcal{S_G}, a} |Q^{\pi_G^*}(g, a) - Q_T(\ep_{Q^*}(g), a)| \leq \sum_{t=0}^{0} \epsilon \gamma^t
-\end{equation}
+% Base Case t=1
+\textit{Base Case: $T = 1$}
+\begin{align*}
+&Q_1(s,a) = \underset{g \in X(s)}{\sum} \left[ w(g)Q_G(g,a) \right]\\
+\end{align*}
+Since all aggregated states have Q-values within $\epsilon$ of one another and $w(g)$ induces a convex combination.
+\begin{align*}
+&Q_1(s,a) \leq \epsilon \gamma^t + \epsilon + Q_0(s_G, a)\\
+&Q_1(s,a) \leq \gamma\sum_{t=0}^{1} \epsilon \gamma^t + Q_0(s_G, a)\\
+&\text{Thus,}\\
+&Q_1(s,a) \left| Q_{T}(s_A, a) - Q_0(s_G,a) \right| \leq \gamma\sum_{t=0}^{1}\epsilon \gamma^t
+\end{align*}
 
-\enote{Add base case for $T=1$ since our value function is not well defined unless $T > 1$.}
+
 
 % Inductive Case
-\textit{Inductive Case:} \enote {For $T>1$}
+\textit{Inductive Case: $T > 1$}
 
 We assume as our inductive hypothesis that:
 \begin{equation}
-\forall_{g \in \mathcal{S}_G, a} |Q^{\pi_G^*}(g, a) - Q_{T-1}(\epQ(g), a)| \leq \sum_{t=0}^{T-1} \epsilon \gamma^t\\
+\forall_{s_G \in \mathcal{S}_G, a} |Q_0(s_G, a) - Q_{T-1}(\epQ(s_G), a)| \leq \sum_{t=0}^{T-2} \epsilon \gamma^t\\
 \end{equation}
 
 Consider a fixed but arbitrary state, $s_G \in \mathcal{S}_G$, and fixed but arbitrary action $a$.
 
 We denote $\epQ(s_G)$ as $s_A$.
 \begin{align*}
-&\text{By definition of $Q_{T}(s_A, a)$:}\\
-&Q_T(s_A, a) = \mathcal{R}_T(s_A,a) + \gamma \sum_{{s_A}' \in M_T} \mathcal{T}_T(s_A,a,{s_A}') \max_{a'} Q_{T-1}({s_A}',a')\\
-&=\sum_{g}w(g)\left[ R_0(g,a) + \gamma \sum_{g'} T_0(g,a,g') \max_{a'} Q_{T-1}(g', a')      \right]\\
-&\text{Where $g$ ranges over states such that $\epQ(g) = S_A$ and $g' \in \mathcal{S}_G$}\\
+&\text{By definition of $Q_{T}(s_A, a)$, $\mathcal{R}_A$, $\mathcal{T}_A$:}\\
+&Q_T(s_A, a) =\sum_{g \in X}w(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'} Q_{T-2}(g', a')      \right]\\
 &\text{Applying our inductive hypothesis yields}\\
-&\leq \sum_{g}w(g)\left[ R_0(g,a) + \gamma \sum_{g'} T_0(g,a,g') \max_{a'}(Q_0(g', a') + \sum_{t=0}^{T-1} \epsilon \gamma^t)      \right]\\
-&\leq \gamma\sum_{t=0}^{T-1} \epsilon \gamma^t + \sum_{g}w(g)\left[ R_0(g,a) + \gamma \sum_{g'} T_0(g,a,g') \max_{a'}Q_0      \right]\\
-&\leq \gamma\sum_{t=0}^{T-1} \epsilon \gamma^t + \sum_{g}\left[ w(g)\ Q_0(g,a)\right]\\
+&\leq \sum_{g \in X(s_A)}w(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'}(Q_0(g', a') + \sum_{t=0}^{T-2} \epsilon \gamma^t)      \right]\\
+&\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \sum_{g \in X(s_A)}w(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'}Q_0      \right]\\
+&\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \sum_{g \in X(s_A)}\left[ w(g)\ Q_0(g,a)\right]\\
 &\text{Since all aggregated states have Q-values within $\epsilon$ of one another:}\\
-&\leq \gamma\sum_{t=0}^{T-1} \epsilon \gamma^t + \epsilon + Q_0(s_G, a)\\
-&\leq \gamma\sum_{t=0}^{T} \epsilon \gamma^t + Q_0(s_G, a)\\
+&\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \epsilon + Q_0(s_G, a)\\
+&\leq \gamma\sum_{t=0}^{T-1} \epsilon \gamma^t + Q_0(s_G, a)\\
 &\text{Thus,}\\
-&\left| Q_{T}(s_A, a) - Q_0(s_G,a) \right| \leq \gamma\sum_{t=0}^{T}\epsilon \gamma^t
+&\left| Q_{T}(s_A, a) - Q_0(s_G,a) \right| \leq \gamma\sum_{t=0}^{T-1}\epsilon \gamma^t
 \end{align*}
 
-Since $s_G$ and $s_A$ are arbitrary, we conclude
+Since $s_G$ and $s_A$ are arbitrary and $Q_0=Q_G$ we conclude
 \begin{equation}
-\forall_{T, g \in \mathcal{S}_G, a} |Q^{\pi_G^*}(g, a) - Q_T(\epQ(g), a)| \leq \sum_{t=0}^{T} \epsilon \gamma^t
+\forall_{T, g \in \mathcal{S}_G, a} |Q_0(g, a) - Q_T(\epQ(g), a)| \leq \sum_{t=0}^{T-1} \epsilon \gamma^t
 \end{equation}
 
-As $T \rightarrow \infty$, $Q_T$ becomes $Q_A$ and $\sum_{t=0}^{T} \epsilon \gamma^t$ becomes $\frac{\epsilon}{1-\gamma}$. Therefore:
+As $T \rightarrow \infty$, $Q_T$ becomes $Q_A$ and $\sum_{t=0}^{T-1} \epsilon \gamma^t$ becomes $\frac{\epsilon}{1-\gamma}$. Therefore we conclude Equation $\ref{eq:Q*Claim1}$.
+
+\textbf{Claim 2: the optimal action in the abstract MDP has a Q value in the ground which is nearly optimal:}
 
 \begin{equation}
-\label{eq:Q*HalfResult}
-\forall_{g \in \mathcal{S}_G, a} |Q_G(g, a) - Q_A(\epQ(g), a)| \leq \frac{\epsilon}{1-\gamma}
+\label{eq:Q*Claim2}
+V_G(s_G) \leq Q_G(s_A, a^*_A) + \frac{2\epsilon}{1-\gamma}
 \end{equation}
 
-
-Having proved that the Q values in the abstract MDP formed by abstractions of the $\epQ$ type closely resemble those in the ground \ac{MDP}, we now use this result to demonstrate that optimal behavior in the abstract \ac{MDP} is nearly optimal in the ground \ac{MDP}.
 
 Consider a fixed but arbitrary state, $s_G \in \mathcal{S}_G$ and its corresponding abstract state $s_A=\epQ(s_G)$.
 
@@ -369,12 +396,14 @@ $a^*_G = \argmin Q_G(s_G, a)$
 Let $a^*_A$ stand for the optimal action for $s_A$:\\
  $a^*_A = \argmin Q_A(s_A, a)$
 
-By Equation \ref{eq:Q*HalfResult} and the definition of $a^*_G$ and $a^*_A$ we know that 
+By Equation \ref{eq:Q*Claim1} and the definition of $a^*_G$ and $a^*_A$ we know that 
 \begin{align}
 &V_G(s_G) = Q_G(s_G, a^*_G) \leq Q_A(s_G, a^*_G) + \frac{\epsilon}{1-\gamma} \nonumber \\
 \label{eq:Q*OptActionResult}
 &\leq Q_A(s_A, a^*_A) + \frac{\epsilon}{1-\gamma} \leq Q_G(s_A, a^*_A) + \frac{2\epsilon}{1-\gamma}
 \end{align}
+
+Therefore, we conclude Equation \ref{eq:Q*Claim2}.
 
 Consider the following policy on states in $\mathcal{S}_G$:
 \begin{equation}
