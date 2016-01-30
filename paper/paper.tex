@@ -343,7 +343,7 @@ Since all aggregated states have Q-values within $\epsilon$ of one another and $
 &Q_1(s,a) \leq \epsilon \gamma^t + \epsilon + Q_0(s_G, a)\\
 &Q_1(s,a) \leq \gamma\sum_{t=0}^{1} \epsilon \gamma^t + Q_0(s_G, a)\\
 &\text{Thus,}\\
-&Q_1(s,a) \left| Q_{T}(s_A, a) - Q_0(s_G,a) \right| \leq \gamma\sum_{t=0}^{1}\epsilon \gamma^t
+&Q_1(s,a) \left| Q_{T}(s_A, a) - Q_0(s_G,a) \right| \leq \gamma\sum_{t=0}^{0}\epsilon \gamma^t
 \end{align*}
 
 
@@ -361,7 +361,7 @@ Consider a fixed but arbitrary state, $s_G \in \mathcal{S}_G$, and fixed but arb
 We denote $\epQ(s_G)$ as $s_A$.
 \begin{align*}
 &\text{By definition of $Q_{T}(s_A, a)$, $\mathcal{R}_A$, $\mathcal{T}_A$:}\\
-&Q_T(s_A, a) =\sum_{g \in X}w(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'} Q_{T-2}(g', a')      \right]\\
+&Q_T(s_A, a) =\sum_{g \in X(s_A)}w(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'} Q_{T-1}(g', a')      \right]\\
 &\text{Applying our inductive hypothesis yields}\\
 &\leq \sum_{g \in X(s_A)}w(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'}(Q_0(g', a') + \sum_{t=0}^{T-2} \epsilon \gamma^t)      \right]\\
 &\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \sum_{g \in X(s_A)}w(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'}Q_0      \right]\\
@@ -380,14 +380,6 @@ Since $s_G$ and $s_A$ are arbitrary and $Q_0=Q_G$ we conclude
 
 As $T \rightarrow \infty$, $Q_T$ becomes $Q_A$ and $\sum_{t=0}^{T-1} \epsilon \gamma^t$ becomes $\frac{\epsilon}{1-\gamma}$. Therefore we conclude Equation $\ref{eq:Q*Claim1}$.
 
-\textbf{Claim 2: the optimal action in the abstract MDP has a Q value in the ground which is nearly optimal:}
-
-\begin{equation}
-\label{eq:Q*Claim2}
-V_G(s_G) \leq Q_G(s_A, a^*_A) + \frac{2\epsilon}{1-\gamma}
-\end{equation}
-
-
 Consider a fixed but arbitrary state, $s_G \in \mathcal{S}_G$ and its corresponding abstract state $s_A=\epQ(s_G)$.
 
 Let $a^*_G$ stand for the optimal action for $s_G$: \\
@@ -396,14 +388,35 @@ $a^*_G = \argmin Q_G(s_G, a)$
 Let $a^*_A$ stand for the optimal action for $s_A$:\\
  $a^*_A = \argmin Q_A(s_A, a)$
 
-By Equation \ref{eq:Q*Claim1} and the definition of $a^*_G$ and $a^*_A$ we know that 
+%Claim 2
+\textbf{Claim 2: the optimal action in the abstract MDP has a Q value in the ground which is nearly optimal:}
+
+\begin{equation}
+\label{eq:Q*Claim2}
+V_G(s_G) \leq Q_G(s_A, a^*_A) + \frac{2\epsilon}{1-\gamma}
+\end{equation}
+
+
+By Equation \ref{eq:Q*Claim1}
 \begin{align}
-&V_G(s_G) = Q_G(s_G, a^*_G) \leq Q_A(s_G, a^*_G) + \frac{\epsilon}{1-\gamma} \nonumber \\
+&V_G(s_G) = Q_G(s_G, a^*_G) \leq Q_A(s_G, a^*_G) + \frac{\epsilon}{1-\gamma} \\
 \label{eq:Q*OptActionResult}
-&\leq Q_A(s_A, a^*_A) + \frac{\epsilon}{1-\gamma} \leq Q_G(s_A, a^*_A) + \frac{2\epsilon}{1-\gamma}
+\end{align}
+
+ By the definition of $a^*_A$ we know that 
+ \begin{align}
+Q_A(s_G, a^*_G) + \frac{\epsilon}{1-\gamma} \leq Q_A(s_A, a^*_A) + \frac{\epsilon}{1-\gamma}
+\end{align}
+
+Lastly again by Equation \ref{eq:Q*Claim1} we know
+\begin{align}
+Q_A(s_A, a^*_A) + \frac{\epsilon}{1-\gamma} \leq Q_G(s_A, a^*_A) + \frac{2\epsilon}{1-\gamma}
 \end{align}
 
 Therefore, we conclude Equation \ref{eq:Q*Claim2}.
+
+%Claim 3
+\textbf{Claim 3: we conclude Lemma 1 by Claim 2}
 
 Consider the following policy on states in $\mathcal{S}_G$:
 \begin{equation}
