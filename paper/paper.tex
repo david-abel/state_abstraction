@@ -19,6 +19,7 @@
 % --- Notation Commands ---
 \newcommand{\ep}{\widetilde \phi}
 \newcommand{\epQ}{\ep_{Q^*}}
+\newcommand{\epM}{\ep_{\text{model}}}
 \newcommand\defn[1]{{\bf Definition:} #1}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
@@ -138,6 +139,7 @@ V^{\pi_A}(s) = \mathcal{R}_G(s,\pi_A(a)) + \gamma \sum_{s' \in \mathcal{S}_G} \m
 \end{equation}
 
 \enote{Define $V_G$ and $V_A$ (value function in ground and value function in abstract)}
+\enote{Say more about the weighting (that is sums to 1 but that's all we assume)}
 
 % Subsection: Exact Abstraction Framework
 \subsection{Exact Abstraction Framework}
@@ -499,14 +501,27 @@ Inspired by the model-irrelevance abstraction, we consider the approximate case.
 \forall_{a,s'} \left|\mathcal{T}(s_1, a,s') - \mathcal{T}(s_2, a,s')\right| \leq \epsilon_\mathcal{T}
 \end{multline}
 
-{\bf Lemma 3:} When $S_A$ is created using a function of the $\ep_{model}$ type:
+{\bf Lemma 2:} When $S_A$ is created using a function of the $\ep_{model}$ type:
 \begin{equation}
 \forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{{\epsilon_{\mathcal{R}}} + \gamma |\mathcal{S}|\epsilon_{\mathcal{T}}}{(1-\gamma)^3}
 \end{equation}
 
 {\bf Proof:}
+Given the ground \ac{MDP}, $M_G$, consider the \ac{MDP}, $M_G'$ which is identical to $M_G$ except in its transition and rewards.
 
-Let the maximum upper bound between optimal behavior in the noisy and ground MDP be called $B_s$.
+\begin{equation}
+M_G' =  \langle \mathcal{S}_G, \mathcal{A}, \mathcal{R}_G', \mathcal{T}_G', \gamma \rangle
+\end{equation}
+
+Where
+\begin{align}
+\mathcal{R}_G'(s,a) = R_A(\epM(s), a)\\
+\mathcal{T}_G'(s,a, s') = R_A(\epM(s), a, \epM(s'))
+\end{align}
+
+We know by \cite{li2006towards} that .
+
+Let the maximum upper bound between optimal behavior in the noisy and ground MDP be called $B$.
 
 \begin{align*}
 B_{s} &= \max_{s,a}|Q'(s,a)-Q(s,a)|\\
@@ -558,7 +573,7 @@ We let $\phi_{mult}$ define a type of abstraction that, for fixed $\epsilon$ sat
 
 \dnote{We also need to add the point about the denominator bound...}
 
-{\bf Lemma 4:} When $S_A$ is created using a function of the $\ep_{mult}$ type:
+{\bf Lemma 3:} When $S_A$ is created using a function of the $\ep_{mult}$ type:
 \begin{equation}
 \forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{\left(\textsc{QMax}|\mathcal{A}| + k \epsilon + k \epsilon^2\right)}{1-\gamma}:
 \end{equation}
@@ -577,7 +592,7 @@ Similarly to the multinomial abstraction, we let $\phi_{bolt}$ define a type of 
 \forall_{a} \left|\frac{e^{Q^*(s_1,a)}}{\sum_b e^{Q^*(s_1,b)}} - \frac{e^{Q^*(s_1,a)}}{\sum_b e^{Q^*(s_1,b)}}\right| \leq \epsilon
 \end{multline}
 
-{\bf Lemma 5:} When $S_A$ is created using a function of the $\ep_{bolt}$ type:
+{\bf Lemma 4:} When $S_A$ is created using a function of the $\ep_{bolt}$ type:
 \begin{equation}
 \forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{\epsilon(\textsc{QMax}|\mathcal{A}| + k\epsilon) + A}{1-\gamma}:
 \end{equation}
