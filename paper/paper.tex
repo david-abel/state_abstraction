@@ -590,82 +590,99 @@ We also note that any abstraction that depends only on the reward function, $\ma
 % -----------------------------------------------
 \section{Example Domains}
 
-To demonstrate the efficacy of these approximate abstraction functions, we test out functions in the $\ep{Q^*}$ abstraction family on a variety of domains. We compare the number of states in the abstract MDP to different values of $\epsilon$, as well as the value difference between the optimal policy in the abstract MDP compared to the ground MDP. More specifically, we relate $\epsilon$ to
+To demonstrate the efficacy of these approximate abstraction functions, we test out functions in the $\ep{Q^*}$ abstraction family on a variety of domains. We compare the number of states in the abstract MDP to different values of $\epsilon$, as well as the value difference between the optimal policy in the abstract MDP compared to the ground MDP. More specifically, we relate $\epsilon$ to:
 \begin{equation}
 |V^{\pi_G^*}(s_{init}) - V^{\pi_A^*}(s_{init})|
 \end{equation}
-
 For different values of $\epsilon$.
 
-The domains we evaluate in are UpWorld, Nchain, Trench, and Minefield. UpWorld is a contrived version of Grid World in which the agent can only move left, right, and up (where up is always optimal, thus the name). NChain is a classic exploration task from the Bayesian Reinforcement Learning literature. Trench is a highly challenging goal-based task introduced by CITE DABE. Lastly, the Minefield domain is similar to UpWorld, but introduces stochastic transition dynamics, . Our code base provides implementations to visualize, abstract, and evaluate arbitrary MDPs to promote further investigation into approximate abstraction.
-
-% Subsection: UpWorld.
-\subsection{UpWorld}
-
-The UpWorld task is an $N\times M$ grid in which the agent starts in the lower left corner. The agent may move left, right, and up. The agent receives positive reward for transitioning to a state at the top of the grid, where moving up in the top cells self transitions. the agent receives 0 reward for all other transitions. Consequently, moving up is always the optimal action, since moving left and right does not change the agent's manhattan distance to positive reward. During experimentation, we set $N=10$, $M=4$.
-
-
-
-\begin{figure}
-\subfigure[Ground UpWorld]{
-\includegraphics[width=0.48\columnwidth]{figures/ground_upworld.png}}
-\subfigure[Abstract UpWorld]{
-\includegraphics[width=0.48\columnwidth]{figures/abs_upworld.png}}
-\label{fig:eps-states}
-\caption{Comparison of Original UpWorld MDP and Abstract MDP, under $\epQ$, with $\epsilon=0.5$}
-\end{figure} 
-
-% Insert visual and/or stats on number of states and performance of VI solving the abstract MDP and evaluating the resulting policy on the original MDP
+% Description of visuals.
+Our code base provides implementations to visualize, abstract, and evaluate arbitrary MDPs to promote further investigation into approximate abstraction. The included visuals of compressed MDPs always converts MDPs into a graph so that an arbitrary MDP may be visualized when abstracted. We use the graph visualization library GraphStream~\cite{graphstream}. In our visuals, a grey circle indicates a state, while the colored arrows indicate transitions. The thickness of the arrow indicates how much reward is associated with that transition. In the ground MDPs, states are labeled with a number. In some abstract MDPs, we indicate which ground states were collapsed to each abstract state (some are visually unwieldy and so were ignored).
 
 
 % Subsection: NChain.
 \subsection{NChain}
 
+NChain is a simple MDP heavily investigated in the Bayesian Reinforcement Learning literature due to the interesting exploration problem it poses. \dnote{More description of Nchain}
 
-
-% Insert visual and/or stats on number of states and performance of VI solving the abstract MDP and evaluating the resulting policy on the original MDP
-
-\begin{figure}
+% NChain Compression Visuals.
+\begin{figure}[h]
 \subfigure[Ground NChain]{
 \includegraphics[width=0.48\columnwidth]{figures/ground_nchain.png}}
 \subfigure[Abstract NChain]{
 \includegraphics[width=0.48\columnwidth]{figures/abs_nchain.png}}
-\label{fig:eps-states}
-\caption{Comparison of Original NChain MDP and Abstract MDP, under $\epQ$, with $\epsilon=0.5$}
+\label{fig:nchain-visual}
+\caption{Comparison of Original NChain MDP and Abstract NChain MDP, under $\epQ$, with $\epsilon=0.5$}
 \end{figure} 
+
+
+%% Subsection: UpWorld.
+%\subsection{UpWorld}
+%
+%The UpWorld task is an $N\times M$ grid in which the agent starts in the lower left corner. The agent may move left, right, and up. The agent receives positive reward for transitioning to a state at the top of the grid, where moving up in the top cells self transitions. the agent receives 0 reward for all other transitions. Consequently, moving up is always the optimal action, since moving left and right does not change the agent's manhattan distance to positive reward. During experimentation, we set $N=10$, $M=4$.
+%
+%\begin{figure}
+%\subfigure[Ground UpWorld]{
+%\includegraphics[width=0.48\columnwidth]{figures/ground_upworld.png}}
+%\subfigure[Abstract UpWorld]{
+%\includegraphics[width=0.48\columnwidth]{figures/abs_upworld.png}}
+%\label{fig:upworld-visual}
+%\caption{Comparison of Original UpWorld MDP and Abstract MDP, under $\epQ$, with $\epsilon=0.5$}
+%\end{figure} 
+
+% Subsection: Taxi
+\subsection{Taxi}
+
+Taxi has long been studied by the hierarchical reinforcement learning literature due to its natural decomposition into subgoals. The agent may move left, right, up, and down, as well as pickup a passenger and drop off a passenger. The agent must seek out passengers and take them to their destination. We visualize the compression on a simple 626 Taxi instance in Figure~\ref{fig:taxi-visual}. As stated above, we visualize the original Taxi problem into a graph representation so that we may visualize both the ground MDP and compressed MDP in the same format.
+
+% Taxi Compression Visuals
+\begin{figure}[h]
+\subfigure[Ground Taxi]{
+\includegraphics[width=0.48\columnwidth]{figures/ground_taxi.png}}
+\subfigure[Abstract Taxi]{
+\includegraphics[width=0.48\columnwidth]{figures/abs_taxi.png}}
+\label{fig:taxi-visual}
+\caption{Comparison of Original Taxi MDP and Abstract Taxi MDP, under $\epQ$, with $\epsilon=0.03$}
+\end{figure} 
+
+
+% Insert visual and/or stats on number of states and performance of VI solving the abstract MDP and evaluating the resulting policy on the original MDP
+
 
 % Subsection: Minefield.
 \subsection{Minefield}
 
-Minefield is identical to UpWorld, except the transitions and rewards are perturbed slightly. In particular, there is some slip probability associated with movement; when the agent moves left or right, it has probability $x$ of moving up, when the agent moves up, it has probability $\frac{x}{2}$ of moving left, and probability $\frac{x}{2}$ of moving right. The reward function is nearly identical to UpWorld: transitions to the top row in the grid receive $1.0$ reward, all other transitions receive $0.2$ reward, except for a random set of $\kappa$ states that receive $0$ reward (these are the mine states, that receive $\textsc{RMin}$). During experimentation, we set $N=10, M=4, \epsilon=1.1, \kappa = 5, x = 0.01$.
+Minefield is a slight variant of Grid World. The transitions and rewards are perturbed slightly, and there is no down action. In particular, there is some slip probability associated with movement; when the agent moves left or right, it has probability $x$ of moving up, when the agent moves up, it has probability $\frac{x}{2}$ of moving left, and probability $\frac{x}{2}$ of moving right. The reward function is such that transitions to the top row in the grid receive $1.0$ reward, all other transitions receive $0.2$ reward, except for a random set of $\kappa$ states (which may include the top row) that receive $0$ reward (these are the states with mines in them, thus the name). During experimentation, we set $N=10, M=4, \epsilon=1.1, \kappa = 5, x = 0.01$.
 
+% Minefield Compression Visuals
 \begin{figure}
 \subfigure[Ground Minefield]{
 \includegraphics[width=0.48\columnwidth]{figures/ground_minefield.png}}
 \subfigure[Abstract Minefield]{
 \includegraphics[width=0.48\columnwidth]{figures/abs_minefield.png}}
-\label{fig:eps-states}
+\label{fig:minefield-visual}
 \caption{Comparison of Original Minefield MDP and Abstract MDP, under $\epQ$, with $\epsilon=1.1$}
 \end{figure} 
 
-% Subsection: Trench.
-\subsection{Trench}
 
-To demonstrate the effects of approximate abstraction on goal-based tasks, we investigate the Trench problem, introduced by \dnote{Cite dabe}.
+% Subsection: Random.
+\subsection{Random}
 
-% Insert visual and/or stats on number of states and performance of VI solving the abstract MDP and evaluating the resulting policy on the original MDP
+The Random MDP domain we consider is as follows. There are $N$ states, and $K$ actions. For each state, each action can transition to two randomly selected (but fixed) states, each with probability $0.5$. 
+
+% Random Compression Visuals
+\begin{figure}
+\subfigure[Ground Random]{
+\includegraphics[width=0.48\columnwidth]{figures/ground_random.png}}
+\subfigure[Abstract Random]{
+\includegraphics[width=0.48\columnwidth]{figures/abs_random.png}}
+\label{fig:minefield-visual}
+\caption{Comparison of Original Random MDP and Abstract Random MDP, under $\epQ$, with $\epsilon=0.2$}
+\end{figure} 
 
 
-% Figure: The Trench Problem
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.42\columnwidth]{figures/placeholder.png}
-\caption{The Trench Problem}
-\label{fig:trench}
-\end{figure}
 
-% Subsection: Minefield.
-\subsection{Minefield}
+
 
 
 % --- SECTION: Approximate Abstraction on Example Domains ---
@@ -673,56 +690,33 @@ To demonstrate the effects of approximate abstraction on goal-based tasks, we in
 
 % Figure: Epsilon vs. #States for all three sample domains.
 \begin{figure}
-\subfigure[UpWorld]{
-\includegraphics[width=0.28\columnwidth]{figures/upworld_epsilon_vs_num_abstract_states.png}}
+\centering
 \subfigure[NChain]{
-\includegraphics[width=0.28\columnwidth]{figures/nchain_epsilon_vs_num_abstract_states.png}}
+\includegraphics[width=0.48\columnwidth]{figures/nchain_epsilon_vs_num_abstract_states.png}}
+\subfigure[Taxi]{
+\includegraphics[width=0.48\columnwidth]{figures/taxi_epsilon_vs_num_abstract_states.png}}
 \subfigure[Minefield]{
-\includegraphics[width=0.28\columnwidth]{figures/minefield_epsilon_vs_num_abstract_states.png}}
-\subfigure[Trench]{
-\includegraphics[width=0.28\columnwidth]{figures/placeholder.png}}
+\includegraphics[width=0.48\columnwidth]{figures/minefield_epsilon_vs_num_abstract_states.png}}
+\subfigure[Random]{
+\includegraphics[width=0.48\columnwidth]{figures/random_epsilon_vs_num_abstract_states.png}}
 \label{fig:eps-states}
 \caption{$\epsilon$ vs. Num States}
 \end{figure} 
 
 % Figure: Epsilon vs. Error in Abstract Value Function
 \begin{figure}
-\subfigure[UpWorld]{
-\includegraphics[width=0.28\columnwidth]{figures/upworld_epsilon_vs_value_of_abstract_policy_init_ground_state.png}}
 \subfigure[NChain]{
-\includegraphics[width=0.28\columnwidth]{figures/nchain_epsilon_vs_value_of_abstract_policy_init_ground_state.png}}
+\includegraphics[width=0.48\columnwidth]{figures/nchain_epsilon_vs_value_of_abstract_policy_init_ground_state.png}}
+\subfigure[Taxi]{
+\includegraphics[width=0.48\columnwidth]{figures/taxi_epsilon_vs_value_of_abstract_policy_init_ground_state.png}}
 \subfigure[Minefield]{
-\includegraphics[width=0.28\columnwidth]{figures/minefield_epsilon_vs_value_of_abstract_policy_init_ground_state}}
+\includegraphics[width=0.48\columnwidth]{figures/minefield_epsilon_vs_value_of_abstract_policy_init_ground_state}}
+\subfigure[Random]{
+\includegraphics[width=0.48\columnwidth]{figures/random_epsilon_vs_value_of_abstract_policy_init_ground_state}}
 \label{fig:eps-states}
 \caption{$\epsilon$ vs. the Value under the Abstract Policy in the Initial Ground State}
 \end{figure} 
 
-
-
-% Subsection: Abstract Domain Visualizations
-\subsection{Abstract Domain Visualizations}
-
-% Figure: UpWorld MDP visuals
-\begin{figure}[h]
-\centering
-\subfigure[UpWorld]{
-\includegraphics[width=0.46\columnwidth]{figures/placeholder.png}}
-\hspace{3mm}
-\subfigure[Abstracted UpWorld]{
-\includegraphics[width=0.46\columnwidth]{figures/placeholder.png}}
-\caption{Visualization of Original UpWorld vs. Abstracted UpWorld}
-\end{figure}
-
-% Figure: NChain MDP visuals
-\begin{figure}[h]
-\centering
-\subfigure[NChain]{
-\includegraphics[width=0.46\columnwidth]{figures/placeholder.png}}
-\hspace{3mm}
-\subfigure[Abstracted NChain ]{
-\includegraphics[width=0.46\columnwidth]{figures/placeholder.png}}
-\caption{Visualization of Original NChain vs. Abstracted NChain}
-\end{figure}
 
 
 
