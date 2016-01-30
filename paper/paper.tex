@@ -23,6 +23,11 @@
 \newcommand\defn[1]{{\bf Definition:} #1}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\mc}[1]{\mathcal{#1}}
+\newcommand{\mcS}{\mathcal{S}}
+\newcommand{\mcT}{\mathcal{T}}
+\newcommand{\mcR}{\mathcal{R}}
+\newcommand{\pM}{\phi_{\text{model}}}
 
 
 % --- Note Commands ---
@@ -272,7 +277,6 @@ Recall that $Q^*$ is a function on $\mathcal{S}_G \times \mathcal{A}$ that satis
 \end{equation}
 
 \textbf{Proof:}
-We begin by showing that Q values in the abstract \ac{MDP} closely resemble those in the ground \ac{MDP}.
 
 Let $Q_G : \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_G : \mathcal{S}_G \rightarrow \mathbb{R}$ denote the Q and value functions in the ground \ac{MDP}.
 
@@ -503,23 +507,53 @@ Inspired by the model-irrelevance abstraction, we consider the approximate case.
 
 {\bf Lemma 2:} When $S_A$ is created using a function of the $\ep_{model}$ type:
 \begin{equation}
+\label{eq:lemma2}
 \forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{{\epsilon_{\mathcal{R}}} + \gamma |\mathcal{S}|\epsilon_{\mathcal{T}}}{(1-\gamma)^3}
 \end{equation}
 
-{\bf Proof:}
-Given the ground \ac{MDP}, $M_G$, consider the \ac{MDP}, $M_G'$ which is identical to $M_G$ except in its transition and rewards.
+{\bf Proof:} Our proof proceeds as follows: converting a ground \ac{MDP}, $M_G$, to an abstract \ac{MDP}, $M_A$, using a fixed but arbitrary aggregation function, $\ep_m$, that satisfies the $\epM$ criteria is shown to be equivalent to creating an intermediate \ac{MDP}, ${M_G}'$ and then applying an aggregation of the $\pM$ type. ${M_G}'$ is shown to have Q values identical to $M_A$ and Q values boundedly close to $M_G$ -- applying Lemma 1 we are able to conclude Lemma 2.
+
+\enote{Maybe introduce language of ``homogenization"}
 
 \begin{equation}
-M_G' =  \langle \mathcal{S}_G, \mathcal{A}, \mathcal{R}_G', \mathcal{T}_G', \gamma \rangle
+{M_G}' =  \langle \mathcal{S}_G, \mathcal{A}, \mathcal{R}_G', \mathcal{T}_G', \gamma \rangle
 \end{equation}
 
 Where
 \begin{align}
-\mathcal{R}_G'(s,a) = R_A(\epM(s), a)\\
-\mathcal{T}_G'(s,a, s') = R_A(\epM(s), a, \epM(s'))
+{\mcR_G}'(s,a) = \mcR_A(\ep_m(s), a)\\
+{\mcT_G}'(s,a, s') = \frac{\mcT_A(\ep_m(s), a, \ep_m(s'))}{|X(s')|}
 \end{align}
 
-We know by \cite{li2006towards} that .
+where $X(s') = \{g \in \mathcal{S}_G | \ep_m(g) = \ep_m(s')\}$.
+
+
+It is easily verifiable that ${\mcT_G}'$ induces a valid probability distribution.
+
+Next note that the rewards of states in ${M_G}'$ that are aggregated in $M_A$ are identical:
+\begin{align*}
+&\forall{s1_G, s2_G \in \mc{S}_G, a} \\
+&\left[ \epM(s1_G) = \epM(s2_G) \rightarrow {\mcR_G}'(s1_G, a) = {\mcR_G}'(s2_G, a) \right]
+\end{align*}
+
+Similarly, the transitions of states in ${M_G}'$ that are aggregated in $M_A$ are identical:
+\begin{align*}
+\forall{s1_G, s2_G, {s_G}' \in \mcS_G, a}\\
+\left[ \epM(s1_G) = \epM(s2_G) \rightarrow {\mcT_G}'(s1_G, a, {s_G}') = {\mcT_G}'(s2_G, a, {s_G}') \right]
+\end{align*}
+
+Now consider applying to $M_G$' the state aggregation scheme, $\phi_m$, which satisfies the following:
+\begin{align*}
+\forall{a, s_G \in \mcS_G}  [&{\mcR_G}'(s1_G, a) = {\mcR_G}'(s2_G, a) \wedge \\
+&{\mcT_G}'(s1_G, a, {s_G}') = {\mcT_G}'(s2_G, a, {s_G}') ]  \rightarrow \\
+\phi_m(s1_G) = \phi_m(s2_G)
+\end{align*}
+
+$\phi_m$ is of the $\pM$ type and when applied to ${M_G}'$ results in $M_A$.
+
+ \cite{li2006towards} demonstrate that abstraction schemes of the $\pM$ type maintain Q values so we know that $\forall{s_G \in \mcS} Q_{G'}(s_G) = Q_{A}(s_G)$.
+  
+Knowing that the Q values in $M_A$ are identical to those in ${M_G}'$, we now demonstrate that those of $M_G$ are boundedly close to those of ${M_G}'$ and then conclude by applying Lemma 1 (which states similar Q values in the abstract and ground MDP results in near optimal behavior of the optimal abstract policy applied to the ground MDP).
 
 Let the maximum upper bound between optimal behavior in the noisy and ground MDP be called $B$.
 
