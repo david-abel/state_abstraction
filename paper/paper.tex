@@ -498,11 +498,11 @@ Thus, we conclude
 % Subsection: Model Similarity
 \subsection{Model Similarity: $\ep_{model}$}
 
-Inspired by the model-irrelevance abstraction, we consider the approximate case. We let $\phi_{model}$ define a type of abstraction that, for fixed $\epsilon_\mathcal{R}$ and $\epsilon_\mathcal{T}$, satisfies:
+Inspired by the model-irrelevance abstraction, we consider the approximate case. We let $\phi_{model}$ define a type of abstraction that, for fixed $\epsilon$, satisfies:
 \begin{multline}
 \ep_{model}(s_1) = \ep_{model}(s_2) \rightarrow \\
-\forall_a \left|\mathcal{R}(s_1, a) - \mathcal{R}(s_2, a)\right| \leq \epsilon_\mathcal{R}\ \wedge\ \\
-\forall_{a,s'} \left|\mathcal{T}(s_1, a,s') - \mathcal{T}(s_2, a,s')\right| \leq \epsilon_\mathcal{T}
+\forall_a \left|\mathcal{R}(s_1, a) - \mathcal{R}(s_2, a)\right| \leq \epsilon \wedge\ \\
+\forall_{a,s'} \left|\mathcal{T}(s_1, a,s') - \mathcal{T}(s_2, a,s')\right| \leq \epsilon
 \end{multline}
 
 {\bf Lemma 2:} When $S_A$ is created using a function of the $\ep_{model}$ type:
@@ -516,19 +516,19 @@ Inspired by the model-irrelevance abstraction, we consider the approximate case.
 \enote{Maybe introduce language of ``homogenization"}
 
 \begin{equation}
-{M_G}' =  \langle \mathcal{S}_G, \mathcal{A}, \mathcal{R}_G', \mathcal{T}_G', \gamma \rangle
+{M_G}' =  \langle \mcS_G, \mathcal{A}, {\mcR_G}', {\mcT_G}', \gamma \rangle
 \end{equation}
 
 Where
 \begin{align}
-{\mcR_G}'(s,a) = \mcR_A(\ep_m(s), a)\\
-{\mcT_G}'(s,a, s') = \frac{\mcT_A(\ep_m(s), a, \ep_m(s'))}{|X(s')|}
+&{\mcR_G}'(s,a) = \mcR_A(\ep_m(s), a)\\
+&{\mcT_G}'(s,a, s') = \frac{\mcT_A(\ep_m(s), a, \ep_m(s'))}{|X(s')|}
 \end{align}
 
 where $X(s') = \{g \in \mathcal{S}_G | \ep_m(g) = \ep_m(s')\}$.
+\enote{Disambiguate this X from earlier X}
 
-
-It is easily verifiable that ${\mcT_G}'$ induces a valid probability distribution.
+It is easily verifiable that ${\mcT_G}'$ is a probability distribution.
 
 Next note that the rewards of states in ${M_G}'$ that are aggregated in $M_A$ are identical:
 \begin{align*}
@@ -536,62 +536,75 @@ Next note that the rewards of states in ${M_G}'$ that are aggregated in $M_A$ ar
 &\left[ \epM(s1_G) = \epM(s2_G) \rightarrow {\mcR_G}'(s1_G, a) = {\mcR_G}'(s2_G, a) \right]
 \end{align*}
 
-Similarly, the transitions of states in ${M_G}'$ that are aggregated in $M_A$ are identical:
+The transitions of states in ${M_G}'$ that are aggregated in $M_A$ are identical :
+\begin{align}
+\forall{s1_G, s2_G, {s_G}' \in \mcS_G, a} \nonumber\\
+\left[ \epM(s1_G) = \epM(s2_G) \rightarrow {\mcT_G}'(s1_G, a, {s_G}') = {\mcT_G}'(s2_G, a, {s_G}') \right] \wedge\label{eq:sameTrans}
+\end{align}
+
+Additionally, it is easily verified \enote{or not -- consider adding proof} that transitions and rewards in $M_G'$ are within $\epsilon$ of those in $M_G$:
 \begin{align*}
-\forall{s1_G, s2_G, {s_G}' \in \mcS_G, a}\\
-\left[ \epM(s1_G) = \epM(s2_G) \rightarrow {\mcT_G}'(s1_G, a, {s_G}') = {\mcT_G}'(s2_G, a, {s_G}') \right]
+\forall{s,s' \in \mcS_G, a} : |\mcT_G'(s,a,s') - \mcT_G(s,a,s')| \leq \epsilon\\
+\forall{s \in \mcS_G, a} : |\mcR_G'(s,a) - \mcR_G(s,a)| \leq \epsilon
 \end{align*}
 
+\enote{If this is the case, why can't we just leverage the simulation lemma?...}
+
 Now consider applying to $M_G$' the state aggregation scheme, $\phi_m$, which satisfies the following:
-\begin{align*}
-\forall{a, s_G \in \mcS_G}  [&{\mcR_G}'(s1_G, a) = {\mcR_G}'(s2_G, a) \wedge \\
-&{\mcT_G}'(s1_G, a, {s_G}') = {\mcT_G}'(s2_G, a, {s_G}') ]  \rightarrow \\
-\phi_m(s1_G) = \phi_m(s2_G)
-\end{align*}
+\begin{align}
+\forall{a, s_G \in \mcS_G} \left[\epM(s1_G) =\epM(s2_G) \leftrightarrow \phi_m(s1_G) = \phi_m(s2_G) \right] \label{eq:sameR}
+\end{align}
 
 $\phi_m$ is of the $\pM$ type and when applied to ${M_G}'$ results in $M_A$.
 
- \cite{li2006towards} demonstrate that abstraction schemes of the $\pM$ type maintain Q values so we know that $\forall{s_G \in \mcS} Q_{G'}(s_G) = Q_{A}(s_G)$.
+ \cite{li2006towards} demonstrate that abstraction schemes of the $\pM$ type maintain Q values so we know that $\forall{s_G \in \mcS_G}  \left[ Q_{G'}(s_G) = Q_{A}(\epM(s_G)) \right]$ where $Q_{G'}$ is the Q function in ${M_G}'$ and $Q_G$
   
-Knowing that the Q values in $M_A$ are identical to those in ${M_G}'$, we now demonstrate that those of $M_G$ are boundedly close to those of ${M_G}'$ and then conclude by applying Lemma 1 (which states similar Q values in the abstract and ground MDP results in near optimal behavior of the optimal abstract policy applied to the ground MDP).
+Knowing that the Q values in $M_A$ are identical to those in ${M_G}'$, we now demonstrate that those of $M_G$ are boundedly close to those of ${M_G}'$.
 
-Let the maximum upper bound between optimal behavior in the noisy and ground MDP be called $B$.
+For the remainder of the proof, $s, s' \in \mcS_G$.
 
+Let the maximum Q difference in ${M_G}'$ and $M_G$ be $B$:
 \begin{align*}
-B_{s} &= \max_{s,a}|Q'(s,a)-Q(s,a)|\\
+B = &\max_{s,a}|Q_{G'}(s,a)-Q_{G}(s,a)|\\
 %B_{s} &= \max_{s,a}|R'(s,a) - R(s,a) + \gamma \sum_{s'}\left[T'(s,a,s')\max_{a'}Q'(s',a')-T(s,a,s')\max_{a'}Q(s', a')\right]|\\
-&\forall s' \text{ WLOG } T'(s,a,s')\max_{a'}Q'(s',a') \geq T(s,a,s')\max_{a'}Q(s',a')\\
-\end{align*}
-Applying max is a non-expansion \enote{Probably want a citation and or explanation for this}:
-\begin{multline}
-=\max_{s,a}(|R'(s,a)-R(s,a)| + \gamma \sum_{s'} \\
-\max_{a'} [(T(s,a,s')+T'(s,a,s')- \\ T(s,a,s'))Q'(s', a')-T(s,a,s')Q(s',a')])
-\end{multline}
-%&\leq \max_{s,a}|R'_s-R_s|+\max_{s,a}\gamma \sum_{s'} \max_{a'} \left[(T(s,a,s')+\epsilon_{\mathcal{T}})Q'(s',a') - T(s,a,s')Q(s',a')\right]\\
-%&\leq \epsilon_{\mathcal{R}}+\max_{s,a}\gamma \sum_{s'} \max_{a'} \left[(T(s,a,s')Q'(s',a')+\epsilon_{\mathcal{T}}Q'(s',a') - T(s,a,s')Q(s',a')\right]\\
-%&\leq \epsilon_{\mathcal{R}} + \max_{s,a} \gamma \sum_{s'} \max_{a'} \left[(T(s,a,s')(Q'(s',a')-Q(s',a'))+\epsilon_{\mathcal{T}}Q'(s',a') \right]\\
-\begin{align*}
-&\leq \epsilon_{\mathcal{R}}+\gamma |\mathcal{S}|\epsilon_{\mathcal{T}}Q'_{\text{max}} + \gamma \sum_{s'}\left[ T(s,a,s') B_s\right]\\
-&\leq \epsilon_{\mathcal{R}} + \gamma B_{s} + \gamma |\mathcal{S}|\epsilon_{\mathcal{T}}Q'_{max}
+&\text{Applying the definition of Q values:}\\
+%---Write out using Q definitions
+B \leq &\max_{s,a} |\mcR_G'(s,a)-\mcR(s,a) +  \gamma \sum_{s'} \\
+&\left[ \mcT_G'(s, a, s')\max_{a'}Q_G'(s', a') - \mcT_G(s, a, s')\max_{a'}Q_G(s', a')\right] |\\
+%---Apply WLOG
+& \text{ WLOG }T'(s,a,s')\max_{a'}Q'(s',a') \geq T(s,a,s')\max_{a'}Q(s',a')\\
+\leq &\max_{s,a}(|\mcR_G'(s,a)-\mcR(s,a)| + \gamma \sum_{s'} \\
+&\max_{a'} [(\mcT_G'(s,a,s'))Q_G'(s', a')-\mcT_G(s,a,s')Q_G(s',a')])\\
+%---Apply epsilon to reward and transitions
+\leq & \epsilon +\\
+& \gamma \sum_{s'}  \max_{a'} [(\epsilon+ \mcT_G(s,a,s'))Q_G'(s', a')-\mcT_G(s,a,s')Q_G(s',a')])\\
+%---Do algebra
+= & \epsilon +\\
+&\gamma \sum_{s'}  \max_{a'} [\epsilon Q_G'(s', a')+ \mcT_G(s,a,s')(Q_G'(s', a') - Q_G(s', a'))])
+%---Pull terms out of some
+&\leq \epsilon+\gamma |\mcS|\epsilon Q'_{\text{max}} + \gamma \sum_{s'}\left[ \mcT(s,a,s') B\right]\\
+&\leq \epsilon + \gamma B + \gamma |\mcS|\epsilon Q'_{max}
 \end{align*}
 
 Applying $Q'_{max}=V'_{max} \leq V_{max}=\frac{1}{1-\gamma}$:
 \begin{align*}
-B_{s} &\leq 
+B &\leq 
 \frac
-{{\epsilon_{\mathcal{R}}} + \gamma |\mathcal{S}|\epsilon_{\mathcal{T}}}
+{ \gamma |\mathcal{S} + 1 |\epsilon}
 {(1-\gamma)^2}
 \end{align*}
 
 Therefore:
 \begin{align*}
-\forall_{s,a} : |Q'(s,a) - Q(s,a)| &\leq \max_{s,a}|Q'(s,a)-Q(s,a)| \\
-&\leq  \frac{{\epsilon_{\mathcal{R}}} + \gamma |\mathcal{S}|\epsilon_{\mathcal{T}} }{(1-\gamma)^2}
+\forall_{s,a} : &|Q_A(s,a) - Q_G(s,a)| = |Q_G'(s,a) - Q_G(s,a)| \\
+&\leq \max_{s,a}|Q_G'(s,a)-Q_G(s,a)| \\
+&\leq  \frac{\gamma |\mathcal{S} + 1|\epsilon}{(1-\gamma)^2}
 \end{align*}
 
-Consequently, from the below $\phi_Q^*$ results, we conclude that:
+Consequently, by the logic of the proof for Lemma 1, we conclude that:
 \begin{equation}
-\forall_s : |V^{\pi^*_M}(s) - V^{\pi^*_{M'}}(s)| \leq \frac{{\epsilon_{\mathcal{R}}} + \gamma |\mathcal{S}|\epsilon_{\mathcal{T}}}{(1-\gamma)^3}
+\forall_s : |V^{\pi^*_M}(s) - V^{\pi^*_{A}}(s)| \leq
+\frac{2\gamma|\mcS + 1|\epsilon}{(1-\gamma)^3}
 \end{equation}
 
 
