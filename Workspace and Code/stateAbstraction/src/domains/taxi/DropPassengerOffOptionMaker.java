@@ -15,29 +15,49 @@ import burlap.oomdp.core.states.State;
 import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 
 
-public class GetPassengerOptionMaker {
+public class DropPassengerOffOptionMaker {
 
-	public static boolean isTaxiEmpty(State s) {
+	public static boolean isTaxiEmptyAndPassAtDest(State s) {
 		List<ObjectInstance> allPassengers = s.getObjectsOfClass(TaxiDomainGenerator.PASSENGERCLASS);
-	
+		List<ObjectInstance> allLocations = s.getObjectsOfClass(TaxiDomainGenerator.LOCATIONCLASS);
+		
 		for(ObjectInstance passenger : allPassengers) {
 			boolean inTaxi = passenger.getBooleanValForAttribute(TaxiDomainGenerator.INTAXIATT);
-			
+
 			if (inTaxi) {
 				// There's a passenger in a car.
 				return false;
 			}
+			else {
+				for (ObjectInstance dest : allLocations) {
+					Integer passengerLoc = passenger.getIntValForAttribute(TaxiDomainGenerator.LOCATIONATT);
+					Integer destLoc = dest.getIntValForAttribute(TaxiDomainGenerator.LOCATIONATT);
+					
+					if (passengerLoc == destLoc) {
+						Integer passengerX = passenger.getIntValForAttribute(TaxiDomainGenerator.XATT);
+						Integer passengerY = passenger.getIntValForAttribute(TaxiDomainGenerator.YATT);
+						
+						Integer destX = dest.getIntValForAttribute(TaxiDomainGenerator.XATT);
+						Integer destY = dest.getIntValForAttribute(TaxiDomainGenerator.YATT);
+						
+						if (passengerX == destX && passengerY == passengerX) {
+							return true;
+						}
+					}
+					
+				}
+			}
 		}
-		return true;
+		return false;
 	}
 	
-	public static Option makeGetPassengerOption(Domain domain) {
+	public static Option makeDropOffPassengerOption(Domain domain) {
 		BFS bfs = new BFS(domain, new IsTaxiFullSCT(), new SimpleHashableStateFactory());
 		bfs.toggleDebugPrinting(false);
 		Policy optionPolicy = new DDPlannerPolicy(bfs);
 		
 		//now that we have the parts of our option, instantiate it
-		DeterministicTerminationOption option = new DeterministicTerminationOption("getPassengerOption", optionPolicy, new IsTaxiEmptySCT(), new IsTaxiFullSCT());
+		DeterministicTerminationOption option = new DeterministicTerminationOption("dropOffPassengerOption", optionPolicy, new IsTaxiFullSCT(), new IsTaxiEmptyAndPassAtDestSCT());
 		option.setExpectationHashingFactory(new SimpleHashableStateFactory());
 		
 		return option;
@@ -51,12 +71,23 @@ public class GetPassengerOptionMaker {
 
 }
 
-//Initiation condition.
-class IsTaxiEmptySCT implements StateConditionTest {
+
+
+
+// Initiation condition.
+class IsTaxiEmptyAndPassAtDestSCT implements StateConditionTest {
+	@Override
+	public boolean satisfies(State s) {
+		return DropPassengerOffOptionMaker.isTaxiEmptyAndPassAtDest(s);
+	}
+}
+
+// Terminal condition.
+class IsTaxiFullSCT implements StateConditionTest {
 
 	@Override
 	public boolean satisfies(State s) {
-		return GetPassengerOptionMaker.isTaxiEmpty(s);
+		return !GetPassengerOptionMaker.isTaxiEmpty(s);
 	}
 	
 }

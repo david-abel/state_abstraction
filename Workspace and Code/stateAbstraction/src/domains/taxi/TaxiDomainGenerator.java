@@ -754,10 +754,12 @@ public class TaxiDomainGenerator implements DomainGenerator {
 
 	public List<Option> getOptions(Domain domain) {
 		Option getPassengerOpt = GetPassengerOptionMaker.makeGetPassengerOption(domain);
+		Option dropOffPassengerOpt = DropPassengerOffOptionMaker.makeDropOffPassengerOption(domain);
 
 		List<Option> allOptions = new ArrayList<Option>();
 		
 		allOptions.add(getPassengerOpt);
+		allOptions.add(dropOffPassengerOpt);
 		
 		return allOptions;
 	}

@@ -99,8 +99,18 @@ public class NormalDomainToGraphDomain {
 				Action nextAction = allActions.get(actionIndex);
 				this.graphActionIndexToNonGraphAction.put(actionIndex, nextAction);
 
+
 				
 				GroundedAction ga = nextAction.getAssociatedGroundedAction();
+				
+				
+				if (nextAction instanceof Option){
+					if (((Option) nextAction).probabilityOfTermination(allNonGraphStates.get(stateIndex), ga) == 1.0) {
+						// If this is a terminating state for the option, assume it self loops.
+						gd.setTransition(stateIndex, actionIndex, stateIndex, 1.0);
+						continue;
+					}
+				}
 				
 				if (this.oldDomainTF.isTerminal(allNonGraphStates.get(stateIndex))) {
 					terminalStates.add(stateIndex);
@@ -109,7 +119,6 @@ public class NormalDomainToGraphDomain {
 					gd.setTransition(stateIndex, actionIndex, stateIndex, 1.0);
 				}
 				else {
-					
 					List<TransitionProbability> tps = ga.getTransitions(allNonGraphStates.get(stateIndex));
 					for (TransitionProbability tp : tps) {
 						// Set non-terminal transitions.

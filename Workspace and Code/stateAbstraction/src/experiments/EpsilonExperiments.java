@@ -1,6 +1,7 @@
 package experiments;
 
 import graphStateAbstractionTest.AStarEpsilonTest;
+import graphStateAbstractionTest.QStarEpsilonTest;
 import graphStateAbstractionTest.VIParams;
 import graphStateAbstractionTest.EpsilonToNumStatesTuple;
 
@@ -27,6 +28,7 @@ import burlap.oomdp.singleagent.RewardFunction;
 import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 import domains.GraphRF;
 import domains.NormalDomainToGraphDomain;
+import domains.minefield.MinefieldGenerator;
 import domains.nchain.NChainGenerator;
 import domains.randommdp.RandomMDPGenerator;
 import domains.taxi.GetPassengerOptionMaker;
@@ -46,7 +48,7 @@ public class EpsilonExperiments {
 	
 	// Iterate over epsilon and compute the number of states.
 	final static double startEpsilon = 0.0;
-	final static double endEpsilon = 0.1;
+	final static double endEpsilon = 0.50;
 	final static double epsilonIncrement = 0.01;
 	
 	/**
@@ -59,8 +61,8 @@ public class EpsilonExperiments {
 	 */
 	public static void generateEpsilonResults(GraphDefinedDomain graphDefinedDomain, RewardFunction graphRF, State initGraphState, String taskName) {
 		
-//		List<EpsilonToNumStatesTuple> epsilonAndNumStatesPairs = QStarEpsilonTest.testQPhiStateReduction(graphDefinedDomain, graphRF, new NullTermination(), initGraphState, startEpsilon, endEpsilon, epsilonIncrement);
-		List<EpsilonToNumStatesTuple> epsilonAndNumStatesPairs = AStarEpsilonTest.testAStarPhiStateReduction(graphDefinedDomain, graphRF, new NullTermination(), initGraphState, startEpsilon, endEpsilon, epsilonIncrement);
+		List<EpsilonToNumStatesTuple> epsilonAndNumStatesPairs = QStarEpsilonTest.testQPhiStateReduction(graphDefinedDomain, graphRF, new NullTermination(), initGraphState, startEpsilon, endEpsilon, epsilonIncrement);
+//		List<EpsilonToNumStatesTuple> epsilonAndNumStatesPairs = AStarEpsilonTest.testAStarPhiStateReduction(graphDefinedDomain, graphRF, new NullTermination(), initGraphState, startEpsilon, endEpsilon, epsilonIncrement);
 		
 		List<Double> epsilons = new ArrayList<Double>();
 		List<Integer> numStates = new ArrayList<Integer>();
@@ -69,8 +71,12 @@ public class EpsilonExperiments {
 		
 		Double randomPolValue = computeValueOfRandomPolicy(graphDefinedDomain, graphRF, initGraphState);
 		
+		int numOriginalStates = graphDefinedDomain.getNumNodes();
+		
+		System.out.println("NUMGROUNDSTATES\t" + numOriginalStates);
 		System.out.println("RAND\t" + randomPolValue);
 		
+		writeDataPointToFile("NUMGROUNDSTATES\t" + numOriginalStates, taskName);
 		writeDataPointToFile("RAND\t" + randomPolValue.toString(), taskName);
 		
 		System.out.println("results: ");
@@ -146,7 +152,7 @@ public class EpsilonExperiments {
 		DPrint.toggleUniversal(false);
 		
 		// Create trench domain.
-		int height = 3;
+		int height = 5;
 		int width = 2;
 		TrenchDomainGenerator trenchGen = new TrenchDomainGenerator(height, width);
 		TerminalFunction trenchTF = new TrenchDomainGenerator.TrenchTF(height - 1, width - 1);
@@ -178,7 +184,7 @@ public class EpsilonExperiments {
 		RewardFunction nChainRF = new NChainGenerator.nStateChainRF(numStates);
 		
 		// Create random domain.
-		int numRandStates = 1000;
+		int numRandStates = 100;
 
 		int numRandActions = 3;
 		GraphDefinedDomain randGen = RandomMDPGenerator.getRandomMDP(numRandStates, numRandActions);
@@ -186,14 +192,24 @@ public class EpsilonExperiments {
 		State initialRandState = RandomMDPGenerator.getInitialState(randDomain);
 		RewardFunction randRF = new RandomMDPGenerator.RandomMDPRF(numRandStates);
 		
-		String task = "TAXI"; // NCHAIN, TRENCH, TAXI, UPWORLD, RANDOM		
+		// Create minefield domain
+		int minefieldHeight = 10;
+		int minefieldWidth = 4;
+		int numMineStates = 5;
+		GraphDefinedDomain minefieldGen = MinefieldGenerator.getMinefield(minefieldHeight, minefieldWidth);
+		Domain minefieldDomain = minefieldGen.generateDomain();
+		State initialMinefieldState = GraphDefinedDomain.getState(minefieldDomain, 0);
+		RewardFunction minefieldRF = new MinefieldGenerator.MinefieldRF(numMineStates, minefieldHeight * minefieldWidth);
+		
+		String task = "RANDOM"; // NCHAIN, TRENCH, TAXI, UPWORLD, RANDOM, MINEFIELD
 		
 		if (task == "ALL") {
 			generateEpsilonResults(nChainGen, nChainRF, initialNChainState, "nchain");
 			convertAndGenEpsilonResults(trenchGen, trenchTF, trenchRF, initialTrenchState, "trench");
-			convertAndGenEpsilonResults(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi");
+//			convertAndGenEpsilonResults(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi");
 			generateEpsilonResults(upWorldGen, upWorldRF, initialUpWorldState, "upworld");
 			generateEpsilonResults(randGen, randRF, initialRandState, "random");
+			generateEpsilonResults(minefieldGen, minefieldRF, initialMinefieldState, "minefield");
 		}
 		if (task == "NCHAIN") {
 			generateEpsilonResults(nChainGen, nChainRF, initialNChainState, "nchain");
@@ -202,10 +218,14 @@ public class EpsilonExperiments {
 			convertAndGenEpsilonResults(trenchGen, trenchTF, trenchRF, initialTrenchState, "trench");
 		}
 		else if (task == "TAXI") {
-			convertAndGenEpsilonResultsOptions(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi", taxiOptions);
+//			convertAndGenEpsilonResultsOptions(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi", taxiOptions);
+			convertAndGenEpsilonResults(taxiGen, taxiTF, taxiRF, initialTaxiState, "taxi");
 		}
 		else if (task == "RANDOM") {
 			generateEpsilonResults(randGen, randRF, initialRandState, "random");
+		}
+		else if (task == "MINEFIELD") {
+			generateEpsilonResults(minefieldGen, minefieldRF, initialMinefieldState, "minefield");
 		}
 		else {
 //			TerminalFunction upWorldTF = new UpWorldGenerator.UpWorldTF(upWorldHeight);

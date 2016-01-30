@@ -20,41 +20,6 @@ import burlap.oomdp.statehashing.HashableStateFactory;
 import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 
 public class QStarEpsilonTest {
-	public static class EpsilonToNumStatesTuple {
-		private double eps;
-		private int numStates;
-		private double valOfInitGroundState; // NOW STORES THE DELTA BETWEEN THE VALUE OF GROUND AND ABSTRACT
-		private double valOfInitAbstractState;
-		
-		
-		public EpsilonToNumStatesTuple(double epsilon, int numStates, double valOfInitGroundState, double valOfInitAbstractState) {
-			this.eps = epsilon;
-			this.numStates = numStates;
-			this.valOfInitGroundState = valOfInitGroundState;
-			this.valOfInitAbstractState = valOfInitAbstractState;
-		}
-		@Override
-		public String toString() {
-			return eps + "\t" + numStates + "\t" + valOfInitGroundState + "\t" + valOfInitAbstractState;
-		}
-		
-		public double getEpsilon() {
-			return this.eps;
-		}
-		
-		public int getNumStates() {
-			return this.numStates;
-		}
-		
-		public double getValOfGroundInitState() {
-			return this.valOfInitGroundState;
-		}
-		
-		public double getValOfInitAbstractState() {
-			return this.valOfInitAbstractState;
-		}
-	}
-
 
 
 	public static List<EpsilonToNumStatesTuple> testQPhiStateReduction(GraphDefinedDomain dg, RewardFunction rf, TerminalFunction tf, State initGraphState, double startEpsilon, double endEpsilon, double epsilonIncrement) {
@@ -89,7 +54,6 @@ public class QStarEpsilonTest {
 			GreedyQPolicy abstractPolicy = aVi.planFromState(aInitialState);	
 			
 			
-			
 			//Gather up values for this test iteration
 			int numAbstractStates = aVi.getAllStates().size();
 			System.out.println("Num abstract states (eps): " + numAbstractStates + " (" + epsilon + ")");
@@ -99,16 +63,13 @@ public class QStarEpsilonTest {
 			abstractPI.setPolicyToEvaluate(groundPolicyFromAbstractPolicy);
 			GreedyQPolicy pol = abstractPI.planFromState(initGraphState);
 			
-			
 			EpisodeAnalysis ea = pol.evaluateBehavior(initGraphState, rf, 20000);
 			List<Double> rewards = ea.rewardSequence;
 			
 			Double val = 0.0;
 			if(rewards.contains(1.0)) {
 				val = Math.pow(VIParams.gamma, rewards.indexOf(1.0));
-				System.out.println("LOC OF 1.0: " + rewards.indexOf(1.0));
 				List<State> stateSeq = ea.stateSequence;
-				System.out.println("LAST STATE: " + stateSeq.get(stateSeq.size() - 1));
 			}
 			
 			

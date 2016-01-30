@@ -110,11 +110,8 @@ def makePlot(taskName):
 	randYData = randVal*len(abstractStateVals)
 	numGroundStatesYData = numGroundStates*len(numStates)
 
-
-	print "len:", len(numStates), len(numGroundStatesYData)
-
 	# Plot.
-	plot(epsilons, [numStates, numGroundStatesYData], "Num Abstract States", taskName, yDataNames=["Num. Abstract States", "Num. GroundS tates"])
+	plot(epsilons, [numStates, numGroundStatesYData], "Num Abstract States", taskName, yDataNames=["Num. Abstract States", "Num. Ground States"])
 	plot(epsilons, [abstractStateVals, groundStateVals, randYData], "Value of Abstract Policy Init Ground State", taskName, yDataNames=["Val. Abstract Policy", "Val. Optimal Policy", "Val. Random Policy"])
 	plot(abstractStateVals, numStates, "Num States", taskName, scatter=True, xAxisLabel="Abstract Policy Value", epsilons=epsilons)
 

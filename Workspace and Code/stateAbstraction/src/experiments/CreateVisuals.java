@@ -5,6 +5,7 @@ import java.util.List;
 
 import graphStateAbstractionTest.VIParams;
 import graphStreamVisualizer.GraphStreamVisualizer;
+import stateAbstractor.PhiAStar;
 import stateAbstractor.PhiSAReal;
 import stateAbstractor.StateAbstractor;
 import SARealGenerators.qValueGenerator;
@@ -23,7 +24,9 @@ import burlap.oomdp.singleagent.RewardFunction;
 import burlap.oomdp.statehashing.SimpleHashableStateFactory;
 import domains.GraphRF;
 import domains.NormalDomainToGraphDomain;
+import domains.minefield.MinefieldGenerator;
 import domains.nchain.NChainGenerator;
+import domains.randommdp.RandomMDPGenerator;
 import domains.taxi.GetPassengerOptionMaker;
 import domains.taxi.TaxiDomainGenerator;
 import domains.trench.TrenchDomainGenerator;
@@ -56,7 +59,8 @@ public class CreateVisuals {
 		
 		// Abstract the MDP.
 		qValueGenerator qGen = new qValueGenerator(graphDomain, graphRF, initGraphState, graphTF);
-		StateAbstractor qPhi = new PhiSAReal(qGen, epsilon, graphDomain.getActions());
+//		StateAbstractor qPhi = new PhiSAReal(qGen, epsilon, graphDomain.getActions());
+		StateAbstractor qPhi = new PhiAStar(qGen, epsilon, graphDomain.getActions());
 		GraphDefinedDomain abstractDG = qPhi.abstractMDP(graphDefinedDomain, graphRF, graphTF, initGraphState);
 		RewardFunction abstractRF = qPhi.getRewardFunction();
 		Domain abstractDomain = abstractDG.generateDomain();
@@ -101,11 +105,25 @@ public class CreateVisuals {
 		compressAndVisualizeMDP(graphDefinedDomain, graphTF, graphRF, initGraphState, epsilon);
 	}
 	
+	public static void convertCompressAndVisualizeMDPOptions(DomainGenerator gen, TerminalFunction tf, RewardFunction rf, State initialState, double epsilon, List<Option> options) {
+		
+		// Convert to graph domain.
+		NormalDomainToGraphDomain graphMaker = new NormalDomainToGraphDomain(gen, tf, rf, initialState);
+		GraphDefinedDomain graphDefinedDomain = graphMaker.createGraphDomain(options);
+		TerminalFunction graphTF = new NullTermination();
+		Domain graphDomain = graphDefinedDomain.generateDomain();
+		RewardFunction graphRF = new GraphRF(graphDomain, rf, tf, graphMaker.graphIndexToNonGraphState, graphMaker.graphActionIndexToNonGraphAction);
+		State initGraphState = GraphDefinedDomain.getState(graphDomain, graphMaker.initStateID);
+		
+		// Compress and visualize.
+		compressAndVisualizeMDP(graphDefinedDomain, graphTF, graphRF, initGraphState, epsilon);
+	}
+	
 	public static void main(String[] args) {
 		
 		// Change the text here to switch between visuals.
-		String domainToVisualize = "UPWORLD"; // One of "TRENCH", "UPWORLD", "NCHAIN", "TAXI" or add your own.
-		double epsilon = .01;
+		String domainToVisualize = "TAXI"; // One of "TRENCH", "UPWORLD", "NCHAIN", "TAXI" or add your own.
+		double epsilon = 0.03;
 		
 		if (domainToVisualize == "TRENCH") {
 			// Create trench domain.
@@ -136,11 +154,32 @@ public class CreateVisuals {
 			TerminalFunction tf = new TaxiDomainGenerator.TaxiTF();
 			RewardFunction rf = new TaxiDomainGenerator.TaxiRF();
 			State initialTaxiState = taxiGen.getInitialState(d);
-			convertCompressAndVisualizeMDP(taxiGen, tf, rf, initialTaxiState, epsilon);
+			List<Option> taxiOptions = taxiGen.getOptions(d);
+			convertCompressAndVisualizeMDPOptions(taxiGen, tf, rf, initialTaxiState, epsilon, taxiOptions);
+		}
+		else if (domainToVisualize == "MINEFIELD") {
+			// Create upworld domain.
+			int minefieldHeight = 10;
+			int minefieldWidth = 4;
+			int numMineStates = 5;
+			GraphDefinedDomain minefieldGen = MinefieldGenerator.getMinefield(minefieldHeight, minefieldWidth);
+			Domain minefieldDomain = minefieldGen.generateDomain();
+			State initialMinefieldState = GraphDefinedDomain.getState(minefieldDomain, 0);
+			RewardFunction minefieldRF = new MinefieldGenerator.MinefieldRF(numMineStates, minefieldHeight * minefieldWidth);
+			compressAndVisualizeMDP((GraphDefinedDomain) minefieldGen, new NullTermination(), minefieldRF, initialMinefieldState, epsilon);
+		}
+		else if (domainToVisualize == "RANDOM") {
+			int numRandStates = 100;
+			int numRandActions = 3;
+			GraphDefinedDomain randGen = RandomMDPGenerator.getRandomMDP(numRandStates, numRandActions);
+			Domain randDomain = randGen.generateDomain();
+			State initialRandState = RandomMDPGenerator.getInitialState(randDomain);
+			RewardFunction randRF = new RandomMDPGenerator.RandomMDPRF(numRandStates);
+			compressAndVisualizeMDP((GraphDefinedDomain) randGen, new NullTermination(), randRF, initialRandState, epsilon);
 		}
 		else {
 			// Create nchain domain.
-			int numStates = 20;
+			int numStates = 10;
 			GraphDefinedDomain gen = NChainGenerator.getNStateChain(numStates);
 			Domain d = gen.generateDomain();
 			State initialState = GraphDefinedDomain.getState(d, 0);
