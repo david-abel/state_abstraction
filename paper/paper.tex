@@ -614,22 +614,26 @@ We also note that any abstraction that depends only on the reward function, $\ma
 
 
 
+% -----------------------------------------------
 % --- SECTION: Example Domains ---
+% -----------------------------------------------
 \section{Example Domains}
 
-To demonstrate the efficacy of these approximate abstraction functions, we test out functions in the $\ep{Q^*}$ abstraction on a variety of domains. We compare the number of states in the abstract MDP to different values of $\epsilon$, as well as the value difference between the optimal policy in the abstract MDP compared to the ground MDP.
+To demonstrate the efficacy of these approximate abstraction functions, we test out functions in the $\ep{Q^*}$ abstraction family on a variety of domains. We compare the number of states in the abstract MDP to different values of $\epsilon$, as well as the value difference between the optimal policy in the abstract MDP compared to the ground MDP. More specifically, we relate $\epsilon$ to
+\begin{equation}
+|V^{\pi_G^*}(s_{init}) - V^{\pi_A^*}(s_{init})|
+\end{equation}
 
-The domains we evaluate in are UpWorld, a contrived version of Grid World in which the agent can only move left, right, and up (where up is always optimal, thus the name), 5Chain, the classic exploration task form the Bayesian Reinforcement Learning literature, the goal-based Trench task introduced by CITE DABE, and the Minefield domain. Our code base provides implementations to visualize, abstract, and evaluate arbitrary MDPs to promote further investigation into approximate abstraction.
+For different values of $\epsilon$.
 
-
-\dnote{For each section, we'll include a plot comparing $\epsilon$ to \# states, and $\epsilon$ to performance. For UpWorld and NChain, we can include visuals of uncompressed and compressed (not useful for trench).}
+The domains we evaluate in are UpWorld, Nchain, Trench, and Minefield. UpWorld is a contrived version of Grid World in which the agent can only move left, right, and up (where up is always optimal, thus the name). NChain is a classic exploration task from the Bayesian Reinforcement Learning literature. Trench is a highly challenging goal-based task introduced by CITE DABE. Lastly, the Minefield domain is similar to UpWorld, but introduces stochastic transition dynamics, . Our code base provides implementations to visualize, abstract, and evaluate arbitrary MDPs to promote further investigation into approximate abstraction.
 
 % Subsection: UpWorld.
 \subsection{UpWorld}
 
-The UpWorld task is an $N\times M$ grid in which the agent starts in the lower left corner. The agent may move left, right, and up. The agent receives positive reward for transitioning to a state at the top of the grid, where moving up in the top cells self transitions. the agent receives 0 reward for all other transitions. Consequently, moving up is always the optimal thing to do, since moving left and right does not change the agent's manhattan distance to positive reward. During experimentation, we set $N=10$, $M=4$. 
+The UpWorld task is an $N\times M$ grid in which the agent starts in the lower left corner. The agent may move left, right, and up. The agent receives positive reward for transitioning to a state at the top of the grid, where moving up in the top cells self transitions. the agent receives 0 reward for all other transitions. Consequently, moving up is always the optimal action, since moving left and right does not change the agent's manhattan distance to positive reward. During experimentation, we set $N=10$, $M=4$.
 
-% PUT INTO RESULTS One interesting fact about UpWorld is that, if $M$ the width of the grid, is defined to be an arbitrary function of $N$, say $k^N$ for some $k \in \mathbb{Z}$, then optimality preserving abstractions can arbitrarily reduce the sample complexity of the problem.
+
 
 \begin{figure}
 \subfigure[Ground UpWorld]{
@@ -643,8 +647,10 @@ The UpWorld task is an $N\times M$ grid in which the agent starts in the lower l
 % Insert visual and/or stats on number of states and performance of VI solving the abstract MDP and evaluating the resulting policy on the original MDP
 
 
-% Subsection: 5Chain.
+% Subsection: NChain.
 \subsection{NChain}
+
+
 
 % Insert visual and/or stats on number of states and performance of VI solving the abstract MDP and evaluating the resulting policy on the original MDP
 
@@ -660,7 +666,7 @@ The UpWorld task is an $N\times M$ grid in which the agent starts in the lower l
 % Subsection: Minefield.
 \subsection{Minefield}
 
-There is some slip probability associated with movement; when the agent moves left or right, it has probability $x$ of moving up, when the agent moves up, it has probability $\frac{x}{2}$ of moving left, and probability $\frac{x}{2}$ of moving right.
+Minefield is identical to UpWorld, except the transitions and rewards are perturbed slightly. In particular, there is some slip probability associated with movement; when the agent moves left or right, it has probability $x$ of moving up, when the agent moves up, it has probability $\frac{x}{2}$ of moving left, and probability $\frac{x}{2}$ of moving right. The reward function is nearly identical to UpWorld: transitions to the top row in the grid receive $1.0$ reward, all other transitions receive $0.2$ reward, except for a random set of $\kappa$ states that receive $0$ reward (these are the mine states, that receive $\textsc{RMin}$). During experimentation, we set $N=10, M=4, \epsilon=1.1, \kappa = 5, x = 0.01$.
 
 \begin{figure}
 \subfigure[Ground Minefield]{
@@ -697,9 +703,11 @@ To demonstrate the effects of approximate abstraction on goal-based tasks, we in
 % Figure: Epsilon vs. #States for all three sample domains.
 \begin{figure}
 \subfigure[UpWorld]{
-\includegraphics[width=0.28\columnwidth]{figures/placeholder.png}}
+\includegraphics[width=0.28\columnwidth]{figures/upworld_epsilon_vs_num_abstract_states.png}}
 \subfigure[NChain]{
-\includegraphics[width=0.28\columnwidth]{figures/placeholder.png}}
+\includegraphics[width=0.28\columnwidth]{figures/nchain_epsilon_vs_num_abstract_states.png}}
+\subfigure[Minefield]{
+\includegraphics[width=0.28\columnwidth]{figures/minefield_epsilon_vs_num_abstract_states.png}}
 \subfigure[Trench]{
 \includegraphics[width=0.28\columnwidth]{figures/placeholder.png}}
 \label{fig:eps-states}
@@ -709,13 +717,13 @@ To demonstrate the effects of approximate abstraction on goal-based tasks, we in
 % Figure: Epsilon vs. Error in Abstract Value Function
 \begin{figure}
 \subfigure[UpWorld]{
-\includegraphics[width=0.28\columnwidth]{figures/placeholder.png}}
+\includegraphics[width=0.28\columnwidth]{figures/upworld_epsilon_vs_value_of_abstract_policy_init_ground_state.png}}
 \subfigure[NChain]{
-\includegraphics[width=0.28\columnwidth]{figures/placeholder.png}}
-\subfigure[Trench]{
-\includegraphics[width=0.28\columnwidth]{figures/placeholder.png}}
+\includegraphics[width=0.28\columnwidth]{figures/nchain_epsilon_vs_value_of_abstract_policy_init_ground_state.png}}
+\subfigure[Minefield]{
+\includegraphics[width=0.28\columnwidth]{figures/minefield_epsilon_vs_value_of_abstract_policy_init_ground_state}}
 \label{fig:eps-states}
-\caption{$\epsilon$ vs. Error in Abstract Value Function}
+\caption{$\epsilon$ vs. the Value under the Abstract Policy in the Initial Ground State}
 \end{figure} 
 
 
