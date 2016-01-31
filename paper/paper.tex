@@ -75,7 +75,7 @@ The combinatorial explosion that plagues planning and \ac{RL} algorithms can be 
 
 % --- SECTION: Introduction ---
 \section{Introduction}
-Abstraction plays a fundamental role in learning. Through abstraction, intelligent agents may reason about only the salient features of their environment while ignoring what is irrelevant, consequently enabling agents to solve considerably more complex problems. However, the knowledge available to a learning agent at any given moment is approximate \dnote{Change this sentence}. Thus, agents must determine when their knowledge is sufficiently accurate to form the basis of abstraction. This work characterizes what is ``sufficiently accurate" information for abstraction amounts to in the context of planning and \ac{RL} in \acp{MDP}.
+Abstraction plays a fundamental role in learning. Through abstraction, intelligent agents may reason about only the salient features of their environment while ignoring what is irrelevant, consequently enabling agents to solve considerably more complex problems. However, the knowledge available to a learning agent at any given moment is approximate \dnote{Change this sentence}. Thus, agents must determine when their knowledge is sufficiently accurate to form the basis of abstraction. This work characterizes what ``sufficiently accurate" information for abstraction amounts to in the context of planning and \ac{RL} in \acp{MDP}.
 
 % Abstraction is a good idea b/c MDP has poly comp comp and samp comp in S, but S grows fast.
 Solving for optimal behavior in \acp{MDP} in a planning setting is known to be P-Complete in the size of the state space~\cite{littman1995complexity,papadimitriou1987complexity}. Similarly, many \ac{RL} algorithms for solving \acp{MDP} are known to require a number of samples polynomial in the size of the state space~\cite{strehl2009reinforcement}. Although polynomial runtime or sample complexity may seem like a reasonable constraint, due to Bellman's curse of dimensionality the size of the state space of an \ac{MDP} grows super-polynomially with the number of variables that characterize the domain. Thus, polynomial behavior in state space size often translates to intractability for sufficiently complicated tasks. \dnote{Would prefer a different example} For instance, a robot involved in a pick and place task might be able employ planning algorithms to solve for how to manipulate some objects into a desired configuration in time polynomial in the number of states, but the number of states it must consider to do so grows exponentially with the number of objects it plans over CITE DABE ICAPS.
@@ -513,10 +513,10 @@ where $X(s_A) = \{ g' \in \mcS | \epM(g') = s_A \}$
 {\bf Lemma 2:} When $S_A$ is created using a function of the $\ep_{model}$ type:
 \begin{equation}
 \label{eq:lemma2}
-\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{2\epsilon + 2\gamma(|\mcS-1|\epsilon)}{(1-\gamma)^3}
+\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{2\epsilon + 2\gamma((|\mcS_G|-1)\epsilon)}{(1-\gamma)^3}
 \end{equation}
 
-{\bf Proof:} Our proof proceeds as follows: we demonstrate that states grouped aggregated under $\epM$ have Q values all within a particular bound. Consequently $\epM$ abstractions are interpretable as an instantiation of of $\epQ$ with a particular $\epsilon$ -- understanding $\epM$ abstractions allows us to conclude our bound by applying Lemma 1.
+{\bf Proof:} Our proof proceeds as follows: we demonstrate that states grouped aggregated under $\epM$ have Q values all within a particular bound. Consequently $\epM$ abstractions are interpretable as an instantiation of $\epQ$ with a particular $\epsilon$ -- understanding $\epM$ abstractions allows us to conclude our bound by applying Lemma 1.
 
 
 Let $B$ stand for the maximum Q difference between any pair of ground states in the same abstract state under $\epM$:
@@ -525,20 +525,15 @@ Let $B$ stand for the maximum Q difference between any pair of ground states in 
 B = &\max_{s_A \in \mcS_A, s_1, s_2 \in X(s_A), a} |Q(s_1, a) - Q(s_2, a)|\\
 =&\max_{s_A \in \mcS_A, s_1, s_2 \in X(s_A), a}      |R(s_1, a) - R(s_2, a) +\\
 & \gamma \sum_{g' \in \mcS_G}(\mcT(s_1,a,g')-\mcT(s_2, a, g'))\max_{a'}Q(g', a')|\\
-&\leq \epsilon + \gamma \sum_{s_A \in \mcS_A}\sum_{g' \in \mcS_G}\left[(T(s_1, a, g')-T(s_2, a, g')) 		\max_{a'}Q(g', a')	\right]\\
+\leq &\epsilon + \gamma \sum_{s_A \in \mcS_A}\sum_{g' \in X(s_A)}\left[(T(s_1, a, g')-T(s_2, a, g')) 		\max_{a'}Q(g', a')	\right]\\
 &\text{By the similarity of transitions of grouped states under $\epM$:}\\
-& \leq \epsilon + \gamma \sum_{s_A \in \mcS_A} \epsilon Q_{max} \\
-&\leq \epsilon + \gamma|\mcS|\epsilon Q_{max}\\
+ \leq &\epsilon + \gamma Q_{max} \sum_{s_A \in \mcS_A} \epsilon \\
+\leq& \epsilon + \gamma|\mcS_G|\epsilon Q_{max}\\
 &\text{Applying 0-1 reward normalization and algebra:}\\
-& \leq \frac{\epsilon + \gamma(|\mcS| - 1) \epsilon}{1-\gamma}
+ \leq & \frac{\epsilon + \gamma(|\mcS_G| - 1) \epsilon}{1-\gamma}
 \end{align*}
 
-Since the Q values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\epsilon = B$. Applying Lemma 1, this yields Equation \ref{eq:lemma2}.
-
-
-
-
-
+Since the Q values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\epsilon = B$. Applying Lemma 1 yields Equation \ref{eq:lemma2}.
 
 % Subsection: Multinomial over Optimal Q
 \enote{If not here, we should have some motivation for multinomial (and boltz)}
@@ -600,8 +595,6 @@ Similarly to the multinomial abstraction, we let $\phi_{bolt}$ define a type of 
 
 
 
-
-
 % Subsection: Other Abstractions
 \subsection{Other Abstractions}
 
@@ -646,7 +639,7 @@ NChain is a simple MDP heavily investigated in the Bayesian Reinforcement Learni
 \subfigure[Abstract NChain]{
 \includegraphics[width=0.48\columnwidth]{figures/abs_nchain.png}}
 \label{fig:nchain-visual}
-\caption{Comparison of Original NChain MDP and Abstract NChain MDP, under $\epQ$, with $\epsilon=0.5$}
+\caption{Comparison of Original NChain MDP and Abstract NChain MDP, under an $\epQ$ abstraction, with $\epsilon=0.5$}
 \end{figure} 
 
 
@@ -676,7 +669,7 @@ Taxi has long been studied by the hierarchical reinforcement learning literature
 \subfigure[Abstract Taxi]{
 \includegraphics[width=0.48\columnwidth]{figures/abs_taxi.png}}
 \label{fig:taxi-visual}
-\caption{Comparison of Original Taxi MDP and Abstract Taxi MDP, under $\epQ$, with $\epsilon=0.03$}
+\caption{Comparison of Original Taxi MDP and Abstract Taxi MDP, under an $\epQ$ abstraction, with $\epsilon=0.03$}
 \end{figure} 
 
 
@@ -695,7 +688,7 @@ Minefield is a slight variant of Grid World. The transitions and rewards are per
 \subfigure[Abstract Minefield]{
 \includegraphics[width=0.48\columnwidth]{figures/abs_minefield.png}}
 \label{fig:minefield-visual}
-\caption{Comparison of Original Minefield MDP and Abstract MDP, under $\epQ$, with $\epsilon=1.1$}
+\caption{Comparison of Original Minefield MDP and Abstract MDP, under an $\epQ$ abstraction, with $\epsilon=1.1$}
 \end{figure} 
 
 
@@ -711,7 +704,7 @@ The Random MDP domain we consider is as follows. There are $N$ states, and $K$ a
 \subfigure[Abstract Random]{
 \includegraphics[width=0.48\columnwidth]{figures/abs_random.png}}
 \label{fig:minefield-visual}
-\caption{Comparison of Original Random MDP and Abstract Random MDP, under $\epQ$, with $\epsilon=0.2$}
+\caption{Comparison of Original Random MDP and Abstract Random MDP, under an $\epQ$ abstraction, with $\epsilon=0.2$}
 \end{figure} 
 
 
