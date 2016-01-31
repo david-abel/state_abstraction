@@ -500,112 +500,44 @@ Thus, we conclude
 
 Inspired by the model-irrelevance abstraction, we consider the approximate case. We let $\phi_{model}$ define a type of abstraction that, for fixed $\epsilon$, satisfies:
 \begin{multline}
-\ep_{model}(s_1) = \ep_{model}(s_2) \rightarrow \\
-\forall_a \left|\mathcal{R}(s_1, a) - \mathcal{R}(s_2, a)\right| \leq \epsilon \wedge\ \\
-\forall_{a,s'} \left|\mathcal{T}(s_1, a,s') - \mathcal{T}(s_2, a,s')\right| \leq \epsilon
+\epM(s_1) = \epM(s_2) \rightarrow \\
+\forall_a \left| \mcR(s_1, a) - \mcR(s_2, a)\right| \leq \epsilon \wedge\ \\
+\forall_{s_A \in \mcS_A} \left|\sum_{g' \in X(s_A)}\mcT(s_1, a, g') - \mcT(s_2, a,g')\right| \leq \epsilon
 \end{multline}
+where $X(s_A) = \{ g' \in \mcS | \epM(g') = s_A \}$
+
+\enote{Do we want to make it clear that this is ground transitions and rewards?}
+
+\enote{Note that it is possible }
 
 {\bf Lemma 2:} When $S_A$ is created using a function of the $\ep_{model}$ type:
 \begin{equation}
 \label{eq:lemma2}
-\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{{\epsilon_{\mathcal{R}}} + \gamma |\mathcal{S}|\epsilon_{\mathcal{T}}}{(1-\gamma)^3}
+\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{2\epsilon + 2\gamma(|\mcS-1|\epsilon)}{(1-\gamma)^3}
 \end{equation}
 
-{\bf Proof:} Our proof proceeds as follows: converting a ground \ac{MDP}, $M_G$, to an abstract \ac{MDP}, $M_A$, using a fixed but arbitrary aggregation function, $\ep_m$, that satisfies the $\epM$ criteria is shown to be equivalent to creating an intermediate \ac{MDP}, ${M_G}'$ and then applying an aggregation of the $\pM$ type. ${M_G}'$ is shown to have Q values identical to $M_A$ and Q values boundedly close to $M_G$ -- applying Lemma 1 we are able to conclude Lemma 2.
+{\bf Proof:} Our proof proceeds as follows: we demonstrate that states grouped aggregated under $\epM$ have Q values all within a particular bound. Consequently $\epM$ abstractions are interpretable as an instantiation of of $\epQ$ with a particular $\epsilon$ -- understanding $\epM$ abstractions allows us to conclude our bound by applying Lemma 1.
 
-\enote{Maybe introduce language of ``homogenization"}
 
-\begin{equation}
-{M_G}' =  \langle \mcS_G, \mathcal{A}, {\mcR_G}', {\mcT_G}', \gamma \rangle
-\end{equation}
+Let $B$ stand for the maximum Q difference between any pair of ground states in the same abstract state under $\epM$:
 
-Where
-\begin{align}
-&{\mcR_G}'(s,a) = \mcR_A(\ep_m(s), a)\\
-&{\mcT_G}'(s,a, s') = \frac{\mcT_A(\ep_m(s), a, \ep_m(s'))}{|X(s')|}
-\end{align}
-
-where $X(s') = \{g \in \mathcal{S}_G | \ep_m(g) = \ep_m(s')\}$.
-\enote{Disambiguate this X from earlier X}
-
-It is easily verifiable that ${\mcT_G}'$ is a probability distribution.
-
-Next note that the rewards of states in ${M_G}'$ that are aggregated in $M_A$ are identical:
 \begin{align*}
-&\forall{s1_G, s2_G \in \mc{S}_G, a} \\
-&\left[ \epM(s1_G) = \epM(s2_G) \rightarrow {\mcR_G}'(s1_G, a) = {\mcR_G}'(s2_G, a) \right]
+B = &\max_{s_A \in \mcS_A, s_1, s_2 \in X(s_A), a} |Q(s_1, a) - Q(s_2, a)|\\
+=&\max_{s_A \in \mcS_A, s_1, s_2 \in X(s_A), a}      |R(s_1, a) - R(s_2, a) +\\
+& \gamma \sum_{g' \in \mcS_G}(\mcT(s_1,a,g')-\mcT(s_2, a, g'))\max_{a'}Q(g', a')|\\
+&\leq \epsilon + \gamma \sum_{s_A \in \mcS_A}\sum_{g' \in \mcS_G}\left[(T(s_1, a, g')-T(s_2, a, g')) 		\max_{a'}Q(g', a')	\right]\\
+&\text{By the similarity of transitions of grouped states under $\epM$:}\\
+& \leq \epsilon + \gamma \sum_{s_A \in \mcS_A} \epsilon Q_{max} \\
+&\leq \epsilon + \gamma|\mcS|\epsilon Q_{max}\\
+&\text{Applying 0-1 reward normalization and algebra:}\\
+& \leq \frac{\epsilon + \gamma(|\mcS| - 1) \epsilon}{1-\gamma}
 \end{align*}
 
-The transitions of states in ${M_G}'$ that are aggregated in $M_A$ are identical :
-\begin{align}
-\forall{s1_G, s2_G, {s_G}' \in \mcS_G, a} \nonumber\\
-\left[ \epM(s1_G) = \epM(s2_G) \rightarrow {\mcT_G}'(s1_G, a, {s_G}') = {\mcT_G}'(s2_G, a, {s_G}') \right] \wedge\label{eq:sameTrans}
-\end{align}
+Since the Q values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\epsilon = B$. Applying Lemma 1, this yields Equation \ref{eq:lemma2}.
 
-Additionally, it is easily verified \enote{or not -- consider adding proof} that transitions and rewards in $M_G'$ are within $\epsilon$ of those in $M_G$:
-\begin{align*}
-\forall{s,s' \in \mcS_G, a} : |\mcT_G'(s,a,s') - \mcT_G(s,a,s')| \leq \epsilon\\
-\forall{s \in \mcS_G, a} : |\mcR_G'(s,a) - \mcR_G(s,a)| \leq \epsilon
-\end{align*}
 
-\enote{If this is the case, why can't we just leverage the simulation lemma?...}
 
-Now consider applying to $M_G$' the state aggregation scheme, $\phi_m$, which satisfies the following:
-\begin{align}
-\forall{a, s_G \in \mcS_G} \left[\epM(s1_G) =\epM(s2_G) \leftrightarrow \phi_m(s1_G) = \phi_m(s2_G) \right] \label{eq:sameR}
-\end{align}
 
-$\phi_m$ is of the $\pM$ type and when applied to ${M_G}'$ results in $M_A$.
-
- \cite{li2006towards} demonstrate that abstraction schemes of the $\pM$ type maintain Q values so we know that $\forall{s_G \in \mcS_G}  \left[ Q_{G'}(s_G) = Q_{A}(\epM(s_G)) \right]$ where $Q_{G'}$ is the Q function in ${M_G}'$ and $Q_G$
-  
-Knowing that the Q values in $M_A$ are identical to those in ${M_G}'$, we now demonstrate that those of $M_G$ are boundedly close to those of ${M_G}'$.
-
-For the remainder of the proof, $s, s' \in \mcS_G$.
-
-Let the maximum Q difference in ${M_G}'$ and $M_G$ be $B$:
-\begin{align*}
-B = &\max_{s,a}|Q_{G'}(s,a)-Q_{G}(s,a)|\\
-%B_{s} &= \max_{s,a}|R'(s,a) - R(s,a) + \gamma \sum_{s'}\left[T'(s,a,s')\max_{a'}Q'(s',a')-T(s,a,s')\max_{a'}Q(s', a')\right]|\\
-&\text{Applying the definition of Q values:}\\
-%---Write out using Q definitions
-B \leq &\max_{s,a} |\mcR_G'(s,a)-\mcR(s,a) +  \gamma \sum_{s'} \\
-&\left[ \mcT_G'(s, a, s')\max_{a'}Q_G'(s', a') - \mcT_G(s, a, s')\max_{a'}Q_G(s', a')\right] |\\
-%---Apply WLOG
-& \text{ WLOG }T'(s,a,s')\max_{a'}Q'(s',a') \geq T(s,a,s')\max_{a'}Q(s',a')\\
-\leq &\max_{s,a}(|\mcR_G'(s,a)-\mcR(s,a)| + \gamma \sum_{s'} \\
-&\max_{a'} [(\mcT_G'(s,a,s'))Q_G'(s', a')-\mcT_G(s,a,s')Q_G(s',a')])\\
-%---Apply epsilon to reward and transitions
-\leq & \epsilon +\\
-& \gamma \sum_{s'}  \max_{a'} [(\epsilon+ \mcT_G(s,a,s'))Q_G'(s', a')-\mcT_G(s,a,s')Q_G(s',a')])\\
-%---Do algebra
-= & \epsilon +\\
-&\gamma \sum_{s'}  \max_{a'} [\epsilon Q_G'(s', a')+ \mcT_G(s,a,s')(Q_G'(s', a') - Q_G(s', a'))])
-%---Pull terms out of some
-&\leq \epsilon+\gamma |\mcS|\epsilon Q'_{\text{max}} + \gamma \sum_{s'}\left[ \mcT(s,a,s') B\right]\\
-&\leq \epsilon + \gamma B + \gamma |\mcS|\epsilon Q'_{max}
-\end{align*}
-
-Applying $Q'_{max}=V'_{max} \leq V_{max}=\frac{1}{1-\gamma}$:
-\begin{align*}
-B &\leq 
-\frac
-{ \gamma |\mathcal{S} + 1 |\epsilon}
-{(1-\gamma)^2}
-\end{align*}
-
-Therefore:
-\begin{align*}
-\forall_{s,a} : &|Q_A(s,a) - Q_G(s,a)| = |Q_G'(s,a) - Q_G(s,a)| \\
-&\leq \max_{s,a}|Q_G'(s,a)-Q_G(s,a)| \\
-&\leq  \frac{\gamma |\mathcal{S} + 1|\epsilon}{(1-\gamma)^2}
-\end{align*}
-
-Consequently, by the logic of the proof for Lemma 1, we conclude that:
-\begin{equation}
-\forall_s : |V^{\pi^*_M}(s) - V^{\pi^*_{A}}(s)| \leq
-\frac{2\gamma|\mcS + 1|\epsilon}{(1-\gamma)^3}
-\end{equation}
 
 
 % Subsection: Multinomial over Optimal Q
@@ -681,7 +613,7 @@ Additionally, we are {\it not} going to provide results for $\phi_{Q^\pi}$, sinc
 
 Lastly, we are interested in a generalization of $\phi_{mult}$  and $\phi_{bolt}$ that handles a broader space of distributions over Q values.
 
-We also note that any abstraction that depends only on the reward function, $\mathcal{R}$, can incur unbounded error (or rather, $\textsc{VMax}$).
+We also note that any abstraction that depends only on the reward function, $\mathcal{R}$, can incur unbounded error (or rather, $\textsc{VMax}$).`
 
 % Some abstractions DON'T preserve a meaningful notion of optimality.
 
@@ -692,7 +624,7 @@ We also note that any abstraction that depends only on the reward function, $\ma
 % -----------------------------------------------
 \section{Example Domains}
 
-To demonstrate the efficacy of these approximate abstraction functions, we test out functions in the $\ep{Q^*}$ abstraction family on a variety of domains. We compare the number of states in the abstract MDP to different values of $\epsilon$, as well as the value difference between the optimal policy in the abstract MDP compared to the ground MDP. More specifically, we relate $\epsilon$ to:
+To demonstrate the efficacy of these approximate abstraction functions, we test functions in the $\ep{Q^*}$ abstraction family on a variety of domains. We compare the number of states in the abstract MDP to different values of $\epsilon$, as well as the value difference between the optimal policy in the abstract MDP compared to the ground MDP. More specifically, we relate $\epsilon$ to:
 \begin{equation}
 |V^{\pi_G^*}(s_{init}) - V^{\pi_A^*}(s_{init})|
 \end{equation}
