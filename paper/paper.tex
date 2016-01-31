@@ -628,6 +628,8 @@ For different values of $\epsilon$.
 % Description of visuals.
 Our code base provides implementations to visualize, abstract, and evaluate arbitrary MDPs to promote further investigation into approximate abstraction. The included visuals of compressed MDPs always converts MDPs into a graph so that an arbitrary MDP may be visualized when abstracted. We use the graph visualization library GraphStream~\cite{graphstream}. In our visuals, a grey circle indicates a state, while the colored arrows indicate transitions. The thickness of the arrow indicates how much reward is associated with that transition. In the ground MDPs, states are labeled with a number. In some abstract MDPs, we indicate which ground states were collapsed to each abstract state (some are visually unwieldy and so were ignored).
 
+\dnote{One thing we want to add is a description of how diverse these domains are!}
+\dnote{Also put in a note that we're using a uniform weighting scheme}
 
 % Subsection: NChain.
 \subsection{NChain}
@@ -716,6 +718,17 @@ The Random MDP domain we consider is as follows. There are $N$ states, and $K$ a
 
 % --- SECTION: Approximate Abstraction on Example Domains ---
 \section{Approximate Abstraction on Example Domains}
+
+Here we discuss the results shown in states blah blah \dnote{Description of this section}.
+
+
+\begin{itemize}
+\item For $\epsilon > 0$, there are extremely useful abstractions to be made. Want to emphasize that with approximate knowledge of X, can still abstract effectively (point out Minefield + NChain both retain a very good policy from abstract MDP). This hits the learnable point.
+\item Explain goal based/Taxi (regenerate plot for different scale of epsilon)
+\item Possibly talk about stochasticity (low priority)
+\item Explain Random behavior, smooth interpolation, mention randomness, etc.
+\item Describe plots a bit (what is the y-axis?)
+\end{itemize}
 
 % Figure: Epsilon vs. #States for all three sample domains.
 \begin{figure}
