@@ -47,12 +47,12 @@ public class EpsilonExperiments {
 	static String resultsDir = filePath + "/src/plotting/";
 
 	// Iterate over epsilon and compute the number of states.
-	final static double startEpsilon = 0.027;
-	final static double endEpsilon = 0.033;
+	final static double startEpsilon = 0.028;
+	final static double endEpsilon = 0.03;
 	final static double epsilonIncrement = 0.001;
-	final static int numTrials = 15;
-	final static String task = "TAXI"; // NCHAIN, TRENCH, TAXI, UPWORLD, RANDOM, MINEFIELD
-	final static boolean clearOldResults = false;
+	final static int numTrials = 5;
+	final static String task = "TAXI"; // ALL, NCHAIN, TRENCH, TAXI, UPWORLD, RANDOM, MINEFIELD
+	final static boolean clearOldResults = false; //IF THIS IS TRUE, WILL DELETE ALL OLD ACCUMULATED RESULTS
 
 	/**
 	 * Given a DomainGenerator + RF + TF + initState, this method generates abstract MDPs subject to different epsilons, and prints the results.

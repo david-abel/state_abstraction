@@ -12,10 +12,12 @@ import sys
 import os
 from os import listdir
 from os.path import isdir, join
+from collections import defaultdict
 import numpy as np
 import scipy as sp
 import scipy.stats as stats
 import math
+from math import log10, floor
 
 _markers = ['v','^','s']
 
@@ -99,33 +101,46 @@ def plot(xData, yData, yAxisLabel, taskName, scatter=False, xAxisLabel="Epsilon"
 	plt.clf()
 	# plt.show()
 	
+
 def	plotWithConfidenceIntervals(xData, allYData, yAxisLabel, taskName, confidence=.95, xAxisLabel="Epsilon", yDataNames=[]):
 	
 	maxY = -99999
 
+
 	for yDataIndex, yData in enumerate(allYData):
-		means = []
-		errors = []
-		#Setup legend names
+
+		#Grab legend name
 		legendInfo = ""
 		if len(yDataNames) > yDataIndex:
 			legendInfo = yDataNames[yDataIndex]
 
-		#Plot CIs if there is data for multiple trials
-		if (type(yData[0]) == list):
+		#If Y data is a constant, convert it to a list
+		if (not type(yData) == list):
+			maxY = max(maxY, yData)
+			plt.plot(xData, [yData]*len(xData), label=legendInfo, marker="o", markersize=10)
+		#If a list of constants plot as a line
+		elif(not type(yData[0]) == list):
+			maxY = max(maxY, max(yData))
+			plt.plot(xData, yData, label=legendInfo, marker="o", markersize=10)
+		#If a list of lists, plot CIs if there is data for multiple trials
+		elif (type(yData[0]) == list):
+			means = []
+			errors = []
+			numTrials = []
 			for yDataAcrossTrials in yData:
-				mean, plusminus = mean_confidence_interval(yDataAcrossTrials, confidence)
+				mean, plusminus, numTrial = mean_confidence_interval(yDataAcrossTrials, confidence)
 				if math.isnan(plusminus):
 					errors.append(0)
 				else:
 					errors.append(plusminus)
 				means.append(mean)
+				numTrials.append(numTrial)
 			maxY = max(maxY, max(means))
 			plt.errorbar(xData, means, yerr=errors, label=legendInfo)
-		#Otherwise just plot it without
-		else:
-			maxY = max(maxY, max(yData))
-			plt.plot(xData, yData, label=legendInfo, marker="o", markersize=10)
+			#Add annotation of # trials
+			for (i, x), y in zip(enumerate(xData), means):
+				matplotlib.rcParams.update({'font.size': 8})
+				plt.annotate(numTrials[i], xy=(x, y))
 
 	#Set x axis limits	
 	plt.xlim([min(0,min(xData)), max(xData)])
@@ -145,15 +160,15 @@ def	plotWithConfidenceIntervals(xData, allYData, yAxisLabel, taskName, confidenc
 	plt.grid(True)
 	plt.legend()
 	plt.savefig(taskName.lower() + '/' + xAxisLabel.lower() + '_vs_' + yAxisLabel.lower().replace(" ", "_") + '.png')
-	plt.clf()
-	# plt.show()
+	# plt.clf()
+	plt.show()
 
 
 def mean_confidence_interval(data, confidence):
 	mean, sigma = np.mean(data), np.std(data)
 	lowerMean, upperMean = stats.norm.interval(confidence, loc=mean, scale=sigma/math.sqrt(len(data)))
 
-	return mean, mean-lowerMean
+	return mean, mean-lowerMean, len(data)
 
 def makeAllPlots():
 	allLocalDirs = [f for f in listdir(".") if isdir(join(".", f))]
@@ -161,45 +176,50 @@ def makeAllPlots():
 	for taskName in allLocalDirs:
 		makePlot(taskName)
 
-def combineTrialData(trialToDataHM, indexOfData):
-	toReturn = []
+def round_sig(x, sig=4):
+	return round(x, sig-int(floor(log10(x)))-1)
 
-	for index, trialData in trialToDataHM.iteritems():
-		currData = trialData[indexOfData]
-		if len(toReturn) == 0:
-			for dataPoint in currData:
-				toReturn.append([dataPoint])
-		else:
-			for index, dataPoint in enumerate(currData):
-				toReturn[index].append(dataPoint)
+
+def combineTrialData(trialToDataHM, yDataIndex, xDataIndex):
+	# print "trialToDataHM:", trialToDataHM
+	xToListOfYData = defaultdict(list)
+	#Create HM from x values to list of y values across trials
+	for trialIndex, trialData in trialToDataHM.iteritems():
+		xData = trialToDataHM[trialIndex][xDataIndex]
+		for xIndex, x in enumerate(xData):
+			oldList = trialToDataHM[trialIndex][xIndex]
+			roundedX = round_sig(x)
+			xToListOfYData[roundedX].append(trialToDataHM[trialIndex][yDataIndex][xIndex])
+
+	#Convert HM to list
+	values = [(x , y) for x,y in xToListOfYData.iteritems()]
+	values = sorted(values, key=lambda x: x[0])
+
+	xValues = [x for (x,y) in values]
+	yValues = [y for (x,y) in values]
+
+	return xValues, yValues
 		
-	return toReturn
 
 def makePlot(taskName):
 	resultsFile = loadFile(taskName)
 
 	# Get results.
 	trialIndexToData = parseResultsFile(resultsFile)
-	epsilons = trialIndexToData[0][2]
-	numGroundStates = trialIndexToData[0][0]
-	randVal = trialIndexToData[0][1]
-	groundStateVals = trialIndexToData[0][4]
+	numGroundStates = trialIndexToData[0][0][0]
+	randPolVal = trialIndexToData[0][1][0]
+	groundStateVals = trialIndexToData[0][4][0]
 
 	# numGroundStates, randVal, epsilons, numStates, groundStateVals, abstractStateVals = parseResultsFile(resultsFile)[0]
 
-	numAbstractStates = combineTrialData(trialIndexToData, 3)
-	abstractStateVals = combineTrialData(trialIndexToData, 5)
+	numAbstractStatesEpsilons, numAbstractStates = combineTrialData(trialIndexToData, 3, 2)
+	abstratStateValEpsilons, abstractStateVals = combineTrialData(trialIndexToData, 5, 2)
 
-	# randDiffs = [abs(perf - randVal[0]) for perf in groundStateVals]
-	# performances = [abs(groundStateVals[i] - abstractStateVals[i]) for i in xrange(len(groundStateVals))]
-
-	# Get the random policy value and the number of ground states.
-	randYData = randVal*len(abstractStateVals)
-	numGroundStatesYData = numGroundStates*len(numAbstractStates)
+	print "numAbstractStatesEpsilons:", numAbstractStatesEpsilons
 
 	# Plot with CIs.
-	plotWithConfidenceIntervals(epsilons, [numAbstractStates, numGroundStatesYData],"Num Abstract States", taskName, yDataNames=["Num. Abstract States", "Num. Ground States"])
-	plotWithConfidenceIntervals(epsilons, [abstractStateVals, groundStateVals, randYData], "Value of Abstract Policy Init Ground State", taskName, yDataNames=["Val. Abstract Policy", "Val. Optimal Policy", "Val. Random Policy"])
+	plotWithConfidenceIntervals(numAbstractStatesEpsilons, [numAbstractStates, numGroundStates],"Num Abstract States", taskName, yDataNames=["Num. Abstract States", "Num. Ground States"])
+	plotWithConfidenceIntervals(abstratStateValEpsilons, [abstractStateVals, groundStateVals, randPolVal], "Value of Abstract Policy Init Ground State", taskName, yDataNames=["Val. Abstract Policy", "Val. Optimal Policy", "Val. Random Policy"])
 
 	#Old plotting without CIs
 	# plot(epsilons, [numStates, numGroundStatesYData], "Num Abstract States", taskName, yDataNames=["Num. Abstract States", "Num. Ground States"])
