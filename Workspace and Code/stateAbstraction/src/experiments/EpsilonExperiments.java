@@ -47,10 +47,10 @@ public class EpsilonExperiments {
 	static String resultsDir = filePath + "/src/plotting/";
 
 	// Iterate over epsilon and compute the number of states.
-	final static double startEpsilon = 0.028;
+	final static double startEpsilon = 0.029;
 	final static double endEpsilon = 0.03;
-	final static double epsilonIncrement = 0.001;
-	final static int numTrials = 5;
+	final static double epsilonIncrement = 0.0005;
+	final static int numTrials = 10;
 	final static String task = "TAXI"; // ALL, NCHAIN, TRENCH, TAXI, UPWORLD, RANDOM, MINEFIELD
 	final static boolean clearOldResults = false; //IF THIS IS TRUE, WILL DELETE ALL OLD ACCUMULATED RESULTS
 

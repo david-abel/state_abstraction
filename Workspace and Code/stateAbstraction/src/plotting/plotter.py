@@ -160,8 +160,8 @@ def	plotWithConfidenceIntervals(xData, allYData, yAxisLabel, taskName, confidenc
 	plt.grid(True)
 	plt.legend()
 	plt.savefig(taskName.lower() + '/' + xAxisLabel.lower() + '_vs_' + yAxisLabel.lower().replace(" ", "_") + '.png')
-	# plt.clf()
-	plt.show()
+	plt.clf()
+	# plt.show()
 
 
 def mean_confidence_interval(data, confidence):
@@ -176,12 +176,11 @@ def makeAllPlots():
 	for taskName in allLocalDirs:
 		makePlot(taskName)
 
-def round_sig(x, sig=4):
+def round_sig(x, sig=5):
 	return round(x, sig-int(floor(log10(x)))-1)
 
 
 def combineTrialData(trialToDataHM, yDataIndex, xDataIndex):
-	# print "trialToDataHM:", trialToDataHM
 	xToListOfYData = defaultdict(list)
 	#Create HM from x values to list of y values across trials
 	for trialIndex, trialData in trialToDataHM.iteritems():
@@ -214,8 +213,6 @@ def makePlot(taskName):
 
 	numAbstractStatesEpsilons, numAbstractStates = combineTrialData(trialIndexToData, 3, 2)
 	abstratStateValEpsilons, abstractStateVals = combineTrialData(trialIndexToData, 5, 2)
-
-	print "numAbstractStatesEpsilons:", numAbstractStatesEpsilons
 
 	# Plot with CIs.
 	plotWithConfidenceIntervals(numAbstractStatesEpsilons, [numAbstractStates, numGroundStates],"Num Abstract States", taskName, yDataNames=["Num. Abstract States", "Num. Ground States"])
