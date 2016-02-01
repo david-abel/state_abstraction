@@ -140,7 +140,7 @@ def	plotWithConfidenceIntervals(xData, allYData, yAxisLabel, taskName, confidenc
 				plt.annotate(numTrials[i], xy=(x, y))
 
 	#Set x axis limits	
-	plt.xlim([min(0,min(xData)), max(xData)])
+	plt.xlim([min(0,min(xData)), max(xData)*1.01])
 
 	#Set y axis limits
 	plt.ylim([0,maxY *1.2])
