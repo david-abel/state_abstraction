@@ -47,11 +47,12 @@ public class EpsilonExperiments {
 	static String resultsDir = filePath + "/src/plotting/";
 
 	// Iterate over epsilon and compute the number of states.
-	final static double startEpsilon = 0.0;
-	final static double endEpsilon = 0.50;
-	final static double epsilonIncrement = 0.05;
-	final static int numTrials = 10;
-	final static String task = "RANDOM"; // NCHAIN, TRENCH, TAXI, UPWORLD, RANDOM, MINEFIELD
+	final static double startEpsilon = 0.027;
+	final static double endEpsilon = 0.033;
+	final static double epsilonIncrement = 0.001;
+	final static int numTrials = 15;
+	final static String task = "TAXI"; // NCHAIN, TRENCH, TAXI, UPWORLD, RANDOM, MINEFIELD
+	final static boolean clearOldResults = false;
 
 	/**
 	 * Given a DomainGenerator + RF + TF + initState, this method generates abstract MDPs subject to different epsilons, and prints the results.
@@ -62,8 +63,10 @@ public class EpsilonExperiments {
 	 * @param initialState
 	 */
 	public static void generateEpsilonResults(GraphDefinedDomain graphDefinedDomain, RewardFunction graphRF, State initGraphState, String taskName) {
-		clearOldResultsFile(taskName);
-		for (int trialIndex = 0; trialIndex < numTrials; trialIndex++) {
+		if (clearOldResults) {
+			clearOldResultsFile(taskName);
+		}
+		for (int trialIndex = 1; trialIndex <= numTrials; trialIndex++) {
 			System.out.println("---Trial: " + trialIndex + "---");
 
 			List<EpsilonToNumStatesTuple> epsilonAndNumStatesPairs = QStarEpsilonTest.testQPhiStateReduction(graphDefinedDomain, graphRF, new NullTermination(), initGraphState, startEpsilon, endEpsilon, epsilonIncrement);
