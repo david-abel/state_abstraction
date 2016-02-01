@@ -5,6 +5,7 @@
 \usepackage{natbib}
 \usepackage{algorithm}
 \usepackage{amsmath}
+\usepackage{amsthm}%For stating numbered theorems
 \usepackage{amsfonts}
 \usepackage{algorithmic}
 \usepackage{subfigure}
@@ -13,13 +14,18 @@
 \usepackage{icml2016/icml2016} 
 \usepackage[nolist]{acronym} % Acronym package -- give argument <dua> to suppress acronym usage
 
+%THeorem declarations
+\newtheorem{thm}{Theorem}
+\newtheorem{lma}{Lemma}
+\newtheorem{clm}{Claim}
+\newtheorem{defn}{Definition}
+
 \icmltitlerunning{Suboptimality Bounds for Approximate State Abstraction}
 
 % --- Notation Commands ---
 \newcommand{\ep}{\widetilde \phi}
 \newcommand{\epQ}{\ep_{Q^*}}
 \newcommand{\epM}{\ep_{\text{model}}}
-\newcommand\defn[1]{{\bf Definition:} #1}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \newcommand{\mc}[1]{\mathcal{#1}}
@@ -77,7 +83,7 @@ The combinatorial explosion that plagues planning and \ac{RL} algorithms can be 
 Abstraction plays a fundamental role in learning. Through abstraction, intelligent agents may reason about only the salient features of their environment while ignoring what is irrelevant, consequently enabling agents to solve considerably more complex problems. However, in natural environments, no two states are identical. This work characterizes the impact of combining ``sufficiently similar'' states in the context of planning and \ac{RL} in \acp{MDP}.
 
 % Abstraction is a good idea b/c MDP has poly comp comp and samp comp in S, but S grows fast.
-Solving for optimal behavior in \acp{MDP} in a planning setting is known to be P-Complete in the size of the state space~\cite{papadimitriou1987complexity,littman1995complexity}. Similarly, many \ac{RL} algorithms for solving \acp{MDP} are known to require a number of samples polynomial in the size of the state space~\cite{strehl2009reinforcement}. Although polynomial runtime or sample complexity may seem like a reasonable constraint, due to Bellman's curse of dimensionality, the size of the state space of an \ac{MDP} grows super-polynomially with the number of variables that characterize the domain. Thus, bounds polynomial in state space size often translate to intractable problems for sufficiently complicated tasks. \dnote{Would prefer a different example} For instance, a robot involved in a pick and place task might be able to employ planning algorithms to solve for how to manipulate some objects into a desired configuration in time polynomial in the number of states, but the number of states it must consider to do so grows exponentially with the number of objects it plans over CITE DABE ICAPS.
+Solving for optimal behavior in \acp{MDP} in a planning setting is known to be P-Complete in the size of the state space~\cite{papadimitriou1987complexity,littman1995complexity}. Similarly, many \ac{RL} algorithms for solving \acp{MDP} are known to require a number of samples polynomial in the size of the state space~\cite{strehl2009reinforcement}. Although polynomial runtime or sample complexity may seem like a reasonable constraint, due to Bellman's curse of dimensionality, the size of the state space of an \ac{MDP} grows super-polynomially with the number of variables that characterize the domain. Thus, bounds polynomial in state space size often translate to intractable problems for sufficiently complicated tasks. \dnote{Would prefer a different example} For instance, a robot involved in a pick and place task might be able to employ planning algorithms to solve for how to manipulate some objects into a desired configuration in time polynomial in the number of states, but the number of states it must consider to do so grows exponentially with the number of objects it plans over \enote{Cite Dabe Icaps}.
 
 % Existing work on state abstraction.
 Thus, a key research agenda for planning and RL is leveraging abstraction to reduce large state spaces~\cite{andre2002state,jong2005state,dietterich2000hierarchical,Bean2011}. These methods are characterized by reducing \textit{ground} MDPs with large state spaces to \textit{abstract} MDPs with smaller state spaces by aggregating states according to some notion of equality or similarity. Existing work has characterized how aggregation of states with equal values of particular quantities fully maintains optimality~\cite{li2006towards,dean1997modelmin}. However, exactly solving for these quantities is itself computationally taxing and often as difficult as solving for optimal behavior in the ground \ac{MDP}, thereby defeating the purpose of abstraction.
@@ -138,7 +144,7 @@ V^{\pi_A}(s) = \mathcal{R}_G(s,\pi_A(\phi(s))) + \gamma \sum_{s' \in \mathcal{S}
 \end{equation}
 
 \enote{Define $V_G$ and $V_A$ (value function in ground and value function in abstract)}
-\enote{Say more about the weighting (that it sums to 1 but that's all we assume)}
+\enote{Say more about the weighting, w(s), (that it sums to 1 but that's all we assume)}
 
 % Subsection: Exact Abstraction Framework
 \subsection{Exact Abstraction Framework}
@@ -147,13 +153,15 @@ V^{\pi_A}(s) = \mathcal{R}_G(s,\pi_A(\phi(s))) + \gamma \sum_{s' \in \mathcal{S}
 
 In particular, the authors define the following five classes of state-aggregation functions, inspired by existing methods for state abstraction in \acp{MDP}. For brevity, we include those that we build upon directly. (See their paper for full details.)
 
-\defn{A $Q^*$-irrelevance abstraction, $\phi_{Q^*}$, is one such that:
+\begin{defn}
+A $Q^*$-irrelevance abstraction, $\phi_{Q^*}$, is one such that:
 \begin{equation}
 \phi_{Q^*}(s_1) = \phi_{Q^*}(s_2) \rightarrow \forall a\ \left(Q^*(s_1,a) = Q^*(s_2,a)\right).
 \end{equation}
-}
+\end{defn}
 
-\defn{A model-irrelevance abstraction, $\phi_{model}$, is one such that:
+\begin{defn}
+A model-irrelevance abstraction, $\phi_{model}$, is one such that:
 \begin{multline}
 \phi_{model}(s_1) = \phi_{model}(s_2) \rightarrow \forall a\ \mathcal{R}_G(s_1,a) = \mathcal{R}_G(s_2,a). \\
 \end{multline}
@@ -161,7 +169,7 @@ and
 \begin{multline}
 \phi_{model}(s_1) = \phi_{model}(s_2) \rightarrow \\ \forall a \sum_{s' \in \phi^{-1}(\phi(s_1))} \mathcal{T}_G(s_1,a,s') =\sum_{s' \in \phi^{-1}(\phi(s_2))} \mathcal{T}_G(s_2,a,s'). \\
 \end{multline}
-}
+\end{defn}
 
 In words, zzz.
 
@@ -252,10 +260,13 @@ That is, when $\ep_f$ aggregates states, all aggregated states have values of $f
 We now introduce the main result of the paper.
 
 % Theorem 1
-{\bf Theorem 1:} There exist at least four classes of approximate state-aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{bolt}}$ and $\ep_{\text{mult}}$ for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\epsilon$:
+\begin{thm}
+There exist at least four classes of approximate state-aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{bolt}}$ and $\ep_{\text{mult}}$ for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\epsilon$:
 \begin{equation}
 \forall_{s \in \mathcal{S}_G}: | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq poly(\epsilon).
 \end{equation}
+
+\end{thm}
 
 \enote{Consider moving definition of $V^{\pi^*_{A}}(s)$ so it's fresh for reader.}
 % zzz Also, I think it might be worth spelling out the poly(eps) part. Seems incomplete this way.
@@ -269,11 +280,13 @@ Recall that $Q^*$ is a function on $\mathcal{S}_G \times \mathcal{A}$ that satis
 \ep_{Q^*}(s_1) = \ep_{Q^*}(s_2) \rightarrow \forall_a \left|Q^*(s_1, a) - Q^*(s_2, a)\right| \leq \epsilon.
 \end{equation}
 
-% zzz wy not \begin{lemma} ? you know, to get the number right automatically?
-{\bf Lemma 1:} When $\ep_{Q^*}$ is used to create the abstract state space $\mathcal{S}_A$:
+\begin{lma}
+\label{lma:Q*}
+When $\ep_{Q^*}$ is used to create the abstract state space $\mathcal{S}_A$:
 \begin{equation}
 \forall_{s \in \mathcal{S}_G}: | V(s) - V^{\pi^*_{A}}(s) | \leq \frac{2\epsilon}{(1-\gamma)^2}.
 \end{equation}
+\end{lma}
 
 \textbf{Proof:}
 We begin by showing that Q values in the abstract \ac{MDP} closely resemble those in the ground \ac{MDP}.
@@ -286,12 +299,13 @@ Let $Q_A: \mathcal{S}_A \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_A: \ma
 
 Let $X(s) = \{g \in \mathcal{S}_G | \epQ(g) = s\}$, the set of ground states that correspond to abstract state $s$.
 
-%Claim 1 zzz \begin{claim} ?
-\textbf{Claim 1 -- Q-Values in the abstract \ac{MDP} closely resemble those in the ground \ac{MDP}:}
+\begin{clm}
+Q-Values in the abstract \ac{MDP} closely resemble those in the ground \ac{MDP}:
 \begin{equation}
 \label{eq:Q*Claim1}
 \forall_{s_G \in \mathcal{S}_G, a} |Q_G(s_G, a) - Q_A(\epQ(s_G), a)| \leq \frac{\epsilon}{1-\gamma}.
 \end{equation}
+\end{clm}
 
 Consider a temporally heterogeneous \ac{MDP}, $M^T = \langle \mathcal{S}_T, \mathcal{A}_G, \mathcal{R}_T, \mathcal{T}_T, \gamma \rangle$, parameterized by integer $T$, such that for the first $T$ time steps the reward function, transition dynamics and state space are those of the abstract MDP, $M_A$, and after $T$ time steps the reward function, transition dynamics and state spaces are those of the ground MDP, $M_G$. Thus,
 \begin{equation}
@@ -395,7 +409,10 @@ Let $a^*_A$ stand for the optimal action for $s_A$:\\
  $a^*_A = \argmin Q_A(s_A, a)$
 
 %Claim 2
-\textbf{Claim 2: the optimal action in the abstract MDP has a Q value in the ground which is nearly optimal:}
+\begin{clm}
+\label{clm:optAbsActionNearOptGround}
+The optimal action in the abstract MDP has a Q value in the ground which is nearly optimal.
+\end{clm}
 
 \begin{equation}
 \label{eq:Q*Claim2}
@@ -422,7 +439,9 @@ Q_A(s_A, a^*_A) + \frac{\epsilon}{1-\gamma} \leq Q_G(s_A, a^*_A) + \frac{2\epsil
 Therefore, we conclude Equation \ref{eq:Q*Claim2}.
 
 %Claim 3
-\textbf{Claim 3: we conclude Lemma 1 by Claim 2}
+\begin{clm}
+We conclude Lemma \ref{lma:Q*} by Claim \ref{clm:optAbsActionNearOptGround}.
+\end{clm}
 
 Consider the policy for $M_G$ of following the optimal abstract policy $\pi^*_A$ for t steps and then following the optimal ground policy $\pi^*_G$ in $M_G$:
 
@@ -510,13 +529,16 @@ where $X(s_A) = \{ g' \in \mcS | \epM(g') = s_A \}$
 
 \enote{Note that it is possible }
 
-{\bf Lemma 2:} When $S_A$ is created using a function of the $\ep_{model}$ type:
+%Model Lemma
+\begin{lma}
+\label{lma:model}
+When $S_A$ is created using a function of the $\ep_{model}$ type:
 \begin{equation}
-\label{eq:lemma2}
 \forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{2\epsilon + 2\gamma((|\mcS_G|-1)\epsilon)}{(1-\gamma)^3}
 \end{equation}
+\end{lma}
 
-{\bf Proof:} Our proof proceeds as follows: we demonstrate that states grouped aggregated under $\epM$ have Q values all within a particular bound. Consequently $\epM$ abstractions are interpretable as an instantiation of $\epQ$ with a particular $\epsilon$ -- understanding $\epM$ abstractions allows us to conclude our bound by applying Lemma 1.
+{\bf Proof:} Our proof proceeds as follows: we demonstrate that states grouped aggregated under $\epM$ have Q values all within a particular bound. Consequently $\epM$ abstractions are interpretable as an instantiation of $\epQ$ with a particular $\epsilon$ -- understanding $\epM$ abstractions allows us to conclude our bound by applying Lemma \ref{lma:Q*}.
 
 
 Let $B$ stand for the maximum Q difference between any pair of ground states in the same abstract state under $\epM$:
@@ -533,7 +555,7 @@ B = &\max_{s_A \in \mcS_A, s_1, s_2 \in X(s_A), a} |Q(s_1, a) - Q(s_2, a)|\\
  \leq & \frac{\epsilon + \gamma(|\mcS_G| - 1) \epsilon}{1-\gamma}
 \end{align*}
 
-Since the Q values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\epsilon = B$. Applying Lemma 1 yields Equation \ref{eq:lemma2}.
+Since the Q values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\epsilon = B$. Applying Lemma \ref{lma:Q*} yields Lemma \ref{lma:model}.
 
 % Subsection: Multinomial over Optimal Q
 \enote{If not here, we should have some motivation for multinomial (and boltz)}
