@@ -13,8 +13,7 @@
 \usepackage{icml2016/icml2016} 
 \usepackage[nolist]{acronym} % Acronym package -- give argument <dua> to suppress acronym usage
 
-
-\icmltitlerunning{Approximate State Abstraction}
+\icmltitlerunning{Suboptimality Bounds for Approximate State Abstraction}
 
 % --- Notation Commands ---
 \newcommand{\ep}{\widetilde \phi}
@@ -39,7 +38,7 @@
 \begin{document}
 
 \twocolumn[
-\icmltitle{Approximate State Abstraction}
+\icmltitle{Suboptimality Bounds for Approximate State Abstraction}
 
 % Paper Meta Info
 \icmlauthor{David Abel}{david_abel@brown.edu}
@@ -69,110 +68,108 @@
 
 % --- ABSTRACT ---
 \begin{abstract}
-The combinatorial explosion that plagues planning and \ac{RL} algorithms can be overcome using abstraction. For instance, prohibitively difficult task representations can be condensed, preserving essential information such that solutions are tractably computable. In this work, we investigate a theoretical framework for approximate state abstraction that achieves high degrees of compressing while preserving near optimal behavior. \acp{RL} agents using these abstractions treat experiences that resemble each other as equivalent, and generalize knowledge to novel scenarios based on prior experiences. We present theoretical guarantees of the quality of value functions derived from four classes of approximate state abstraction. Additionally, we empirically evaluate the relationship between the degree of approximation and the degree of abstraction achieved in a variety of tasks, as well as the tradeoff between approximation magnitude and optimality of behavior.
+The combinatorial explosion that plagues planning and \ac{RL} algorithms can be moderated using abstraction. For instance, prohibitively difficult task representations can be condensed, preserving essential information such that solutions are tractably computable. In this work, we investigate a theoretical framework for approximate state abstraction that achieves high degrees of compression while preserving near optimal behavior. \ac{RL} agents using these abstractions treat experiences that resemble each other as equivalent, and generalize knowledge to novel scenarios based on prior experiences. We present theoretical guarantees of the quality of value functions derived from four classes of approximate state abstraction. Additionally, we empirically evaluate the relationship between the degree of approximation and the degree of abstraction achieved in a variety of example tasks, as well as the tradeoff between the degree of approximation and the optimality of behavior.
 \end{abstract}
 
 
 % --- SECTION: Introduction ---
 \section{Introduction}
-Abstraction plays a fundamental role in learning. Through abstraction, intelligent agents may reason about only the salient features of their environment while ignoring what is irrelevant, consequently enabling agents to solve considerably more complex problems. However, the knowledge available to a learning agent at any given moment is approximate \dnote{Change this sentence}. Thus, agents must determine when their knowledge is sufficiently accurate to form the basis of abstraction. This work characterizes what ``sufficiently accurate" information for abstraction amounts to in the context of planning and \ac{RL} in \acp{MDP}.
+Abstraction plays a fundamental role in learning. Through abstraction, intelligent agents may reason about only the salient features of their environment while ignoring what is irrelevant, consequently enabling agents to solve considerably more complex problems. However, in natural environments, no two states are identical. This work characterizes the impact of combining ``sufficiently similar'' states in the context of planning and \ac{RL} in \acp{MDP}.
 
 % Abstraction is a good idea b/c MDP has poly comp comp and samp comp in S, but S grows fast.
-Solving for optimal behavior in \acp{MDP} in a planning setting is known to be P-Complete in the size of the state space~\cite{littman1995complexity,papadimitriou1987complexity}. Similarly, many \ac{RL} algorithms for solving \acp{MDP} are known to require a number of samples polynomial in the size of the state space~\cite{strehl2009reinforcement}. Although polynomial runtime or sample complexity may seem like a reasonable constraint, due to Bellman's curse of dimensionality the size of the state space of an \ac{MDP} grows super-polynomially with the number of variables that characterize the domain. Thus, polynomial behavior in state space size often translates to intractability for sufficiently complicated tasks. \dnote{Would prefer a different example} For instance, a robot involved in a pick and place task might be able employ planning algorithms to solve for how to manipulate some objects into a desired configuration in time polynomial in the number of states, but the number of states it must consider to do so grows exponentially with the number of objects it plans over CITE DABE ICAPS.
+Solving for optimal behavior in \acp{MDP} in a planning setting is known to be P-Complete in the size of the state space~\cite{papadimitriou1987complexity,littman1995complexity}. Similarly, many \ac{RL} algorithms for solving \acp{MDP} are known to require a number of samples polynomial in the size of the state space~\cite{strehl2009reinforcement}. Although polynomial runtime or sample complexity may seem like a reasonable constraint, due to Bellman's curse of dimensionality, the size of the state space of an \ac{MDP} grows super-polynomially with the number of variables that characterize the domain. Thus, bounds polynomial in state space size often translate to intractable problems for sufficiently complicated tasks. \dnote{Would prefer a different example} For instance, a robot involved in a pick and place task might be able to employ planning algorithms to solve for how to manipulate some objects into a desired configuration in time polynomial in the number of states, but the number of states it must consider to do so grows exponentially with the number of objects it plans over CITE DABE ICAPS.
 
 % Existing work on state abstraction.
-Thus, a key research agenda for planning and RL is leveraging abstraction in order to reduce large state spaces~\cite{andre2002state,jong2005state,dietterich2000hierarchical,Bean2011}. These methods are characterized by reducing \textit{ground} MDPs with large state spaces to \textit{abstract} MDPs with smaller state spaces by aggregating states according to some notion of equality or similarity. Existing work has characterized how aggregation of states with equal values of particular quantities fully maintain optimality~\cite{li2006towards,dean1997modelmin}. However, exactly solving for these quantities is itself computationally taxing and often as difficult as solving for optimal behavior in the ground \ac{MDP}, thereby defeating the purpose of abstraction.
+Thus, a key research agenda for planning and RL is leveraging abstraction to reduce large state spaces~\cite{andre2002state,jong2005state,dietterich2000hierarchical,Bean2011}. These methods are characterized by reducing \textit{ground} MDPs with large state spaces to \textit{abstract} MDPs with smaller state spaces by aggregating states according to some notion of equality or similarity. Existing work has characterized how aggregation of states with equal values of particular quantities fully maintains optimality~\cite{li2006towards,dean1997modelmin}. However, exactly solving for these quantities is itself computationally taxing and often as difficult as solving for optimal behavior in the ground \ac{MDP}, thereby defeating the purpose of abstraction.
 
 % Approximate abstraction
-In this work we demonstrate that aggregation of states on the basis of various approximate criteria incur only bounded error in the resulting policy. Relaxing the aggregation criteria from equality of quantities to $\varepsilon$-closeness offers two benefits. First, state aggregation algorithms that satisfy these criteria employ the sort of knowledge which we expect a planning or learning algorithm to approximate without fully solving the \ac{MDP}. Second, because the state aggregation criteria are relaxed to approximate equality, methods which employ approximate equality are able to tune the aggressiveness of state aggregation all the while incurring bounded error.
+In this work, we demonstrate that aggregation of states on the basis of various approximate criteria incur only bounded error in the resulting policy. Relaxing the aggregation criteria from equality of quantities to $\varepsilon$-closeness offers two benefits. First, state aggregation algorithms that satisfy these criteria employ the sort of knowledge that we expect a planning or learning algorithm to approximate without fully solving the \ac{MDP}. Second, because the state-aggregation criteria are relaxed to approximate equality, methods that employ approximate equality are able to tune the aggressiveness of state aggregation all the while incurring bounded error.
 
 % Summary	
-This paper is organized as follows. We first introduce the necessary terminology and background of \ac{RL} and state abstraction. We then survey existing approaches in state abstraction as applied to sequential decision making. The following section introduces our four primary results; bounds on the error guaranteed by four classes of approximate state abstraction. We then discuss our experimentation, in which we apply one class of approximate abstraction to a variety of different tasks, visualizing their abstraction and showing the relationship between degrees of compression and error incurred.
-
+This paper is organized as follows. We first introduce the necessary terminology and background of \ac{RL} and state abstraction. We then survey existing types in state abstraction as applied to sequential decision making. The following section introduces our four primary results; bounds on the error guaranteed by four classes of approximate state abstraction. We then discuss experiments in which we apply one class of approximate abstraction to a variety of different tasks, visualizing the abstractions and showing the relationship between degree of compression and error incurred.
 
 % --- SECTION: Background ---
 \section{Background}
 
+First, some background.
+
 %MDP/SDM Background and Notation
 \subsection{\acp{MDP} and Sequential Decision Making}
-A \ac{MDP} is a five-tuple: $\langle \mathcal{S}, \mathcal{A}, \mathcal{T}, \mathcal{R}, \gamma \rangle$: $\mathcal{S}$ is a finite state space; $\mathcal{A}$ is the set of actions available to the agent; $\mathcal{T}$ denotes $\mathcal{T}(s' \mid s,a)$, the probability of an agent applying action $a \in \mathcal{A}$ in state $s \in \mathcal{S}$ and arriving in $s' \in \mathcal{S}$; $\mathcal{R}(s)$ denotes the reward received by the agent arriving in state $s$; $\gamma \in [0, 1]$ is a discount  factor that defines how much the agent prefers immediate rewards over future rewards. We assume without loss of generality that all reward functions are normalized to $[0,1]$.
+An \ac{MDP} is a five-tuple: $\langle \mathcal{S}, \mathcal{A}, \mathcal{T}, \mathcal{R}, \gamma \rangle$: $\mathcal{S}$ is a finite state space; $\mathcal{A}$ is the set of actions available to the agent; $\mathcal{T}$ denotes $\mathcal{T}(s' \mid s,a)$, the probability of an agent applying action $a \in \mathcal{A}$ in state $s \in \mathcal{S}$ resulting in arriving in $s' \in \mathcal{S}$; $\mathcal{R}(s)$ denotes the reward received by the agent arriving in state $s$; $\gamma \in [0, 1]$ is a discount  factor that defines how much the agent prefers future rewards over immediate rewards. We assume without loss of generality that all reward functions are normalized to $[0,1]$.
 
-The goal of an agent in an \ac{MDP} is to solve for a policy that maps states to actions: $\pi: \mathcal{S} \rightarrow \mathcal{A}$. In particular, the agent wants to solve for the policy that maximizes its expected discounted reward from any state. This goal policy is denoted $\pi^*$. We denote the expected discounted reward for following policy $\pi$ from state $s$ as the value of the state under that policy, $V(s)^\pi$. We similarly denote the expected discounted reward for taking action $a \in \mathcal{A}$ and then following policy $\pi$ from state $s$ forever after as $Q^\pi(s,a)$. Lastly, we denote the value and $Q$ functions under the optimal policy as $V^*$ and $Q^*$ respectively. \enote{Add citation -- either Littman review paper or Sutton/Barto}
+The goal of an agent in an \ac{MDP} is to solve for a policy that maps states to actions: $\pi: \mathcal{S} \rightarrow \mathcal{A}$. In particular, the agent wants to solve for the policy that maximizes its expected discounted reward from any state. This goal policy is denoted $\pi^*$. We denote the expected discounted reward for following policy $\pi$ from state $s$ as the value of the state under that policy, $V^\pi(s)$. We similarly denote the expected discounted reward for taking action $a \in \mathcal{A}$ and then following policy $\pi$ from state $s$ forever after as $Q^\pi(s,a)$. Lastly, we denote the value and $Q$ functions under the optimal policy as $V^*$ and $Q^*$, respectively. \enote{Add citation -- either Littman review paper or Sutton/Barto or Puterman}
 
 \enote{Define value of state under a policy}
 
 %Lihong Section
 \subsection{Abstraction Notation}
-We build upon the notation used by \cite{li2006towards} \enote{This should probably say more}.
+We build upon the notation used by \citeauthor{li2006towards} \enote{This should probably say more}.
 
-We understand an abstraction as a mapping from a ground MDP $M_G$ to an abstract MDP $M_A$ using a state aggregation scheme. $M_G = \langle \mathcal{S}_G, \mathcal{A}, \mathcal{T}_G, \mathcal{R}_G, \gamma \rangle$ and $M_A = \langle \mathcal{S}_A, \mathcal{A}, \mathcal{T}_A, \mathcal{R}_A, \gamma \rangle$.
+We understand an abstraction as a mapping from the state space of a ground MDP $M_G$ to that of an abstract MDP $M_A$ using a state-aggregation scheme. $M_G = \langle \mathcal{S}_G, \mathcal{A}, \mathcal{T}_G, \mathcal{R}_G, \gamma \rangle$ and $M_A = \langle \mathcal{S}_A, \mathcal{A}, \mathcal{T}_A, \mathcal{R}_A, \gamma \rangle$.
 
 % States
-The states in the abstract MDP are constructed by applying a state aggregation scheme, $\phi$, to the states in the ground MDP, $\mathcal{S}_A$. More specifically, $\phi$ maps a state in the ground MDP to a state in the abstract MDP.
+The states in the abstract \ac{MDP} are constructed by applying a state-aggregation function, $\phi$, to the states in the ground \ac{MDP}, $\mathcal{S}_A$. More specifically, $\phi$ maps a state in the ground \ac{MDP} to a state in the abstract \ac{MDP}:
 \begin{equation}
-\mathcal{S}_A = \{ \phi(s) \mid s \in \mathcal{S}_G\}
+\mathcal{S}_A = \{ \phi(s) \mid s \in \mathcal{S}_G\}.
 \end{equation}
 
 Intuitively, the abstract reward function and abstract transition dynamics for each abstract state are a weighted combination of the rewards and transitions for each ground state in the partition. We make no assumptions about the weighting scheme, except that the weighting is a convex combination across all states in the partition.
 
 % Reward
-The abstract reward function $\mathcal{R}_A(s,a)$ is a weighted sum of the rewards of each of the ground states that map to the abstract state:
+The abstract reward function $\mathcal{R}_A(s,a)$ is a weighted sum of the rewards of each of the ground states that map to the same abstract state:
 \begin{equation}
-\mathcal{R}_A(s,a) = \sum_{g \in \phi(s), s \in \mathcal{S}_G} \mathcal{R}_G(g,a) \omega(g) 
+\mathcal{R}_A(s,a) = \sum_{g \in \phi(s), s \in \mathcal{S}_G} \mathcal{R}_G(g,a) \omega(g) .
 \end{equation}
-
+% zzz g in phi(s) seems like a type error, no?
 
 % Transition
-The abstract transition function $\mathcal{T}_A(s,a,s')$ is a weighted sum of the transitions of each of the ground states that map to the abstract state:
+The abstract transition function $\mathcal{T}_A(s,a,s')$ is a weighted sum of the transitions of each of the ground states that map to the same abstract state:
 \begin{equation}
-\mathcal{T}_A(s,a,s') = \sum_{g \in \phi^{-1}(s)} \sum_{g' \in \phi^{-1}(s')} \mathcal{T}_G(g,a,g') \omega(g) 
+\mathcal{T}_A(s,a,s') = \sum_{g \in \phi^{-1}(s)} \sum_{g' \in \phi^{-1}(s')} \mathcal{T}_G(g,a,g') \omega(g),
 \end{equation}
-For:
-\begin{equation}
+\noindent where $
 s, s' \in \mathcal{S}_A
-\end{equation}
+$.
 
-% Abstract policy using in ground.
-In general we are interested in how policies defined over the abstract MDP perform in the ground MDP. To leverage a policy defined in the abstract in the ground, we map a ground state into the abstract state space, and query the abstract policy for behavior. Specifically:
+% Abstract policy in ground.
+In general, we are interested in how policies defined over the abstract \ac{MDP} perform in the ground \ac{MDP}. To evaluate a policy $\pi_A:\mathcal{A}\rightarrow\mathcal{A}$, we map a ground state into the abstract state space, and query the abstract policy for behavior. Specifically:
 \begin{equation}
-\pi_A(s) = \pi_A(\phi(s)),\ s \in \mathcal{S}_G
-\end{equation}
-
-We evaluate the value of the abstract policy in the ground MDP by following the abstract policy:
-\begin{equation}
-V^{\pi_A}(s) = \mathcal{R}_G(s,\pi_A(a)) + \gamma \sum_{s' \in \mathcal{S}_G} \mathcal{T}_G(s,\pi_A(a),s')V^{\pi_A}(s')
+V^{\pi_A}(s) = \mathcal{R}_G(s,\pi_A(\phi(s))) + \gamma \sum_{s' \in \mathcal{S}_G} \mathcal{T}_G(s,\pi_A(\phi(s)),s')V^{\pi_A}(s').
 \end{equation}
 
 \enote{Define $V_G$ and $V_A$ (value function in ground and value function in abstract)}
-\enote{Say more about the weighting (that is sums to 1 but that's all we assume)}
+\enote{Say more about the weighting (that it sums to 1 but that's all we assume)}
 
 % Subsection: Exact Abstraction Framework
 \subsection{Exact Abstraction Framework}
 
-\citep{li2006towards} develop a framework for state abstraction in \acp{MDP}, the notation for which is defined in the previous section. Here we survey their main results that we extend to the framework of approximate abstraction.
+\citeauthor*{li2006towards} developed a framework for state abstraction in \acp{MDP}, the notation for which is defined in the previous section. Here, we survey their main results, which we then extend to the framework of approximate abstraction.
 
-In particular, they define the following five classes of state abstractors, inspired by existing methods for state abstraction in \acp{MDP}. For brevity, we include those which we build upon directly (see their paper for full details).
+In particular, the authors define the following five classes of state-aggregation functions, inspired by existing methods for state abstraction in \acp{MDP}. For brevity, we include those that we build upon directly. (See their paper for full details.)
 
-\defn{A $Q^*$-irrelevance abstraction, $\phi_{Q^*}$, is such that:
+\defn{A $Q^*$-irrelevance abstraction, $\phi_{Q^*}$, is one such that:
 \begin{equation}
-\phi_{Q^*}(s_1) = \phi_{Q^*}(s_2) \longrightarrow \forall a\ \left(Q^*(s_1,a) = Q^*(s_2,a)\right)
+\phi_{Q^*}(s_1) = \phi_{Q^*}(s_2) \rightarrow \forall a\ \left(Q^*(s_1,a) = Q^*(s_2,a)\right).
 \end{equation}
 }
 
-\defn{A model-irrelevance abstraction, $\phi_{model}$, is such that:
+\defn{A model-irrelevance abstraction, $\phi_{model}$, is one such that:
 \begin{multline}
-\phi_{model}(s_1) = \phi_{model}(s_2) \rightarrow \forall a\ \mathcal{R}_G(s_1,a) = \mathcal{R}_G(s_2,a) \\
+\phi_{model}(s_1) = \phi_{model}(s_2) \rightarrow \forall a\ \mathcal{R}_G(s_1,a) = \mathcal{R}_G(s_2,a). \\
 \end{multline}
-And:
+and
 \begin{multline}
-\phi_{model}(s_1) = \phi_{model}(s_2) \rightarrow \\ \forall a \sum_{s' \in \phi^{-1}(\phi(s_1))} \mathcal{T}_G(s_1,a,s') =\sum_{s' \in \phi^{-1}(\phi(s_2))} \mathcal{T}_G(s_2,a,s') \\
+\phi_{model}(s_1) = \phi_{model}(s_2) \rightarrow \\ \forall a \sum_{s' \in \phi^{-1}(\phi(s_1))} \mathcal{T}_G(s_1,a,s') =\sum_{s' \in \phi^{-1}(\phi(s_2))} \mathcal{T}_G(s_2,a,s'). \\
 \end{multline}
 }
+
+In words, zzz.
 
 
 % --- SECTION: Related Work ---
 \section{Related Work}
 
+Several other projects have addressed similar topics.
 
 % Approximate abstraction work.
 %Dean: 
@@ -197,14 +194,13 @@ And:
 
 
 \subsection{Approximate State Abstraction}
-\citep{dean1997model} investigates partitioning an MDP's state space into $\epsilon$-homogenous blocks, which are defined as clusters of states whose transition model and reward function are within $\epsilon$ of each other. They provide bounds on the error incurred as a result of using the optimal policy defined over these blocks in the original MDP. This method of abstraction is effectively characterized as a function belonging to the approximate class $\phi_{model}$.
-Several approaches build on the notion of $\epsilon$-homogeneity. ~\citep{even2003approximate} analyze different distant metrics used in the process of identifying $\epsilon$-homogenous partitions. ~\cite{ortner2013adaptive} develops an algorithm for learning partitions in an on line setting by taking advantage of the confidence bounds for $T$ and $R$ provided by UCRL~\cite{auer2009near}.
+\citeauthor*{dean1997model} investigated partitioning an MDP's state space into $\epsilon$-homogenous blocks, which are defined as clusters of states whose transition model and reward function are within $\epsilon$ of each other. They provide bounds on the error incurred as a result of using the optimal policy defined over these blocks in the original MDP. This method of abstraction is effectively characterized as a function belonging to the approximate class $\phi_{model}$.
+Several approaches build on the notion of $\epsilon$-homogeneity. \citeauthor*{even2003approximate} analyzed different distance metrics used in the process of identifying $\epsilon$-homogenous partitions. \citeauthor*{ortner2013adaptive} developed an algorithm for learning partitions in an online setting by taking advantage of the confidence bounds for $T$ and $R$ provided by UCRL~\cite{auer2009near}.
 
 %Prior work considers abstractions related to transition model similarity, or both transition model and reward function similarity with the aim of reducing the state space size required for planning and learning while still achieving a bounded error solution~\cite{even2003approximate,ortner2013adaptive,Boutilier2000}. All of this work is closely in line with our own agenda; they investigate rules for abstractions that may inform a reduced, abstract MDP, the solution to which has bounded error in the original MDP. However, all prior results explore model similarity abstraction rules, whereas we consider several broader classes of approximate abstraction. Furthermore, our results depend on no assumptions regarding the structure of the MDPs in which we apply our abstraction, and generalize to both the reinforcement learning or the planning setting, while many previous approaches require simplifying assumptions about the space of MDPs\dnote{a comment about what assumptions are made would be nice}, or only work target planning.
 
 \subsection{Specific Abstraction Algorithms}
-Many previous works have targeted the creation of algorithms that enable state abstraction for MDPs. \citep{andre2002state} investigates a method for state abstraction in hierarchical reinforcement learning leveraging a programming language called ALISP that promotes the notion of {\it safe} state abstraction. Agents programmed using ALISP can ignore irrelevant parts of the state, achieving abstraction that maintains optimality. ~\cite{dietterich2000hierarchical} develops the MAXQ algorithm, a framework for composing tasks into an abstracted hierarchy. \citep{jong2005state} introduce a method called {\it policy-irrelevance}, in which agents identify (online) which state variables may be safely ignored in a factored MDP, and consequently achieve state abstraction. The agent will learn to ignore state variables that don't impact optimal behavior, and is consequently contained within the approximate $\phi_{a^*}$ work. For a full survey of algorithms that leverage state abstraction in recent reinforcement learning literature, see~\cite{li2006towards}.
-
+Many previous works have targeted the creation of algorithms that enable state abstraction for MDPs. \citeauthor*{andre2002state} investigated a method for state abstraction in hierarchical reinforcement learning leveraging a programming language called ALISP that promotes the notion of {\it safe} state abstraction. Agents programmed using ALISP can ignore irrelevant parts of the state, achieving abstractions that maintain optimality. \citeauthor{dietterich2000hierarchical} developed the MAXQ algorithm, a framework for composing tasks into an abstracted hierarchy where state aggregation can be applied. \citeauthor*{jong2005state} introduced a method called {\it policy-irrelevance} in which agents identify (online) which state variables may be safely abstracted away ignored in a factored-state \ac{MDP}. The agent will learn to ignore state variables that don't impact optimal behavior, making this method a version of the approximate $\phi_{a^*}$ work. For a full survey of algorithms that leverage state abstraction in past reinforcement-learning papers, see \citeauthor{li2006towards}.
 
 % Other? Selecting abstractions
 %\subsection{Selecting Abstractions}
@@ -233,92 +229,96 @@ Many previous works have targeted the creation of algorithms that enable state a
 \section{Approximate State Abstraction}
 
 % Intro to approx state abstraction results.
-Here we introduce our formal method for approximate state abstraction, and the related results bounding the error associated with these abstraction methods. In particular, we demonstrate that abstractions based on $Q^*$ similarity, Model similarity (that is, $\mathcal{T}$ and $\mathcal{R}$), and similarity between distributions over $Q^*$, for both multinomial and Boltzmann disibtruions, induce abstract MDPs for which the optimal policy has bounded error in the ground MDP.
+Here, we introduce our formal method for analyzing approximate state abstraction, including results bounding the error associated with these abstraction methods. In particular, we demonstrate that abstractions based on $Q^*$ similarity, model similarity (that is, $\mathcal{T}$ and $\mathcal{R}$), and similarity between distributions over $Q^*$, for both multinomial and Boltzmann distributions, induce abstract \acp{MDP} for which the optimal policy has bounded error in the ground MDP.
 
 In general, our proof strategy for each of the included results is as follows:
 \begin{itemize}
-\item First, we relate the values of states in the ground MDP to value of the states in the Abstract MDP
-\item Then, we relate the value of states in the ground MDP to value of the states in the Abstract MDP under the optimal abstract policy.
+\item First, we relate the values of states in the ground MDP to the value of states in the abstract \ac{MDP},
+\item then, we relate the value of states in the ground \ac{MDP} to the value of states in the abstract \ac{MDP} under the optimal abstract policy.
 \end{itemize}
+
+% zzz that's odd... sounds like the same thing twice but with optimal policy added. we'll see how that works.
 
 We now introduce some additional notation to formally discuss these results.
 
-{\bf $\ep_f$ definition:} Given a function $f : \mathcal{S}_G \times \mathcal{A} \rightarrow \mathcal{R}$ and a fixed non-negative $\epsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state abstraction function which satisfies the following for any two ground states $s_1$ and $s_2$: 
+{\bf $\ep_f$ definition:} Given a function $f: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathcal{R}$ and a fixed non-negative $\epsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state-aggregation function that satisfies the following for any two ground states $s_1$ and $s_2$: 
 \begin{equation}
 \label{eq:phi_f}
 \ep_f(s_1) = \ep_f(s_2) \rightarrow \forall_a \left|f(s_1, a) - f(s_2, a)\right| \leq \epsilon
 \end{equation}
 
-That is, when $\phi_f$ aggregates states, all aggregated states have values of $f$ within $\epsilon$ of each other for all actions. Note that for any $f$, there are many such functions that satisfy this criteria.
+That is, when $\ep_f$ aggregates states, all aggregated states have values of $f$ within $\epsilon$ of each other for all actions. Note that, for any $f$, there are many functions that satisfy this criterion.
 
 We now introduce the main result of the paper.
 
 % Theorem 1
-{\bf Theorem 1:} There exist at least four classes of approximate state aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{bolt}}$ and $\ep_{\text{mult}}$ for which the optimal policy in the abstract MDP, applied to the ground MDP, has error bounded polynomially in $\epsilon$:
+{\bf Theorem 1:} There exist at least four classes of approximate state-aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{bolt}}$ and $\ep_{\text{mult}}$ for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\epsilon$:
 \begin{equation}
-\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq poly(\epsilon)
+\forall_{s \in \mathcal{S}_G}: | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq poly(\epsilon).
 \end{equation}
 
 \enote{Consider moving definition of $V^{\pi^*_{A}}(s)$ so it's fresh for reader.}
+% zzz Also, I think it might be worth spelling out the poly(eps) part. Seems incomplete this way.
 
 % Subsection: Optimal Q Function
 \subsection{Optimal Q Function: $\ep_{Q^*}$}
 
 % Q* Lemma
-Recall that $Q^*$ is a function on $\mathcal{S}_G \times \mathcal{A}$ that satisfies \enote{$Q^*$ definition}. Inspired by the $Q^*$ irrelevance abstraction, we consider the approximate case. By Equation~\ref{eq:phi_f}, $\ep_{Q^*}$ is a type of abstraction that, for a fixed $\epsilon$, satisfies:
-
+Recall that $Q^*$ is a function on $\mathcal{S}_G \times \mathcal{A}$ that satisfies \enote{$Q^*$ definition}. We consider an approximate version of the $Q^*$-irrelevance abstraction. An approximate $Q$ function has the same form as Equation~\ref{eq:phi_f}:
 \begin{equation}
-\ep_{Q^*}(s_1) = \ep_{Q^*}(s_2) \rightarrow \forall_a \left|Q^*(s_1, a) - Q^*(s_2, a)\right| \leq \epsilon
+\ep_{Q^*}(s_1) = \ep_{Q^*}(s_2) \rightarrow \forall_a \left|Q^*(s_1, a) - Q^*(s_2, a)\right| \leq \epsilon.
 \end{equation}
 
-{\bf Lemma 1:} When $S_A$ is created using a function of the $\ep_{Q^*}$ type:
+% zzz wy not \begin{lemma} ? you know, to get the number right automatically?
+{\bf Lemma 1:} When $\ep_{Q^*}$ is used to create the abstract state space $\mathcal{S}_A$:
 \begin{equation}
-\forall_{s \in S_M} : | V(s) - V^{\pi^*_{A}}(s) | \leq \frac{2\epsilon}{(1-\gamma)^2}
+\forall_{s \in \mathcal{S}_G}: | V(s) - V^{\pi^*_{A}}(s) | \leq \frac{2\epsilon}{(1-\gamma)^2}.
 \end{equation}
 
 \textbf{Proof:}
+We begin by showing that Q values in the abstract \ac{MDP} closely resemble those in the ground \ac{MDP}.
 
-Let $Q_G : \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_G : \mathcal{S}_G \rightarrow \mathbb{R}$ denote the Q and value functions in the ground \ac{MDP}.
+Let $Q_G: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_G: \mathcal{S}_G \rightarrow \mathbb{R}$ denote the Q and value functions in the ground \ac{MDP}.
 
-Let $Q_A  : \mathcal{S}_A \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_A : \mathcal{S}_A \rightarrow \mathbb{R}$  stand for the Q and value functions in the abstract \ac{MDP}.
+Let $Q_A: \mathcal{S}_A \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_A: \mathcal{S}_A \rightarrow \mathbb{R}$  stand for the Q and value functions in the abstract \ac{MDP}.
 
-Let $X(s) = \{g \in \mathcal{S}_G | \epQ(g) = s\}$.
+% zzz I don't understand what ``the'' Q function means. if it's the optimal values, we already had a notation for these and I don't see why there should be another.
 
-%Claim 1
-\textbf{Claim 1 -- Q-Values in the abstract MDP, closely resemble those in the ground MDP:}
+Let $X(s) = \{g \in \mathcal{S}_G | \epQ(g) = s\}$, the set of ground states that correspond to abstract state $s$.
+
+%Claim 1 zzz \begin{claim} ?
+\textbf{Claim 1 -- Q-Values in the abstract \ac{MDP} closely resemble those in the ground \ac{MDP}:}
 \begin{equation}
 \label{eq:Q*Claim1}
-\forall_{s_G \in \mathcal{S}_G, a} |Q_G(s_G, a) - Q_A(\epQ(s_G), a)| \leq \frac{\epsilon}{1-\gamma}
+\forall_{s_G \in \mathcal{S}_G, a} |Q_G(s_G, a) - Q_A(\epQ(s_G), a)| \leq \frac{\epsilon}{1-\gamma}.
 \end{equation}
 
-Consider a temporally heterogeneous \ac{MDP}, $M^T = \langle \mathcal{S}_T, \mathcal{A}_G, \mathcal{R}_T, \mathcal{T}_T, \gamma \rangle$, parameterized by integer $T$, such that for the first $T$ time steps the reward function, transition dynamics and state space are those of the abstract MDP, $M_A$, and after $T$ time steps the reward function, transition dynamics and state spaces are those of the ground MDP, $M_G$. 
-
-Where:
+Consider a temporally heterogeneous \ac{MDP}, $M^T = \langle \mathcal{S}_T, \mathcal{A}_G, \mathcal{R}_T, \mathcal{T}_T, \gamma \rangle$, parameterized by integer $T$, such that for the first $T$ time steps the reward function, transition dynamics and state space are those of the abstract MDP, $M_A$, and after $T$ time steps the reward function, transition dynamics and state spaces are those of the ground MDP, $M_G$. Thus,
 \begin{equation}
 \mathcal{S}_T = \begin{cases}
-\mathcal{S}_G& T \leq 0 \\
-\mathcal{S}_A& \text{o/w} \\
+\mathcal{S}_G,& T \leq 0, \\
+\mathcal{S}_A,& \text{o/w}, \\
 \end{cases}
 \end{equation}
-
-And:
 \begin{equation}
 \mathcal{R}_T(s,a) = \begin{cases}
-\mathcal{R}_G(s,a)& T \leq 0 \\
-\mathcal{R}_A(s, a)& \text{o/w} \\
+\mathcal{R}_G(s,a),& T \leq 0, \\
+\mathcal{R}_A(s, a),& \text{o/w}, \\
 \end{cases}
 \end{equation}
-
-And:
+and
 \begin{equation}
 \mathcal{T}_T(s,a,s') = \begin{cases}
-\mathcal{T}_G(s,a,s')& T \leq 0 \\
-\underset{{g \in X(s)}}{\sum}\left[w(g)T_G(g, a, s')\right]& T = 1 \\
-\mathcal{T}_A(s,a,s')& \text{o/w} \\
+\mathcal{T}_G(s,a,s'),& T \leq 0, \\
+\underset{{g \in X(s)}}{\sum}\left[w(g)T_G(g, a, s')\right],& T = 1, \\
+\mathcal{T}_A(s,a,s'),& \text{o/w}. \\
 \end{cases}
 \end{equation}
 
 It follows that the Q-value of a state $s$ in $M^T$ for action $a$ is defined by:
+% zzz too long... needs to be broken up.
+% zzz also, I'm not sure we want the temporally heterogeneous MDP to change state spaces mid stream. I think it should all be in terms of the ground MDP (but with the phi function used as needed)
+% zzz also, ``w(g)'' comes out of the blue... there's got to be a better notation here.
 \begin{equation}
 Q_T(s, a) = 
 \begin{cases}
@@ -328,28 +328,28 @@ Q_T(s, a) =
 \end{cases}
 \end{equation}
 
-
 We proceed by induction on $T$ to show that:
 \begin{equation}
-\forall_{T, s_G \in \mathcal{S}_G, a} |Q_0(s_G, a) - Q_T(s_G, a)| \leq \sum_{t=0}^{T-1} \epsilon \gamma^{t}
+\forall_{T, s_G \in \mathcal{S}_G, a} |Q_0(s_G, a) - Q_T(s_G, a)| \leq \sum_{t=0}^{T-1} \epsilon \gamma^{t},
 \end{equation}
+that is, the Q function remains relatively unchanged over time.
 
 % Base Case t=0
 \textit{Base Case: $T = 0$}
 
-When T = 0, $Q_T = Q_0$, so the result trivially follows.
+When $T = 0$, $Q_T = Q_0$, so the result trivially follows.
 
 % Base Case t=1
 \textit{Base Case: $T = 1$}
 \begin{align*}
-&Q_1(s,a) = \underset{g \in X(s)}{\sum} \left[ w(g)Q_G(g,a) \right]\\
+&Q_1(s,a) = \underset{g \in X(s)}{\sum} \left[ w(g)Q_G(g,a) \right].\\
 \end{align*}
-Since all aggregated states have Q-values within $\epsilon$ of one another and $w(g)$ induces a convex combination.
+Since all co-aggregated states have Q-values within $\epsilon$ of one another and $w(g)$ induces a convex combination,
 \begin{align*}
-&Q_1(s,a) \leq \epsilon \gamma^t + \epsilon + Q_0(s_G, a)\\
-&Q_1(s,a) \leq \gamma\sum_{t=0}^{1} \epsilon \gamma^t + Q_0(s_G, a)\\
+&Q_1(s,a) \leq \epsilon \gamma^t + \epsilon + Q_0(s_G, a),\\
+&Q_1(s,a) \leq \gamma\sum_{t=0}^{1} \epsilon \gamma^t + Q_0(s_G, a).\\
 &\text{Thus,}\\
-&Q_1(s,a) \left| Q_{T}(s_A, a) - Q_0(s_G,a) \right| \leq \gamma\sum_{t=0}^{0}\epsilon \gamma^t
+&Q_1(s,a) \left| Q_{T}(s_A, a) - Q_0(s_G,a) \right| \leq \gamma\sum_{t=0}^{T}\epsilon \gamma^t
 \end{align*}
 
 
@@ -359,7 +359,7 @@ Since all aggregated states have Q-values within $\epsilon$ of one another and $
 
 We assume as our inductive hypothesis that:
 \begin{equation}
-\forall_{s_G \in \mathcal{S}_G, a} |Q_0(s_G, a) - Q_{T-1}(\epQ(s_G), a)| \leq \sum_{t=0}^{T-2} \epsilon \gamma^t\\
+\forall_{s_G \in \mathcal{S}_G, a} |Q_0(s_G, a) - Q_{T-1}(\epQ(s_G), a)| \leq \sum_{t=0}^{T-2} \epsilon \gamma^t.\\
 \end{equation}
 
 Consider a fixed but arbitrary state, $s_G \in \mathcal{S}_G$, and fixed but arbitrary action $a$.
