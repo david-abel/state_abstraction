@@ -85,7 +85,7 @@ def plot(xData, yData, yAxisLabel, taskName, scatter=False, xAxisLabel="Epsilon"
 	plt.title(taskName[0].upper() + taskName[1:] + ': ' + xAxisLabel + ' vs. ' + yAxisLabel)
 	plt.grid(True)
 	plt.legend()
-	plt.savefig(taskName.lower() + '/' + xAxisLabel.lower() + '_vs_' + yAxisLabel.lower().replace(" ", "_") + '.png')
+	plt.savefig(taskName.lower() + '/' + xAxisLabel.lower() + '_vs_' + yAxisLabel.lower().replace(" ", "_") + '.pdf', format="pdf")
 	plt.clf()
 	# plt.show()
 	
