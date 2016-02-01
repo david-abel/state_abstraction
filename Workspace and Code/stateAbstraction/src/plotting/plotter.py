@@ -129,10 +129,7 @@ def	plotWithConfidenceIntervals(xData, allYData, yAxisLabel, taskName, confidenc
 			numTrials = []
 			for yDataAcrossTrials in yData:
 				mean, plusminus, numTrial = mean_confidence_interval(yDataAcrossTrials, confidence)
-				if math.isnan(plusminus):
-					errors.append(0)
-				else:
-					errors.append(plusminus)
+				errors.append(plusminus)
 				means.append(mean)
 				numTrials.append(numTrial)
 			maxY = max(maxY, max(means))
@@ -166,6 +163,11 @@ def	plotWithConfidenceIntervals(xData, allYData, yAxisLabel, taskName, confidenc
 
 def mean_confidence_interval(data, confidence):
 	mean, sigma = np.mean(data), np.std(data)
+	#If all same element return 0 for interval
+	if len(set(data)) <= 1:
+		return mean, 0, len(data)
+
+	#Otherwise calculate bounds
 	lowerMean, upperMean = stats.norm.interval(confidence, loc=mean, scale=sigma/math.sqrt(len(data)))
 
 	return mean, mean-lowerMean, len(data)
