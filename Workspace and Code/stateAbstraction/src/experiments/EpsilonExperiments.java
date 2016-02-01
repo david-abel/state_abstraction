@@ -213,7 +213,6 @@ public class EpsilonExperiments {
 		State initialMinefieldState = GraphDefinedDomain.getState(minefieldDomain, 0);
 		RewardFunction minefieldRF = new MinefieldGenerator.MinefieldRF(numMineStates, minefieldHeight * minefieldWidth);
 
-
 		if (task.equals("ALL")) {
 			generateEpsilonResults(nChainGen, nChainRF, initialNChainState, "nchain");
 			convertAndGenEpsilonResults(trenchGen, trenchTF, trenchRF, initialTrenchState, "trench");
