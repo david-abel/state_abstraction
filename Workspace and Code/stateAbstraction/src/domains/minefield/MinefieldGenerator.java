@@ -106,20 +106,36 @@ public class MinefieldGenerator {
 		public static class MinefieldRF implements RewardFunction {
 
 			private List<Integer> mineStates = new ArrayList<Integer>();
+			private List<Integer> topNodeIndices = new ArrayList<Integer>();
 			private Random prf = new Random();
 
-			public MinefieldRF(int numMineStates, int numTotalStates) {
+			/**
+			 * 
+			 * @param numMineStates
+			 * @param numTotalStates
+			 * @param height
+			 * @param width
+			 */
+			public MinefieldRF(int numMineStates, int numTotalStates, int height, int width) {
+				//Randomize mines
 				for (int i = 0; i < numMineStates; i++) {
 					mineStates.add(prf.nextInt(numTotalStates));
+				}
+				//Add to topNodes
+				for (int i = 0; i < width; i++) {
+					int indexToAdd = numTotalStates-1-i;
+					topNodeIndices.add(indexToAdd);
 				}
 			}
 
 			@Override
 			public double reward(State s, GroundedAction a, State sprime) {
-				if (s.equals(sprime) && a.actionName().equals("action2")){ 
+				int sIndex = GraphDefinedDomain.getNodeId(s);
+				int sPrimeIndex = GraphDefinedDomain.getNodeId(sprime);
+				if (topNodeIndices.contains(sIndex) && sIndex == sPrimeIndex && a.actionName().equals("action3")){ 
 					return 1;
 				}
-				else if (mineStates.contains(sprime)) {
+				else if (mineStates.contains(sPrimeIndex)) {
 					return 0;
 				} else{
 					return 0.1;
