@@ -345,10 +345,12 @@ B = &\max_{s_A \in \mcS_A, s_1, s_2 \in X(s_A), a} |Q(s_1, a) - Q(s_2, a)|\\
 By the similarity of transitions of grouped states under $\epM$:
 \begin{align*}
  \leq &\epsilon + \gamma Q_{max} \sum_{s_A \in \mcS_A} \epsilon \\
-\leq& \epsilon + \gamma|\mcS_G|\epsilon Q_{max}\\
-&\text{Applying 0-1 reward normalization and algebra:}\\
- \leq & \frac{\epsilon + \gamma(|\mcS_G| - 1) \epsilon}{1-\gamma}
+\leq& \epsilon + \gamma|\mcS_G|\epsilon Q_{max}
 \end{align*}
+Applying 0-1 reward normalization and algebra:
+\begin{equation*}
+ \leq \frac{\epsilon + \gamma(|\mcS_G| - 1) \epsilon}{1-\gamma}
+\end{equation*}
 
 Since the Q values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\epsilon = B$. Applying Lemma \ref{lma:Q*} yields Lemma \ref{lma:model}.
 
@@ -364,10 +366,12 @@ We let $\phi_{mult}$ define a type of abstraction that, for fixed $\epsilon$ sat
 
 \dnote{We also need to add the point about the denominator bound...}
 
-{\bf Lemma 3:} When $S_A$ is created using a function of the $\ep_{mult}$ type:
+{\bf Lemma 3:} When $S_A$ is created using a function of the $\ep_{mult}$ type, for some constant positive $k \in \mathbb{R}$:
 \begin{equation}
 \forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{\left(\textsc{QMax}|\mathcal{A}| + k \epsilon + k \epsilon^2\right)}{1-\gamma}:
 \end{equation}
+
+
 
 {\bf Proof Sketch:}
 
@@ -383,7 +387,7 @@ Similarly to the multinomial abstraction, we let $\phi_{bolt}$ define a type of 
 \forall_{a} \left|\frac{e^{Q^*(s_1,a)}}{\sum_b e^{Q^*(s_1,b)}} - \frac{e^{Q^*(s_1,a)}}{\sum_b e^{Q^*(s_1,b)}}\right| \leq \epsilon
 \end{multline}
 
-{\bf Lemma 4:} When $S_A$ is created using a function of the $\ep_{bolt}$ type:
+{\bf Lemma 4:} When $S_A$ is created using a function of the $\ep_{bolt}$ type, for some constant positive $k \in \mathbb{R}$::
 \begin{equation}
 \forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{\epsilon(\textsc{QMax}|\mathcal{A}| + k\epsilon) + A}{1-\gamma}:
 \end{equation}
