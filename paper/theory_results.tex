@@ -10,6 +10,13 @@ In general, our proof strategy for each of the included results is as follows:
 \item then, we relate the value of states in the ground \ac{MDP} to the value of states in the abstract \ac{MDP} under the optimal abstract policy.
 \end{itemize}
 
+% Explanation of the above.
+The first statement is relating Q values defined over the ground MDP with Q values defined over the abstract MDP, while the second statement is comparing the optimal Q values in the ground MDP, with the Q values in the ground MDP under the abstract policy. This is because our learners will solve for the optimal policy in the abstract, and use it in the ground MDP by mapping each ground state to its abstract state and querying the abstract policy for behavior. That is:
+\begin{equation}
+\pi_G(s) = \pi_A(\phi(s))
+\end{equation}
+
+
 % zzz that's odd... sounds like the same thing twice but with optimal policy added. we'll see how that works.
 % In response^^^ Could add a sentence pointing out how these differ.
 
@@ -46,6 +53,7 @@ Recall that $Q^*$ is a function on $\mathcal{S}_G \times \mathcal{A}$ that satis
 \ep_{Q^*}(s_1) = \ep_{Q^*}(s_2) \rightarrow \forall_a \left|Q^*(s_1, a) - Q^*(s_2, a)\right| \leq \epsilon.
 \end{equation}
 
+% Q^* Lemma
 \begin{lma}
 \label{lma:Q*}
 When $\ep_{Q^*}$ is used to create the abstract state space $\mathcal{S}_A$:
@@ -54,6 +62,7 @@ When $\ep_{Q^*}$ is used to create the abstract state space $\mathcal{S}_A$:
 \end{equation}
 \end{lma}
 
+% Proof
 \textbf{Proof:}
 We begin by showing that Q values in the abstract \ac{MDP} closely resemble those in the ground \ac{MDP}.
 
@@ -65,6 +74,7 @@ Let $Q_A: \mathcal{S}_A \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_A: \ma
 
 Let $X(s) = \{g \in \mathcal{S}_G | \epQ(g) = s\}$, the set of ground states that correspond to abstract state $s$.
 
+% Claim 1:
 \begin{clm}
 Q-Values in the abstract \ac{MDP} closely resemble those in the ground \ac{MDP}:
 \begin{equation}
@@ -77,13 +87,13 @@ Consider a temporally heterogeneous \ac{MDP}, $M^T = \langle \mathcal{S}_T, \mat
 \begin{equation}
 \mathcal{S}_T = \begin{cases}
 \mathcal{S}_G,& T \leq 0, \\
-\mathcal{S}_A,& \text{o/w}, \\
+\mathcal{S}_A,& \text{o/w},
 \end{cases}
 \end{equation}
 \begin{equation}
 \mathcal{R}_T(s,a) = \begin{cases}
 \mathcal{R}_G(s,a),& T \leq 0, \\
-\mathcal{R}_A(s, a),& \text{o/w}, \\
+\mathcal{R}_A(s, a),& \text{o/w},
 \end{cases}
 \end{equation}
 and
@@ -91,7 +101,7 @@ and
 \mathcal{T}_T(s,a,s') = \begin{cases}
 \mathcal{T}_G(s,a,s'),& T \leq 0, \\
 \underset{{g \in X(s)}}{\sum}\left[w(g)T_G(g, a, s')\right],& T = 1, \\
-\mathcal{T}_A(s,a,s'),& \text{o/w}. \\
+\mathcal{T}_A(s,a,s'),& \text{o/w}.
 \end{cases}
 \end{equation}
 

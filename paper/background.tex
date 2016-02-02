@@ -1,23 +1,27 @@
 \section{Background}
 
-First, some background.\dnote{Mmm. Hmmm? mmmm.}
+%First, some background.
 
 %MDP/SDM Background and Notation
 \subsection{\acp{MDP} and Sequential Decision Making}
-An \ac{MDP} is a five-tuple: $\langle \mathcal{S}, \mathcal{A}, \mathcal{T}, \mathcal{R}, \gamma \rangle$: $\mathcal{S}$ is a finite state space; $\mathcal{A}$ is the set of actions available to the agent; $\mathcal{T}$ denotes $\mathcal{T}(s' \mid s,a)$, the probability of an agent applying action $a \in \mathcal{A}$ in state $s \in \mathcal{S}$ resulting in arriving in $s' \in \mathcal{S}$; $\mathcal{R}(s)$ denotes the reward received by the agent arriving in state $s$; $\gamma \in [0, 1]$ is a discount  factor that defines how much the agent prefers future rewards over immediate rewards. We assume without loss of generality that all reward functions are normalized to $[0,1]$.
+An \ac{MDP} is a five-tuple: $\langle \mathcal{S}, \mathcal{A}, \mathcal{T}, \mathcal{R}, \gamma \rangle$: $\mathcal{S}$ is a finite state space; $\mathcal{A}$ is the set of actions available to the agent; $\mathcal{T}$ denotes $\mathcal{T}(s' \mid s,a)$, the probability of an agent transitioning to state $s' \in \mathcal{S}$ after applying action $a \in \mathcal{A}$ in state $s \in \mathcal{S}$; $\mathcal{R}(s)$ denotes the reward received by the agent arriving in state $s$; $\gamma \in [0, 1]$ is a discount  factor that defines how much the agent prefers future rewards over immediate rewards. We assume without loss of generality that all reward functions are normalized to $[0,1]$.
 
-The goal of an agent in an \ac{MDP} is to solve for a policy that maps states to actions: $\pi: \mathcal{S} \rightarrow \mathcal{A}$. In particular, the agent wants to solve for the policy that maximizes its expected discounted reward from any state. This goal policy is denoted $\pi^*$. We denote the expected discounted reward for following policy $\pi$ from state $s$ as the value of the state under that policy, $V^\pi(s)$. We similarly denote the expected discounted reward for taking action $a \in \mathcal{A}$ and then following policy $\pi$ from state $s$ forever after as $Q^\pi(s,a)$. Lastly, we denote the value and $Q$ functions under the optimal policy as $V^*$ and $Q^*$, respectively. \enote{Add citation -- either Littman review paper or Sutton/Barto or Puterman}
+The goal of an agent in an \ac{MDP} is to solve for a policy that maps states to actions: $\pi: \mathcal{S} \rightarrow \mathcal{A}$. In particular, the agent wants to solve for the policy that maximizes its expected discounted reward from any state. This goal policy is denoted $\pi^*$. We denote the expected discounted reward for following policy $\pi$ from state $s$ as the value of the state under that policy, $V^\pi(s)$. We similarly denote the expected discounted reward for taking action $a \in \mathcal{A}$ and then following policy $\pi$ from state $s$ forever after as $Q^\pi(s,a)$, defined by the Bellman Equation as:
+\begin{equation}
+Q^\pi(s,a) = \mathcal{R}(s,a) + \gamma \sum_{s'} \mathcal{T}(s,a,s') Q^\pi(s',\pi(s))
+\end{equation}
+Similarly, the value function defined under a given policy, denoted $V^\pi(s)$, is defined as:
+\begin{equation}
+V^\pi(s) = \max_a Q^\pi(s,a)
+\end{equation}
 
-\enote{Define value of state under a policy}
-\dnote{Q function, since we use it a lot}
+Lastly, we denote the value and $Q$ functions under the optimal policy as $V^*$ and $Q^*$, respectively~\cite{kaelbling1996reinforcement}.
 
 %Lihong Section
 \subsection{Abstraction Notation}
-We build upon the notation used by \citeauthor{li2006towards} \enote{This should probably say more}.
+We build upon the notation used by \citeauthor{li2006towards}, who introduced a unifying theoretical framework for state abstraction in \acp{MDP} and sequential decision making. We build heavily on their notation, and discuss other similarities in our work in the next section.
 
-We understand an abstraction as a mapping from the state space of a ground MDP $M_G$ to that of an abstract MDP $M_A$ using a state-aggregation scheme. $M_G = \langle \mathcal{S}_G, \mathcal{A}, \mathcal{T}_G, \mathcal{R}_G, \gamma \rangle$ and $M_A = \langle \mathcal{S}_A, \mathcal{A}, \mathcal{T}_A, \mathcal{R}_A, \gamma \rangle$.
-
-\dnote{Might be worth noting that $\phi$ induces a full abstract MDP in the ``intuitively" section}
+We understand an abstraction as a mapping from the state space of a ground MDP $M_G$ to that of an abstract MDP $M_A$ using a state-aggregation scheme. Consequently, this mapping induces an abstract MDP. Let:$M_G = \langle \mathcal{S}_G, \mathcal{A}, \mathcal{T}_G, \mathcal{R}_G, \gamma \rangle$ and $M_A = \langle \mathcal{S}_A, \mathcal{A}, \mathcal{T}_A, \mathcal{R}_A, \gamma \rangle$.
 
 % States
 The states in the abstract \ac{MDP} are constructed by applying a state-aggregation function, $\phi$, to the states in the ground \ac{MDP}, $\mathcal{S}_A$. More specifically, $\phi$ maps a state in the ground \ac{MDP} to a state in the abstract \ac{MDP}:
@@ -44,15 +48,20 @@ The abstract transition function $\mathcal{T}_A(s,a,s')$ is a weighted sum of th
 s, s' \in \mathcal{S}_A
 $.
 
+We refer to the weight associated with a ground state, $s \in \mathcal{S}_G$ by $\omega(s)$. The only restriction placed on the weighting schema is that it induces a probability distribution on the states:
+\begin{equation}
+\left(\sum_{s \in \mathcal{S}_G} \omega(s)\right) = 1,\hspace{6mm} \forall_{s \in \mathcal{S}_G} \omega(s) \in [0,1]
+\end{equation}
+
 % Abstract policy in ground.
 In general, we are interested in how policies defined over the abstract \ac{MDP} perform in the ground \ac{MDP}. To evaluate a policy $\pi_A:\mathcal{A}\rightarrow\mathcal{A}$, we map a ground state into the abstract state space, and query the abstract policy for behavior. Specifically:
 \begin{equation}
 V^{\pi_A}(s) = \mathcal{R}_G(s,\pi_A(\phi(s))) + \gamma \sum_{s' \in \mathcal{S}_G} \mathcal{T}_G(s,\pi_A(\phi(s)),s')V^{\pi_A}(s').
 \end{equation}
+\dnote{I don't think this is right. Should be the max action? Or am I confused? My reading of the Q function from above is then possibly confused...}
 
-\enote{Define $V_G$ and $V_A$ (value function in ground and value function in abstract)}
-\dnote{This should be done in the background section, right? Just defining a value fund under a policy}
-\enote{Say more about the weighting, w(s), (that it sums to 1 but that's all we assume)}
+%\enote{Define $V_G$ and $V_A$ (value function in ground and value function in abstract)}
+%\dnote{This should be done in the background section, right? Just defining a value fund under a policy}
 
 % Subsection: Exact Abstraction Framework
 \subsection{Exact Abstraction Framework}
@@ -71,12 +80,25 @@ A $Q^*$-irrelevance abstraction, $\phi_{Q^*}$, is one such that:
 \begin{defn}
 A model-irrelevance abstraction, $\phi_{model}$, is one such that:
 \begin{multline}
-\phi_{model}(s_1) = \phi_{model}(s_2) \rightarrow \forall a\ \mathcal{R}_G(s_1,a) = \mathcal{R}_G(s_2,a). \\
+\phi_{model}(s_1) = \phi_{model}(s_2) \rightarrow \forall a\ \mathcal{R}_G(s_1,a) = \mathcal{R}_G(s_2,a).
 \end{multline}
 and
 \begin{multline}
-\phi_{model}(s_1) = \phi_{model}(s_2) \rightarrow \\ \forall a \sum_{s' \in \phi^{-1}(\phi(s_1))} \mathcal{T}_G(s_1,a,s') =\sum_{s' \in \phi^{-1}(\phi(s_2))} \mathcal{T}_G(s_2,a,s'). \\
+\phi_{model}(s_1) = \phi_{model}(s_2) \rightarrow \\ \forall a \sum_{s' \in \phi^{-1}(\phi(s_1))} \mathcal{T}_G(s_1,a,s') = \sum_{s' \in \phi^{-1}(\phi(s_2))} \mathcal{T}_G(s_2,a,s').
 \end{multline}
 \end{defn}
 
-In words, zzz.\dnote{Insert details about each $\phi$ above}
+Intuitively, a $Q^*$-irrelevance is one that is guaranteed to compress states that share optimal Q functions. Critically, the direction of the implication is such that the abstraction is not guaranteed to abstract all states for which this condition is true, only that, if the abstraction function collapses two (or more) states to an abstract state, that those states have the same $Q^*$. Computing such a function is as difficult as solving the MDP, as it requires knowledge of the $Q*$, which is a sufficient condition for knowing the optimal policy. This is one of the motivations for investigating approximate abstractions, as we anticipate that an approximation of $Q^*$ is the sort of knowledge a learner can infer online.
+
+A model-irrelevance abstraction is one that is guaranteed to compress states that transition to the same compressed states, and have identical rewards. Critically, this need not require that the ground transition functions of any two compressed states are identical; only that their corresponding abstract state transitions {\it in the abstract} MDP are identical. Unlike the $Q^*$ irrelevance, in the planning setting we anticipate knowing the full transition function and reward function up front, so it is feasible that an abstraction function of this kind may be used. In a model based learning setting, we expect an approximate abstraction akin to model-irrelevance to be more realistic, as we anticipate reinforcement learners to be able to approximate the information content of the transition function and reward function during learning.
+
+
+
+
+
+
+
+
+
+
+

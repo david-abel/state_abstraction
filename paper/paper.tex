@@ -14,13 +14,13 @@
 \usepackage{icml2016/icml2016} 
 \usepackage[nolist]{acronym} % Acronym package -- give argument <dua> to suppress acronym usage
 
-%THeorem declarations
+%Theorem declarations
 \newtheorem{thm}{Theorem}
 \newtheorem{lma}{Lemma}
 \newtheorem{clm}{Claim}
 \newtheorem{defn}{Definition}
 
-\icmltitlerunning{Suboptimality Bounds for Approximate State Abstraction}
+\icmltitlerunning{Near Optimal Behavior with Approximate State Abstraction}
 
 % --- Notation Commands ---
 \newcommand{\ep}{\widetilde \phi}
@@ -44,7 +44,8 @@
 \begin{document}
 
 \twocolumn[
-\icmltitle{Optimality Bounds for Approximate State Abstraction}
+% Suboptimality Bounds for Approximate State Abstraction
+\icmltitle{Near Optimal Behavior with Approximate State Abstraction}
 
 % Paper Meta Info
 \icmlauthor{David Abel}{david_abel@brown.edu}
@@ -91,15 +92,19 @@
 \input{background.tex}
 
 
+
 % -----------------------------------------
 % --- SECTION: Related Work ---
 % -----------------------------------------
 \input{related_work.tex}
 
+
+
 % ----------------------------------------------------------------
 % --- SECTION: Approximate State Abstraction  ---
 % ----------------------------------------------------------------
 \input{theory_results.tex}
+
 
 
 % -----------------------------------------------
@@ -108,30 +113,18 @@
 \input{example_domains.tex}
 
 
+
 % ------------------------------------------------------------------------------------
 % --- SECTION: Approximate Abstraction on Example Domains ---
 % ------------------------------------------------------------------------------------
 \input{results_discussion.tex}
 
 
+
+% --------------------------------------
 % --- SECTION: Conclusion ---
-\section{Conclusion}
-
-% Summary
-
-% Future Work
-\begin{enumerate}
-\item Learning Phi
-\begin{itemize}
-\item Exploration vs. Exploitation problem is different while trying to learn Phi
-\end{itemize}
-\item Compressibility
-\begin{itemize}
-\item Relationship between approximate abstract and compressibility
-\end{itemize}
-\item POMDP and abstraction
-\end{enumerate}
-
+% --------------------------------------
+\input{conclusion.tex}
 
 
 
