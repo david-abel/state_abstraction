@@ -179,6 +179,8 @@ def makeAllPlots():
 		makePlot(taskName)
 
 def round_sig(x, sig=5):
+	if (x == 0):
+		return 0
 	return round(x, sig-int(floor(log10(x)))-1)
 
 
@@ -188,7 +190,6 @@ def combineTrialData(trialToDataHM, yDataIndex, xDataIndex):
 	for trialIndex, trialData in trialToDataHM.iteritems():
 		xData = trialToDataHM[trialIndex][xDataIndex]
 		for xIndex, x in enumerate(xData):
-			oldList = trialToDataHM[trialIndex][xIndex]
 			roundedX = round_sig(x)
 			xToListOfYData[roundedX].append(trialToDataHM[trialIndex][yDataIndex][xIndex])
 
