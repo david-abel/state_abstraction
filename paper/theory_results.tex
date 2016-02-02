@@ -115,8 +115,14 @@ Q_T(s, a) =
 \begin{cases}
 	   Q_G(s, a) &  T=0\\
 	   \underset{g \in X(s)}{\sum} \left[ w(g)Q_G(g,a) \right] & T = 1\\
-	   \mathcal{R}_A(\epQ(s),a) + \gamma \underset{{s_A}' \in \mathcal{S}_A}{\sum} \mathcal{T}_A(\epQ(s),a,{s_A}') \max_{a'} Q_{T-1}({s_A}', a') & \text{o/w}
+	   \mathcal{R}_A(\epQ(s),a) + \sigma_{T-1}(s,a) &\text{o/w}
+
 \end{cases}
+\end{equation}
+
+Where:
+\begin{equation}
+\sigma_{T-1}(s,a) = \gamma \underset{{s_A}' \in \mathcal{S}_A}{\sum} \mathcal{T}_A(\epQ(s),a,{s_A}') \max_{a'} Q_{T-1}({s_A}', a')
 \end{equation}
 
 We proceed by induction on $T$ to show that:
@@ -127,24 +133,21 @@ that is, the Q function remains relatively unchanged over time.
 
 % Base Case t=0
 \textit{Base Case: $T = 0$}
-
 When $T = 0$, $Q_T = Q_0$, so the result trivially follows.
-
 % Base Case t=1
 \textit{Base Case: $T = 1$}
 \begin{align*}
-&Q_1(s,a) = \underset{g \in X(s)}{\sum} \left[ w(g)Q_G(g,a) \right].\\
+&Q_1(s,a) = \underset{g \in X(s)}{\sum} \left[ w(g)Q_G(g,a) \right].
 \end{align*}
 Since all co-aggregated states have Q-values within $\epsilon$ of one another and $w(g)$ induces a convex combination,
 \begin{align*}
 &Q_1(s,a) \leq \epsilon \gamma^t + \epsilon + Q_0(s_G, a),\\
-&Q_1(s,a) \leq \gamma\sum_{t=0}^{1} \epsilon \gamma^t + Q_0(s_G, a).\\
-&\text{Thus,}\\
-&Q_1(s,a) \left| Q_{T}(s_A, a) - Q_0(s_G,a) \right| \leq \gamma\sum_{t=0}^{T}\epsilon \gamma^t
+&Q_1(s,a) \leq \gamma\sum_{t=0}^{1} \epsilon \gamma^t + Q_0(s_G, a).
 \end{align*}
-
-
-
+Thus,
+\begin{equation}
+Q_1(s,a) \left| Q_{T}(s_A, a) - Q_0(s_G,a) \right| \leq \gamma\sum_{t=0}^{T}\epsilon \gamma^t
+\end{equation}
 % Inductive Case
 \textit{Inductive Case: $T > 1$}
 
@@ -155,20 +158,29 @@ We assume as our inductive hypothesis that:
 
 Consider a fixed but arbitrary state, $s_G \in \mathcal{S}_G$, and fixed but arbitrary action $a$.
 
-We denote $\epQ(s_G)$ as $s_A$.
+We denote $\epQ(s_G)$ as $s_A$. By definition of $Q_{T}(s_A, a)$, $\mathcal{R}_A$, $\mathcal{T}_A$:
+\begin{multline*}
+Q_T(s_A, a) = \sum_{g \in X(s_A)}w(g)* \\ 
+ \left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'} Q_{T-1}(g', a')      \right]
+\end{multline*}
+Applying our inductive hypothesis yields,
+\begin{multline*}
+\leq \sum_{g \in X(s_A)}w(g) * \\ \left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'}(Q_0(g', a') + \sum_{t=0}^{T-2} \epsilon \gamma^t)      \right]
+\end{multline*}
+%&\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \sum_{g \in X(s_A)}w(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'}Q_0      \right]\\
+Then:
+\begin{equation*}
+\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \sum_{g \in X(s_A)}\left[ w(g)\ Q_0(g,a)\right]
+\end{equation*}
+Since all aggregated states have Q-values within $\epsilon$ of one another:
 \begin{align*}
-&\text{By definition of $Q_{T}(s_A, a)$, $\mathcal{R}_A$, $\mathcal{T}_A$:}\\
-&Q_T(s_A, a) =\sum_{g \in X(s_A)}w(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'} Q_{T-1}(g', a')      \right]\\
-&\text{Applying our inductive hypothesis yields}\\
-&\leq \sum_{g \in X(s_A)}w(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'}(Q_0(g', a') + \sum_{t=0}^{T-2} \epsilon \gamma^t)      \right]\\
-&\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \sum_{g \in X(s_A)}w(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'}Q_0      \right]\\
-&\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \sum_{g \in X(s_A)}\left[ w(g)\ Q_0(g,a)\right]\\
-&\text{Since all aggregated states have Q-values within $\epsilon$ of one another:}\\
 &\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \epsilon + Q_0(s_G, a)\\
-&\leq \gamma\sum_{t=0}^{T-1} \epsilon \gamma^t + Q_0(s_G, a)\\
-&\text{Thus,}\\
-&\left| Q_{T}(s_A, a) - Q_0(s_G,a) \right| \leq \gamma\sum_{t=0}^{T-1}\epsilon \gamma^t
+&\leq \gamma\sum_{t=0}^{T-1} \epsilon \gamma^t + Q_0(s_G, a)
 \end{align*}
+Thus,
+\begin{equation*}
+\left| Q_{T}(s_A, a) - Q_0(s_G,a) \right| \leq \gamma\sum_{t=0}^{T-1}\epsilon \gamma^t
+\end{equation*}
 
 Since $s_G$ and $s_A$ are arbitrary and $Q_0=Q_G$ we conclude
 \begin{equation}
@@ -196,10 +208,9 @@ The optimal action in the abstract MDP has a Q value in the ground which is near
 V_G(s_G) \leq Q_G(s_A, a^*_A) + \frac{2\epsilon}{1-\gamma}
 \end{equation}
 
-
 By Equation \ref{eq:Q*Claim1}
 \begin{align}
-&V_G(s_G) = Q_G(s_G, a^*_G) \leq Q_A(s_G, a^*_G) + \frac{\epsilon}{1-\gamma} \\
+&V_G(s_G) = Q_G(s_G, a^*_G) \leq Q_A(s_G, a^*_G) + \frac{\epsilon}{1-\gamma}
 \label{eq:Q*OptActionResult}
 \end{align}
 
@@ -221,28 +232,24 @@ We conclude Lemma \ref{lma:Q*} by Claim \ref{clm:optAbsActionNearOptGround}.
 \end{clm}
 
 Consider the policy for $M_G$ of following the optimal abstract policy $\pi^*_A$ for t steps and then following the optimal ground policy $\pi^*_G$ in $M_G$:
-
 \begin{equation}
 \pi_{A,t}(s)=
 \begin{cases}
 \pi_G^*(s), \text{if $t<=0$}\\
-\pi_A^*(\ep(s)), \text{if $t > 0$}\\
+\pi_A^*(\ep(s)), \text{if $t > 0$}
 \end{cases}
 \end{equation}
 
 For a particular $t$, the value of this policy for $s_G \in \mathcal{S}_G$ is as follows:
-\begin{align*}
-V^{\pi_{A,t}}(s_G) &= \\
-&R_G(s, \pi_{A,t}(s_G)) + \gamma \sum_{{s_G}' \in \mathcal{S}_G}\mathcal{T}_G(s_G, a, {s_G}')V^{\pi_{A,t-1}}({s_G}')
-\end{align*}
-
+\begin{multline*}
+V^{\pi_{A,t}}(s_G) = \\
+R_G(s, \pi_{A,t}(s_G)) +\ \gamma \sum_{{s_G}' \in \mathcal{S}_G}\mathcal{T}_G(s_G, a, {s_G}')V^{\pi_{A,t-1}}({s_G}')
+\end{multline*}
 %Start induction on following the optimal abstract policy
 We now show by induction on $t$ that
 \begin{equation}
 \forall_{t, s_G \in \mathcal{S}_g} V^{\pi^*}(s_G) \leq  V^{\pi_{A,t}}(s_G) + \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma}
 \end{equation}
-
-
 \textit{Base case: $t=0$}
 
 By definition when $t=0$, $V^{\pi_{A,t}} = V^{\pi^*}$ so our bound trivially holds in this case.
@@ -255,22 +262,29 @@ We assume for our inductive hypothesis that
 \begin{equation}
 V^{\pi^*}(s_G) \leq V^{\pi_{A,t-1}}(s_G)  + \sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma}
 \end{equation}
-
 By definition 
+\begin{multline*}
+V^{\pi_{A,t}}(s_G) = R_G(s, \pi_{A,t}(s_G)) + \\ \gamma \sum_{g'}\mathcal{T}_G(s_G, a, {s_G}')V^{\pi_{A,t-1}}({s_G}')
+\end{multline*}
+Applying our inductive hypothesis yields:
+\begin{multline*}
+V^{\pi_{A,t}}(g, a) \geq R_G(s, \pi_{A,t}(g, a))\ + \\ \gamma \sum_{g'}\mathcal{T}_G(g, a, g')\left(V^{\pi^*}({s_G}') - \sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} \right)
+\end{multline*}
+Therefore:
 \begin{align*}
-&V^{\pi_{A,t}}(s_G) = R_G(s, \pi_{A,t}(s_G)) + \gamma \sum_{g'}\mathcal{T}_G(s_G, a, {s_G}')V^{\pi_{A,t-1}}({s_G}')\\
-&\text{Applying our inductive hypothesis yields}\\
-&V^{\pi_{A,t}}(g, a) \geq\\
-&R_G(s, \pi_{A,t}(g, a)) + \gamma \sum_{g'}\mathcal{T}_G(g, a, g')\left(V^{\pi^*}({s_G}') - \sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} \right)\\
-&\geq -\gamma\sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} + R_G(s, \pi_{A,t}(g)) + \gamma \sum_{g'}\mathcal{T}_G(g, a, g')V^{\pi^*}(g')\\
-&\geq -\gamma\sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} + Q^{\pi^*}(g, \pi_{A,t} (g))\\
-&\text{Applying Equation \ref{eq:Q*Claim2} yields}\\
+%&\geq -\gamma\sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} + R_G(s, \pi_{A,t}(g)) + \gamma \sum_{g'}\mathcal{T}_G(g, a, g')V^{\pi^*}(g')\\
+&\geq -\gamma\sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} + Q^{\pi^*}(g, \pi_{A,t} (g))
+\end{align*}
+Applying Equation \ref{eq:Q*Claim2} yields:
+\begin{align*}
 &\geq \gamma\sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} - \frac{2\epsilon}{1-\gamma} + V_{G}(s_G)\\
-&\leq \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma} + V_G(g)\\
-& \text{Thus,}\\
-&V^{\pi^*}(s_G) \leq V^{\pi_{A,t}}(s_G)  + \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma}
+&\leq \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma} + V_G(g)
 \end{align*}
 
+Thus,
+\begin{equation*}
+V^{\pi^*}(s_G) \leq V^{\pi_{A,t}}(s_G)  + \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma}
+\end{equation*}
 Since $s_G$ was arbitrary, we conclude that our bound holds for all states in $\mathcal{S}_G$ for the inductive case.
 
 Thus, from our base case and induction we conclude that
@@ -323,9 +337,13 @@ Let $B$ stand for the maximum Q difference between any pair of ground states in 
 \begin{align*}
 B = &\max_{s_A \in \mcS_A, s_1, s_2 \in X(s_A), a} |Q(s_1, a) - Q(s_2, a)|\\
 =&\max_{s_A \in \mcS_A, s_1, s_2 \in X(s_A), a}      |R(s_1, a) - R(s_2, a) +\\
-& \gamma \sum_{g' \in \mcS_G}(\mcT(s_1,a,g')-\mcT(s_2, a, g'))\max_{a'}Q(g', a')|\\
-\leq &\epsilon + \gamma \sum_{s_A \in \mcS_A}\sum_{g' \in X(s_A)}\left[(T(s_1, a, g')-T(s_2, a, g')) 		\max_{a'}Q(g', a')	\right]\\
-&\text{By the similarity of transitions of grouped states under $\epM$:}\\
+& \gamma \sum_{g' \in \mcS_G}(\mcT(s_1,a,g')-\mcT(s_2, a, g'))\max_{a'}Q(g', a')|
+\end{align*}
+\begin{multline*}
+\leq \epsilon + \gamma \sum_{s_A \in \mcS_A}\sum_{g' \in X(s_A)} \\ \left[(T(s_1, a, g')-T(s_2, a, g')) 		\max_{a'}Q(g', a')	\right]
+\end{multline*}
+By the similarity of transitions of grouped states under $\epM$:
+\begin{align*}
  \leq &\epsilon + \gamma Q_{max} \sum_{s_A \in \mcS_A} \epsilon \\
 \leq& \epsilon + \gamma|\mcS_G|\epsilon Q_{max}\\
 &\text{Applying 0-1 reward normalization and algebra:}\\
