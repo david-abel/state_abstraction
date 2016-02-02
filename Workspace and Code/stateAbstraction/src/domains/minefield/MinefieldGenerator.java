@@ -15,8 +15,9 @@ public class MinefieldGenerator {
 	
 	/**
 	 * 
-	 * @param totalNumStates
-	 * @return an n state graph MDP.
+	 * @param width
+	 * @param height
+	 * @return
 	 */
 	public static GraphDefinedDomain getMinefield(int width, int height) {
 		GraphDefinedDomain dg = new GraphDefinedDomain(height*width);
@@ -43,6 +44,10 @@ public class MinefieldGenerator {
 				// Set slip probs for Up:
 				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 2/*up action*/, leftIndex, slipProbability/2.0);
 				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 2/*up action*/, rightIndex, slipProbability/2.0);
+				
+				// Set slip probs for down:
+				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 3/*down action*/, leftIndex, slipProbability/2.0);
+				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 3/*down action*/, rightIndex, slipProbability/2.0);
 			}
 		}
 
@@ -54,8 +59,24 @@ public class MinefieldGenerator {
 				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 2/*up action*/, currentStateIndex+width, 1.0 - slipProbability);
 				
 				// Set slip for Left and Right
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 0/*left action*/, currentStateIndex+width, slipProbability);
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 1/*right action*/, currentStateIndex+width, slipProbability);
+				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 0/*left action*/, currentStateIndex+width, slipProbability/2.0);
+				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 1/*right action*/, currentStateIndex+width, slipProbability/2.0);
+			}
+		}
+		// Set up transition for down.
+		for (int j = 0; j < height-1; j++){
+			for (int i = 0; i < width; i++) {
+				int currentStateIndex = i +j*width;
+				int stateBelowIndex = currentStateIndex-width;
+				if (stateBelowIndex < 0) stateBelowIndex = currentStateIndex; // Self loop at bottom
+				System.out.println("sbelow: " + stateBelowIndex);
+				
+				// Set normal transition for down.
+				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 3/*down action*/, stateBelowIndex, 1.0 - slipProbability);
+				
+				// Set slip for Left and Right
+				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 0/*left action*/, stateBelowIndex, slipProbability/2.0);
+				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 1/*right action*/, stateBelowIndex, slipProbability/2.0);
 			}
 		}
 
@@ -70,7 +91,7 @@ public class MinefieldGenerator {
 	}	
 
 	/**
-	 * n State chain reward function -- returns 10 if action 1 is taken in the last state, 2 if
+	 * Minefield reward function -- returns 10 if action 1 is taken in the last state, 2 if
 	 * action 0 is taken ever and 0 otherwise.
 	 * @author Dhershkowitz
 	 *
