@@ -156,7 +156,7 @@ def	plotWithConfidenceIntervals(xData, allYData, yAxisLabel, taskName, confidenc
 
 	plt.grid(True)
 	plt.legend()
-	plt.savefig(taskName.lower() + '/' + xAxisLabel.lower() + '_vs_' + yAxisLabel.lower().replace(" ", "_") + '.png')
+	plt.savefig(taskName.lower() + '/' + xAxisLabel.lower() + '_vs_' + yAxisLabel.lower().replace(" ", "_") + '.pdf', format="pdf")
 	plt.clf()
 	# plt.show()
 
