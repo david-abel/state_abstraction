@@ -54,7 +54,7 @@ We now introduce the main result of the paper.
 
 % Theorem 1
 \begin{thm}
-There exist at least four classes of approximate state-aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{mult}}$ and $\ep_{\text{bolt}}$ for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\epsilon$:
+There exist at least four classes of approximate state-aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{bolt}}$ and $\ep_{\text{mult}}$ for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\epsilon$:
 \begin{equation}
 \forall_{s \in \mathcal{S}_G}: | V_G^{\pi^*_G}(s) - V_G^{\pi^*_{A}}(s) | \leq poly(\epsilon).
 \end{equation}
@@ -374,57 +374,81 @@ Applying 0-1 reward normalization and algebra:
 
 Since the Q values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\epsilon = B$. Applying Lemma \ref{lma:Q*} yields Lemma \ref{lma:model}.
 
-% Subsection: Boltzmann over Optimal Q
-\enote{Motivate Boltzmann + multinomial}
 
 \subsection{Boltzmann over Optimal Q: $\ep_{bolt}$}
 \label{sec:boltz}
 
+Here we introduce the approximate abstraction family, $\phi_{bolt}$, which aggregates states with similar Boltzmann distributions on optimal Q values as equivalent. This family of abstractions is appealing as the Boltzmman distribution over Q-values has been of interest in the reinforcement learning literature due to its natural balancing of exploration and exploitation~\cite{sutton1998reinforcement}.
 
-Similarly to the multinomial abstraction, we let $\phi_{bolt}$ define a type of abstraction that, for fixed $\epsilon$ satisfies:
+We let $\phi_{bolt}$ define a family of abstractions that, for fixed $\epsilon$ satisfies:
 \begin{multline}
 \ep_{bolt}(s_1) = \ep_{bolt}(s_2) \rightarrow \\
-\forall_{a} \left|\frac{e^{Q^*(s_1,a)}}{\sum_b e^{Q^*(s_1,b)}} - \frac{e^{Q^*(s_1,a)}}{\sum_b e^{Q^*(s_1,b)}}\right| \leq \epsilon
+\forall_{a} \left|\frac{e^{Q^*(s_1,a)}}{\sum_b e^{Q^*(s_1,b)}} - \frac{e^{Q^*(s_2,a)}}{\sum_b e^{Q^*(s_2,b)}}\right| \leq \epsilon
+\label{eq:phi_bolt}
 \end{multline}
 
-{\bf Lemma 4:} When $S_A$ is created using a function of the $\ep_{bolt}$ type, for some constant positive $k \in \mathbb{R}$::
+We also assume that the difference in normalizing terms is bounded by some non-negative constant, $k\in \mathbb{R}$, of $\epsilon$:
 \begin{equation}
-\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq 
-\epsilon:
+\sum_b e^{Q^*(s_1,b)} - \sum_b e^{Q^*(s_2,b)} \leq k*\epsilon
+\label{eq:bolt_denom}
 \end{equation}
+
+\begin{lma} When $S_A$ is created using a function of the $\ep_{bolt}$ type, for some non-negative constant $k \in \mathbb{R}$::
+\begin{equation}
+\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{2\epsilon\left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k\right)}{(1-\gamma)^2}
+\end{equation}
+\label{lma:bolt_lemma}
+\end{lma}
+
+We prove Lemma~\ref{lma:bolt_lemma} by using the approximation for $e^x$:
+\begin{equation}
+1 + x + \delta = e^x
+\label{eq:e_to_x_approx}
+\end{equation}
+Where $\delta$ is the error associated with the approximation.
 
 {\bf Proof Sketch:}
 
-\dnote{Proof sketch}
+By the approximation in Equation~\ref{eq:e_to_x_approx} and the assumption in Equation~\ref{eq:bolt_denom}:
+\begin{align*}
+|\frac{1 + Q(s_1,a) + \delta_1}{\sum_j e^{Q(s_1,a_j)}} - \frac{1 + Q(s_2,a) + \delta_2}{\sum_j e^{Q(s_1,a_j)} \pm k\epsilon}| \leq \epsilon
+\end{align*}
 
+It follows that:
+\begin{equation}
+|Q(s_1,a) - Q(s_2,a)| \leq \epsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k \right)
+\label{eq:bolt_qs}
+\end{equation}
 
-\dnote{(Probably put full proofs in appendix if we have room?}
+Consequently, we can consider $\widetilde{\phi}_{bolt}$ as a type of $\epQ$, where the difference in Q values is bounded by: $\epsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k \right)$. The Lemma follows directly from Lemma~\ref{lma:Q*}.
 
 
 % Subsection: Multinomial over Optimal Q
 \subsection{Multinomial over Optimal Q: $\ep_{mult}$}
 \label{sec:mult}
 
-We let $\phi_{mult}$ define a type of abstraction that, for fixed $\epsilon$ satisfies:
+We consider a multinomial distribution over $Q^*$ for similar reasons as the Boltzmann. We let $\phi_{mult}$ define a type of abstraction that, for fixed $\epsilon$ satisfies.
 \begin{multline}
 \ep_{mult}(s_1) = \ep_{mult}(s_2) \rightarrow \\
 \forall_{a} \left|\frac{Q^*(s_1,a)}{\sum_b Q^*(s_1,b)} - \frac{Q^*(s_1,a)}{\sum_b Q^*(s_1,b)}\right| \leq \epsilon
 \end{multline}
 
-\dnote{We also need to add the point about the denominator bound...}
-
-{\bf Lemma 3:} When $S_A$ is created using a function of the $\ep_{mult}$ type, for some constant positive $k \in \mathbb{R}$:
+We also assume that the difference in normalizing terms is bounded by some positive factor, $k \in \mathbb{R}$, of $\epsilon$:
 \begin{equation}
-\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{\left(\textsc{QMax}|\mathcal{A}| + k \epsilon + k \epsilon^2\right)}{1-\gamma}:
+|\sum_i Q(s_1,a_i) - \sum_j Q(s_2,a_j) | \leq k\epsilon
 \end{equation}
 
-
+\begin{lma} When $S_A$ is created using a function of the $\ep_{mult}$ type, for some non-negative constant $k \in \mathbb{R}$:
+\begin{equation}
+\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{\frac{2\epsilon|\mathcal{A}|}{1-\gamma} + k \epsilon^2 + k}{(1-\gamma)^2}
+\end{equation}
+\end{lma}
 
 {\bf Proof Sketch:}
 
-% Possibly a lemma for NP-Completeness of the minimal such phi for all abstractions (was a result for model in previous cases).
+The proof follows a near identical strategy to that of Lemma~\ref{lma:bolt_lemma}.
 
-
+\dnote{Bounds for multi and bolt suspisiously similar. Double check math}
 
 % Subsection: Other Abstractions
 \subsection{Other Abstractions}
