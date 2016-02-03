@@ -20,27 +20,29 @@ Here, we introduce our formal method for analyzing approximate state abstraction
 % zzz that's odd... sounds like the same thing twice but with optimal policy added. we'll see how that works.
 % In response^^^ Could add a sentence pointing out how these differ.
 
-We now introduce some additional notation to formally discuss these results:
+We now introduce some additional notation to formally discuss these results.
 
 % Abstract policy in ground.
-We are interested in how the optimal policy in the abstract \ac{MDP} performs in the ground \ac{MDP}. 
+We are interested in how the optimal policy in the abstract \ac{MDP} performs in the ground \ac{MDP}. As such we formally define the policy in the ground \ac{MDP} derived from optimal behavior in the abstract \ac{MDP}:
 
-\bdefn{$\pi_A^*$}
-To evaluate a the optimal abstractpolicy $\pi_A:\mathcal{A}\rightarrow\mathcal{A}$, we map a ground state into the abstract state space, and query the abstract policy for behavior. Specifically:
+\bdefn{$\pi_{GA}$}
+Given a $s \in \mcS_G$ and a state aggregation function, $\phi$, 
 \begin{equation}
-V^{\pi_A}(s) = \mathcal{R}_G(s,\pi_A(\phi(s))) + \gamma \sum_{s' \in \mathcal{S}_G} \mathcal{T}_G(s,\pi_A(\phi(s)),s')V^{\pi_A}(s').
+\pi_{GA}(s)=\pi_A^*(\phi(s))
 \end{equation}
+where $\pi_A^*$ is the optimal policy in the abstract \ac{MDP}.
 \edefn
 
-\begin{defn}
+We now define classes of abstraction based on functions state, action pairs.
+\bdefn{$\ep_f$}
 Given a function $f: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathcal{R}$ and a fixed non-negative $\epsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state-aggregation function that satisfies the following for any two ground states $s_1$ and $s_2$: 
 \begin{equation}
 \label{eq:phi_f}
 \ep_f(s_1) = \ep_f(s_2) \rightarrow \forall_a \left|f(s_1, a) - f(s_2, a)\right| \leq \epsilon
 \end{equation}
-\end{defn}
+\edefn
 
-That is, when $\ep_f$ aggregates states, all aggregated states have values of $f$ within $\epsilon$ of each other for all actions. Note that, for any $f$, there are many functions that satisfy the $\ep_f$ criterion.
+That is, when $\ep_f$ aggregates states, all aggregated states have values of $f$ within $\epsilon$ of each other for all actions.
 
 \bdefn{$Q_G$, $V_G$}
 Let $Q_G: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_G: \mathcal{S}_G \rightarrow \mathbb{R}$ denote the optimal Q and optimal value functions in the ground \ac{MDP}.
@@ -56,19 +58,17 @@ We now introduce the main result of the paper.
 \begin{thm}
 There exist at least four classes of approximate state-aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{mult}}$ and $\ep_{\text{bolt}}$ for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\epsilon$:
 \begin{equation}
-\forall_{s \in \mathcal{S}_G}: | V_G^{\pi^*_G}(s) - V_G^{\pi^*_{A}}(s) | \leq poly(\epsilon).
+\forall_{s \in \mathcal{S}_G}: | V_G^{\pi_{GA}}(s) - V_G^{\pi_G^*}(s) | \leq poly(\epsilon).
 \end{equation}
+Where $\pi_G^*$ is the optimal policy in the ground \ac{MDP}.
 \end{thm}
-
-\enote{Consider moving definition of $V^{\pi^*_{A}}(s)$ so it's fresh for reader.}
-% zzz Also, I think it might be worth spelling out the poly(eps) part. Seems incomplete this way.
 
 % Subsection: Optimal Q Function
 \subsection{Optimal Q Function: $\ep_{Q^*}$}
 \label{sec:Q*}
 
 % Q* Lemma
-Recall that $Q^*$ is a function on $\mathcal{S}_G \times \mathcal{A}$ that satisfies \enote{$Q^*$ definition}. We consider an approximate version of the $Q^*$-irrelevance abstraction. An approximate $Q$ function has the same form as Equation~\ref{eq:phi_f}:
+We consider an approximate version of the $Q^*$-irrelevance abstraction. An approximate $Q$ function has the same form as Equation~\ref{eq:phi_f}:
 \begin{equation}
 \ep_{Q^*}(s_1) = \ep_{Q^*}(s_2) \rightarrow \forall_a \left|Q^*(s_1, a) - Q^*(s_2, a)\right| \leq \epsilon.
 \end{equation}
