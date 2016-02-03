@@ -10,6 +10,7 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.*;
+import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 
 import domains.upworld.UpWorldGenerator;
@@ -118,18 +119,19 @@ public class GraphStreamVisualizer {
 					int edgeReward = (int) rf.reward(currState, ga, sPrime);
 //					System.out.println("GraphStreamVis edgeReward: " + edgeReward);
 					int actionIndex = dom.getActions().indexOf(a);
-					e.addAttribute("ui.label", probString);
+//					e.addAttribute("ui.label", probString); //Label edges with probs
 					// Set color to match action
 					String colorString = "fill-color:" + colorPalette[actionIndex % colorPalette.length]  + ";";
 					// Set edge width to mag of reward
 					e.addAttribute("ui.style", "size:" + Math.abs(edgeReward) + "px;" + colorString);
 				}
 			}
-
-
 		}
 
-		Viewer view = graph.display();
+		Viewer viewer = graph.display();
+		View view = viewer.getDefaultView();
+		view.getCamera().setViewPercent(1.5);
+
 	}
 	
 	public static void addExplorer(Domain d, RewardFunction rf, TerminalFunction tf, State initialState) {

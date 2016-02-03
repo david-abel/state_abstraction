@@ -1,41 +1,55 @@
 \section{Approximate Abstraction on Example Domains}
+%Explanation of what abstraction is used
+We run experiments on aggregation functions the $\ep{Q^*}$ abstraction. For each trial our aggregation greedily groups ground states into abstract states that satisfy the $\ep{Q^*}$ criteria. The order in which ground states are selected and then greedily added is randomized so there is randomization across trials. Every ground state is equally weighted in its abstract state.
 
-Here we discuss the results shown in states blah blah \dnote{Description of this section}.
+%Explanation of what plots done
+For each domain we report two quantities as a function of epsilon in Figures \ref{fig:main_empirical_results1} and \ref{fig:main_empirical_results2}. First, we compare the number of states in the abstract \ac{MDP} to different values of $\epsilon$. The smaller this value, the smaller the state space of the $\ac{MDP}$ that the agent must plan over. Second, we report the value under the abstract policy of the initial ground state. 50 Trials are gathered for each data point \enote{except ones where it doesn't matter (nChain and Minefield) -- is this worth noting?}
 
+%Discuss results
+Our empirical results corroborate our thesis -- that approximate state abstractions can form the basis of learnable and useful state aggregation criteria. In both NChain and Minefield, we observe that despite increasing $\epsilon$ to reduce the number of states which must be planned over, optimal behavior is either fully maintained (NChain) or optimal behavior is very nearly maintained (Minefield). Similarly for Taxi and $\epsilon$ between $.02$ and $.025$ we observe a reduction in the number of states that must be planned over while value is fully maintained. After $.025$, increased reduction in state space size comes at a cost of value. Lastly, as $\epsilon$ is increased Random smoothly reduces the number of abstract states which must be planned over with a corresponding cost in the value of the derived policy.
 
-\begin{itemize}
-\item For $\epsilon > 0$, there are extremely useful abstractions to be made. Want to emphasize that with approximate knowledge of X, can still abstract effectively (point out Minefield + NChain both retain a very good policy from abstract MDP). This hits the learnable point.
-\item Explain goal based/Taxi (regenerate plot for different scale of epsilon)
-\item Possibly talk about stochasticity (low priority)
-\item Explain Random behavior, smooth interpolation, mention randomness, etc.
-\item Describe plots a bit (what is the y-axis?)
-\end{itemize}
+Our experimental results also demonstrate a noteworthy contrast between approximate state abstraction on goal-based \acp{MDP} and random \acp{MDP}. Taxi exhibits relative stability in state space size and behavior for epsilon up to $.02$ until both precipitously fall off. We attribute the sudden fall off in number of abstract states and value of the derived policy in Taxi to its goal-based nature; once certain information critical for optimal behavior is lost in the state aggregation, solving the goal -- and so acquiring any reward -- is rendered entirely unattainable. Conversely, in Random a great deal of near-optimal policies are available to the agent. Thus, even the information for optimal behavior is lost with an increase in $\epsilon$ there are a great deal of near-optimal policies available to the agent which are not lost in the state aggregation.
 
-% Figure: Epsilon vs. #States for all three sample domains.
+\enote{Should we regenerate plots for nChain so it has CIs to match other plots?}
+% Figure: Epsilon vs. #States and Epsilon vs Abstract Pol. For NChain and Minefield.
 \begin{figure}
+\label{fig:main_empirical_results1}
 \centering
+
 \subfigure[NChain]{
-\includegraphics[width=0.48\columnwidth]{figures/nchain_epsilon_vs_num_abstract_states.png}}
-\subfigure[Taxi]{
-\includegraphics[width=0.48\columnwidth]{figures/taxi_epsilon_vs_num_abstract_states.png}}
+\includegraphics[width=0.46\columnwidth]{figures/nchain_epsilon_vs_num_abstract_states.png}
+}
+\subfigure[NChain]{
+\includegraphics[width=0.46\columnwidth]{figures/nchain_epsilon_vs_value_of_abstract_policy_init_ground_state.png}
+}
+
 \subfigure[Minefield]{
-\includegraphics[width=0.48\columnwidth]{figures/minefield_epsilon_vs_num_abstract_states.png}}
-\subfigure[Random]{
-\includegraphics[width=0.48\columnwidth]{figures/random_epsilon_vs_num_abstract_states.png}}
-\label{fig:eps-states}
-\caption{$\epsilon$ vs. Num States}
+\includegraphics[width=0.46\columnwidth]{figures/minefield_epsilon_vs_num_abstract_states.pdf}
+}
+\subfigure[Minefield]{
+\includegraphics[width=0.46\columnwidth]{figures/minefield_epsilon_vs_value_of_abstract_policy_init_ground_state.pdf}
+}
+
+\caption{$\epsilon$ vs. Num States and $\epsilon$ vs. Abstract Policy Value}
 \end{figure} 
 
-% Figure: Epsilon vs. Error in Abstract Value Function
+% Figure: Epsilon vs. #States and Epsilon vs Abstract Pol. For Taxi and Random.
 \begin{figure}
-\subfigure[NChain]{
-\includegraphics[width=0.48\columnwidth]{figures/nchain_epsilon_vs_value_of_abstract_policy_init_ground_state.png}}
+\label{fig:main_empirical_results2}
+\centering
 \subfigure[Taxi]{
-\includegraphics[width=0.48\columnwidth]{figures/taxi_epsilon_vs_value_of_abstract_policy_init_ground_state.png}}
-\subfigure[Minefield]{
-\includegraphics[width=0.48\columnwidth]{figures/minefield_epsilon_vs_value_of_abstract_policy_init_ground_state}}
+\includegraphics[width=0.46\columnwidth]{figures/taxi_epsilon_vs_num_abstract_states.png}
+}
+\subfigure[Taxi]{
+\includegraphics[width=0.46\columnwidth]{figures/taxi_epsilon_vs_value_of_abstract_policy_init_ground_state.png}
+}
+
 \subfigure[Random]{
-\includegraphics[width=0.48\columnwidth]{figures/random_epsilon_vs_value_of_abstract_policy_init_ground_state}}
-\label{fig:eps-states}
-\caption{$\epsilon$ vs. the Value under the Abstract Policy in the Initial Ground State}
+\includegraphics[width=0.46\columnwidth]{figures/random_epsilon_vs_num_abstract_states.pdf}
+}
+\subfigure[Random]{
+\includegraphics[width=0.46\columnwidth]{figures/random_epsilon_vs_value_of_abstract_policy_init_ground_state.pdf}
+}
+
+\caption{$\epsilon$ vs. Num States and $\epsilon$ vs. Abstract Policy Value}
 \end{figure} 

@@ -44,7 +44,7 @@ public class CreateVisuals {
 
 	// Change the text here to switch between visuals.
 	public static String domainToVisualize = "MINEFIELD"; // One of "TRENCH", "UPWORLD", "NCHAIN", "TAXI", "MINEFIELD" or add your own.
-	public static double epsilon = 0.03;
+	public static double epsilon = 1.1;
 
 	/**
 	 * Function that compresses a GraphDefinedDomain under phi_{Q^*}, for the given epsilon.
@@ -161,8 +161,8 @@ public class CreateVisuals {
 		}
 		else if (domainToVisualize == "MINEFIELD") {
 			// Create upworld domain.
-			int minefieldHeight = 3;
-			int minefieldWidth = 3;
+			int minefieldHeight = 10;
+			int minefieldWidth = 4;
 			int numMineStates = 5;
 			GraphDefinedDomain minefieldGen = MinefieldGenerator.getMinefield(minefieldHeight, minefieldWidth);
 			Domain minefieldDomain = minefieldGen.generateDomain();
