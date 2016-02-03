@@ -331,8 +331,8 @@ Thus, we conclude
 Inspired by the model-irrelevance abstraction, we consider the approximate case. We let $\phi_{model}$ define a type of abstraction that, for fixed $\epsilon$, satisfies:
 \begin{multline}
 \epM(s_1) = \epM(s_2) \rightarrow \\
-\forall_a \left| \mcR(s_1, a) - \mcR(s_2, a)\right| \leq \epsilon \wedge\ \\
-\forall_{s_A \in \mcS_A} \left|\sum_{g' \in X(s_A)}\mcT(s_1, a, g') - \mcT(s_2, a,g')\right| \leq \epsilon
+\forall_a \left| \mcR_G(s_1, a) - \mcR_G(s_2, a)\right| \leq \epsilon \wedge\ \\
+\forall_{s_A \in \mcS_A} \left|\sum_{g' \in G(s_A)} \left[\mcT_G(s_1, a, g') - \mcT_G(s_2, a,g')\right] \right| \leq \epsilon
 \end{multline}
 where $X(s_A) = \{ g' \in \mcS | \epM(g') = s_A \}$
 
