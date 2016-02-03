@@ -3,7 +3,7 @@
 We run experiments on aggregation functions the $\ep{Q^*}$ abstraction. For each trial our aggregation greedily groups ground states into abstract states that satisfy the $\ep{Q^*}$ criteria. The order in which ground states are selected and then greedily added is randomized so there is randomization across trials. Every ground state is equally weighted in its abstract state.
 
 %Explanation of what plots done
-For each domain we report two quantities as a function of epsilon. First, we compare the number of states in the abstract \ac{MDP} to different values of $\epsilon$, shown in Figure~\ref{fig:main_empirical_results1}. The smaller this value, the smaller the state space of the $\ac{MDP}$ that the agent must plan over. Second, we report the value under the abstract policy of the initial ground state, shown in Figure~\ref{fig:main_empirical_results2}. 200 Trials are run for each data point.
+For each domain we report two quantities as a function of epsilon with \%95 confidence bars. First, we compare the number of states in the abstract \ac{MDP} to different values of $\epsilon$, shown in Figure~\ref{fig:main_empirical_results1}. The smaller this value, the smaller the state space of the $\ac{MDP}$ that the agent must plan over. Second, we report the value under the abstract policy of the initial ground state, shown in Figure~\ref{fig:main_empirical_results2}. 200 Trials are run for each data point.
 
 %Discuss results
 Our empirical results corroborate our thesis -- that approximate state abstractions can form the basis of learnable and useful state aggregation criteria. In both NChain and Minefield, we observe that despite increasing $\epsilon$ to reduce the number of states which must be planned over, optimal behavior is either fully maintained (NChain) or very nearly maintained (Minefield). Similarly for Taxi and $\epsilon$ between $.02$ and $.025$ we observe a reduction in the number of states in the Abstract MDP while value is fully maintained. After $.025$, increased reduction in state space size comes at a cost of value. Lastly, as $\epsilon$ is increased in the Random domain, there is a smooth reduction in the number of abstract states which must be planned over with a corresponding cost in the value of the derived policy.
@@ -38,10 +38,10 @@ Our experimental results also highlight a noteworthy characteristic of approxima
 \label{fig:main_empirical_results2}
 \centering
 \subfigure[Taxi]{
-\includegraphics[width=0.46\columnwidth]{figures/taxi_epsilon_vs_num_abstract_states.png}
+\includegraphics[width=0.46\columnwidth]{figures/taxi_epsilon_vs_num_abstract_states.pdf}
 }
 \subfigure[Taxi]{
-\includegraphics[width=0.46\columnwidth]{figures/taxi_epsilon_vs_value_of_abstract_policy_init_ground_state.png}
+\includegraphics[width=0.46\columnwidth]{figures/taxi_epsilon_vs_value_of_abstract_policy_init_ground_state.pdf}
 }
 
 \subfigure[Random]{
