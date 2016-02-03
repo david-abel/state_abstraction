@@ -1,3 +1,4 @@
+
 \section{Background}
 
 %First, some background.
@@ -21,38 +22,55 @@ Lastly, we denote the value and $Q$ functions under the optimal policy as $V^*$ 
 \subsection{Abstraction Notation}
 We build upon the notation used by \citeauthor{li2006towards}, who introduced a unifying theoretical framework for state abstraction in \acp{MDP} and sequential decision making. We build heavily on their notation, and discuss other similarities in our work in the next section.
 
-We understand an abstraction as a mapping from the state space of a ground MDP $M_G$ to that of an abstract MDP $M_A$ using a state-aggregation scheme. Consequently, this mapping induces an abstract MDP. Let:$M_G = \langle \mathcal{S}_G, \mathcal{A}, \mathcal{T}_G, \mathcal{R}_G, \gamma \rangle$ and $M_A = \langle \mathcal{S}_A, \mathcal{A}, \mathcal{T}_A, \mathcal{R}_A, \gamma \rangle$.
+\bdefn{$M_G$, $M_A$}
+We understand an abstraction as a mapping from the state space of a ground MDP $M_G$ to that of an abstract MDP $M_A$ using a state-aggregation scheme. Consequently, this mapping induces an abstract MDP. Let $M_G = \langle \mathcal{S}_G, \mathcal{A}, \mathcal{T}_G, \mathcal{R}_G, \gamma \rangle$ and $M_A = \langle \mathcal{S}_A, \mathcal{A}, \mathcal{T}_A, \mathcal{R}_A, \gamma \rangle$.
+\edefn
 
 % States
+\bdefn{$\mcS_A$, $\phi$}
 The states in the abstract \ac{MDP} are constructed by applying a state-aggregation function, $\phi$, to the states in the ground \ac{MDP}, $\mathcal{S}_A$. More specifically, $\phi$ maps a state in the ground \ac{MDP} to a state in the abstract \ac{MDP}:
 \begin{equation}
 \mathcal{S}_A = \{ \phi(s) \mid s \in \mathcal{S}_G\}.
 \end{equation}
+\edefn
 
-Intuitively, the abstract reward function and abstract transition dynamics for each abstract state are a weighted combination of the rewards and transitions for each ground state in the partition. We make no assumptions about the weighting scheme, except that the weighting is a convex combination across all states in the partition.
-
-% Reward
-The abstract reward function $\mathcal{R}_A(s,a)$ is a weighted sum of the rewards of each of the ground states that map to the same abstract state:
+\bdefn{$G$}
+Given a $\phi$, each ground state has associated with it the ground states with which it is aggregated. Similarly, each abstract state has its constituent ground states. We let $G$ be the function that retrieves these states:
 \begin{equation}
-\mathcal{R}_A(s,a) = \sum_{g \in \phi(s), s \in \mathcal{S}_G} \mathcal{R}_G(g,a) \omega(g) .
+G(s)=
+\begin{cases}
+\{g \in \mcS_G \mid \phi(g) = \phi(s) \}& s \in \mcS_G\\
+\{g \in \mcS_G \mid \phi(g)=s \}& s \in \mcS_A
+\end{cases}
 \end{equation}
-\dnote{Need to change the subscript here.}
-% zzz g in phi(s) seems like a type error, no?
+\edefn
 
-% Transition
-The abstract transition function $\mathcal{T}_A(s,a,s')$ is a weighted sum of the transitions of each of the ground states that map to the same abstract state:
-\begin{equation}
-\mathcal{T}_A(s,a,s') = \sum_{g \in \phi^{-1}(s)} \sum_{g' \in \phi^{-1}(s')} \mathcal{T}_G(g,a,g') \omega(g),
-\end{equation}
-\noindent where $
-s, s' \in \mathcal{S}_A
-$.
+The abstract reward function and abstract transition dynamics for each abstract state are a weighted combination of the rewards and transitions for each ground state in the partition. We make no assumptions about the weighting scheme, except that for each abstract state, the weighting is a convex combination across all ground states.
 
+\bdefn{$\omega(s)$}
 We refer to the weight associated with a ground state, $s \in \mathcal{S}_G$ by $\omega(s)$. The only restriction placed on the weighting schema is that it induces a probability distribution on the states:
 \begin{equation}
-\left(\sum_{s \in \mathcal{S}_G} \omega(s)\right) = 1,\hspace{6mm} \forall_{s \in \mathcal{S}_G} \omega(s) \in [0,1]
+\forall s \in \mcS_G \left(\sum_{s \in G(s)} \omega(s)\right) = 1 \texttt{ and }\hspace{6mm}  \omega(s) \in [0,1]
 \end{equation}
-\enote{This ins't right -- should be a prob distribution over ground states of a \textit{single} abstract state -- not all ground states.}
+\edefn
+
+% Reward
+\bdefn{$\mcR_A$}
+The abstract reward function $\mathcal{R}_A(s,a)$ is a weighted sum of the rewards of each of the ground states that map to the same abstract state:
+\begin{equation}
+\mathcal{R}_A(s,a) = \sum_{g \in G(s)} \mathcal{R}_G(g,a) \omega(g) .
+\end{equation}
+\edefn
+
+% Transition
+\bdefn{$\mcT_A$}
+The abstract transition function $\mathcal{T}_A(s,a,s')$ is a weighted sum of the transitions of each of the ground states that map to the same abstract state:
+\begin{equation}
+\mathcal{T}_A(s,a,s') = \sum_{g \in G(s)} \sum_{g' \in G(s')} \mathcal{T}_G(g,a,g') \omega(g),
+\end{equation}
+\edefn
+
+
 
 %\enote{Define $V_G$ and $V_A$ (value function in ground and value function in abstract)}
 %\dnote{This should be done in the background section, right? Just defining a value fund under a policy}
