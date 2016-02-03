@@ -2,33 +2,53 @@
 \section{Approximate State Abstraction}
 
 % Intro to approx state abstraction results.
-Here, we introduce our formal method for analyzing approximate state abstraction, including results bounding the error associated with these abstraction methods. In particular, we demonstrate that abstractions based on $Q^*$ similarity, model similarity (that is, $\mathcal{T}$ and $\mathcal{R}$), and similarity between distributions over $Q^*$, for both multinomial and Boltzmann distributions, induce abstract \acp{MDP} for which the optimal policy has bounded error in the ground MDP.
+Here, we introduce our formal method for analyzing approximate state abstraction, including results bounding the error associated with these abstraction methods. In particular, we demonstrate that abstractions based on $Q^*$ similarity (\ref{sec:Q*}), model similarity (\ref{sec:model}), and similarity between distributions over $Q^*$, for both Boltzmann (\ref{sec:boltz}) and multinomial (\ref{sec:mult}) distributions, induce abstract \acp{MDP} for which the optimal policy has bounded error in the ground MDP.
 
-In general, our proof strategy for each of the included results is as follows:
-\begin{itemize}
-\item First, we relate the values of states in the ground MDP to the value of states in the abstract \ac{MDP},
-\item then, we relate the value of states in the ground \ac{MDP} to the value of states in the abstract \ac{MDP} under the optimal abstract policy.
-\end{itemize}
+%In general, our proof strategy for each of the included results is as follows:
+%\begin{itemize}
+%\item First, we relate the values of states in the ground MDP to the value of states in the abstract \ac{MDP},
+%\item then, we relate the value of states in the ground \ac{MDP} to the value of states in the abstract \ac{MDP} under the optimal abstract policy.
+%\end{itemize}
 
 % Explanation of the above.
-The first statement is relating Q values defined over the ground MDP with Q values defined over the abstract MDP, while the second statement is comparing the optimal Q values in the ground MDP, with the Q values in the ground MDP under the abstract policy. This is because our learners will solve for the optimal policy in the abstract, and use it in the ground MDP by mapping each ground state to its abstract state and querying the abstract policy for behavior. That is:
-\begin{equation}
-\pi_G(s) = \pi_A(\phi(s))
-\end{equation}
+%The first statement is relating Q values defined over the ground MDP with Q values defined over the abstract MDP, while the second statement is comparing the optimal Q values in the ground MDP, with the Q values in the ground MDP under the abstract policy. This is because our learners will solve for the optimal policy in the abstract, and use it in the ground MDP by mapping each ground state to its abstract state and querying the abstract policy for behavior. That is:
+%\begin{equation}
+%\pi_G(s) = \pi_A(\phi(s))
+%\end{equation}
 
 
 % zzz that's odd... sounds like the same thing twice but with optimal policy added. we'll see how that works.
 % In response^^^ Could add a sentence pointing out how these differ.
 
-We now introduce some additional notation to formally discuss these results.
+We now introduce some additional notation to formally discuss these results:
 
-{\bf $\ep_f$ definition:} Given a function $f: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathcal{R}$ and a fixed non-negative $\epsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state-aggregation function that satisfies the following for any two ground states $s_1$ and $s_2$: 
+% Abstract policy in ground.
+We are interested in how the optimal policy in the abstract \ac{MDP} performs in the ground \ac{MDP}. 
+
+\begin{defn}
+To evaluate a policy $\pi_A:\mathcal{A}\rightarrow\mathcal{A}$, we map a ground state into the abstract state space, and query the abstract policy for behavior. Specifically:
+\begin{equation}
+V^{\pi_A}(s) = \mathcal{R}_G(s,\pi_A(\phi(s))) + \gamma \sum_{s' \in \mathcal{S}_G} \mathcal{T}_G(s,\pi_A(\phi(s)),s')V^{\pi_A}(s').
+\end{equation}
+\end{defn}
+
+\begin{defn}
+Given a function $f: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathcal{R}$ and a fixed non-negative $\epsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state-aggregation function that satisfies the following for any two ground states $s_1$ and $s_2$: 
 \begin{equation}
 \label{eq:phi_f}
 \ep_f(s_1) = \ep_f(s_2) \rightarrow \forall_a \left|f(s_1, a) - f(s_2, a)\right| \leq \epsilon
 \end{equation}
+\end{defn}
 
-That is, when $\ep_f$ aggregates states, all aggregated states have values of $f$ within $\epsilon$ of each other for all actions. Note that, for any $f$, there are many functions that satisfy this criterion.
+That is, when $\ep_f$ aggregates states, all aggregated states have values of $f$ within $\epsilon$ of each other for all actions. Note that, for any $f$, there are many functions that satisfy the $\ep_f$ criterion.
+
+\begin{defn}
+Let $Q_G: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_G: \mathcal{S}_G \rightarrow \mathbb{R}$ denote the optimal Q and optimal value functions in the ground \ac{MDP}.
+\end{defn}
+
+\begin{defn}
+Let $Q_A: \mathcal{S}_A \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_A: \mathcal{S}_A \rightarrow \mathbb{R}$  stand for the optimal Q and optimal value functions in the abstract \ac{MDP}.
+\end{defn}
 
 We now introduce the main result of the paper.
 
@@ -36,7 +56,7 @@ We now introduce the main result of the paper.
 \begin{thm}
 There exist at least four classes of approximate state-aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{mult}}$ and $\ep_{\text{bolt}}$ for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\epsilon$:
 \begin{equation}
-\forall_{s \in \mathcal{S}_G}: | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq poly(\epsilon).
+\forall_{s \in \mathcal{S}_G}: | V_G^{\pi^*_G}(s) - V_G^{\pi^*_{A}}(s) | \leq poly(\epsilon).
 \end{equation}
 \end{thm}
 
@@ -45,6 +65,7 @@ There exist at least four classes of approximate state-aggregation functions, $\
 
 % Subsection: Optimal Q Function
 \subsection{Optimal Q Function: $\ep_{Q^*}$}
+\label{sec:Q*}
 
 % Q* Lemma
 Recall that $Q^*$ is a function on $\mathcal{S}_G \times \mathcal{A}$ that satisfies \enote{$Q^*$ definition}. We consider an approximate version of the $Q^*$-irrelevance abstraction. An approximate $Q$ function has the same form as Equation~\ref{eq:phi_f}:
@@ -65,9 +86,7 @@ When $\ep_{Q^*}$ is used to create the abstract state space $\mathcal{S}_A$:
 \textbf{Proof:}
 We begin by showing that Q values in the abstract \ac{MDP} closely resemble those in the ground \ac{MDP}.
 
-Let $Q_G: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_G: \mathcal{S}_G \rightarrow \mathbb{R}$ denote the Q and value functions in the ground \ac{MDP}.
 
-Let $Q_A: \mathcal{S}_A \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_A: \mathcal{S}_A \rightarrow \mathbb{R}$  stand for the Q and value functions in the abstract \ac{MDP}.
 
 % zzz I don't understand what ``the'' Q function means. if it's the optimal values, we already had a notation for these and I don't see why there should be another.
 % "The" q function is the optimal one.
@@ -307,6 +326,7 @@ Thus, we conclude
 
 % Subsection: Model Similarity
 \subsection{Model Similarity: $\ep_{model}$}
+\label{sec:model}
 
 Inspired by the model-irrelevance abstraction, we consider the approximate case. We let $\phi_{model}$ define a type of abstraction that, for fixed $\epsilon$, satisfies:
 \begin{multline}
@@ -354,9 +374,36 @@ Applying 0-1 reward normalization and algebra:
 
 Since the Q values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\epsilon = B$. Applying Lemma \ref{lma:Q*} yields Lemma \ref{lma:model}.
 
+% Subsection: Boltzmann over Optimal Q
+\enote{Motivate Boltzmann + multinomial}
+
+\subsection{Boltzmann over Optimal Q: $\ep_{bolt}$}
+\label{sec:boltz}
+
+
+Similarly to the multinomial abstraction, we let $\phi_{bolt}$ define a type of abstraction that, for fixed $\epsilon$ satisfies:
+\begin{multline}
+\ep_{bolt}(s_1) = \ep_{bolt}(s_2) \rightarrow \\
+\forall_{a} \left|\frac{e^{Q^*(s_1,a)}}{\sum_b e^{Q^*(s_1,b)}} - \frac{e^{Q^*(s_1,a)}}{\sum_b e^{Q^*(s_1,b)}}\right| \leq \epsilon
+\end{multline}
+
+{\bf Lemma 4:} When $S_A$ is created using a function of the $\ep_{bolt}$ type, for some constant positive $k \in \mathbb{R}$::
+\begin{equation}
+\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq 
+\epsilon:
+\end{equation}
+
+{\bf Proof Sketch:}
+
+\dnote{Proof sketch}
+
+
+\dnote{(Probably put full proofs in appendix if we have room?}
+
+
 % Subsection: Multinomial over Optimal Q
-\enote{If not here, we should have some motivation for multinomial (and boltz)}
 \subsection{Multinomial over Optimal Q: $\ep_{mult}$}
+\label{sec:mult}
 
 We let $\phi_{mult}$ define a type of abstraction that, for fixed $\epsilon$ satisfies:
 \begin{multline}
@@ -374,43 +421,6 @@ We let $\phi_{mult}$ define a type of abstraction that, for fixed $\epsilon$ sat
 
 
 {\bf Proof Sketch:}
-
-\dnote{Proof sketch}
-
-
-% Subsection: Boltzmann over Optimal Q
-\subsection{Boltzmann over Optimal Q: $\ep_{bolt}$}
-
-Similarly to the multinomial abstraction, we let $\phi_{bolt}$ define a type of abstraction that, for fixed $\epsilon$ satisfies:
-\begin{multline}
-\ep_{bolt}(s_1) = \ep_{bolt}(s_2) \rightarrow \\
-\forall_{a} \left|\frac{e^{Q^*(s_1,a)}}{\sum_b e^{Q^*(s_1,b)}} - \frac{e^{Q^*(s_1,a)}}{\sum_b e^{Q^*(s_1,b)}}\right| \leq \epsilon
-\end{multline}
-
-{\bf Lemma 4:} When $S_A$ is created using a function of the $\ep_{bolt}$ type, for some constant positive $k \in \mathbb{R}$::
-\begin{equation}
-\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{\epsilon(\textsc{QMax}|\mathcal{A}| + k\epsilon) + A}{1-\gamma}:
-\end{equation}
-
-{\bf Proof Sketch:}
-
-\dnote{Proof sketch}
-
-
-\dnote{(Probably put full proofs in appendix if we have room?}
-
-% There are at least four classes of functions:
-% 1 \phi_q^*
-% 2 \phi_model
-% 3 \phi_mult
-% 4 \phi_bolt
-
-
-% Explain each of the Phis
-
-% One theorem, each separate phi is its own lemma.
-
-% Proof of Q^*
 
 % Possibly a lemma for NP-Completeness of the minimal such phi for all abstractions (was a result for model in previous cases).
 

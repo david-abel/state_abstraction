@@ -18,7 +18,18 @@
 \newtheorem{thm}{Theorem}
 \newtheorem{lma}{Lemma}
 \newtheorem{clm}{Claim}
+
+\newtheoremstyle{dotless}{}{}{\itshape}{}{\bfseries}{}{ }{}
+\theoremstyle{dotless}
 \newtheorem{defn}{Definition}
+
+\newcommand{\bdefn}[1]{
+\begin{defn} {\boldmath, #1}\textbf{:}
+}
+
+\newcommand{\edefn}[1]{
+\end{defn}
+}
 
 \icmltitlerunning{Near Optimal Behavior with Approximate State Abstraction}
 
@@ -115,7 +126,7 @@
 
 
 % ------------------------------------------------------------------------------------
-% --- SECTION: Approximate Abstraction on Example Domains ---
+% --- SECTION: Approximate Abstraction on Example Domains ---s
 % ------------------------------------------------------------------------------------
 \input{results_discussion.tex}
 
