@@ -34,11 +34,10 @@ We now introduce the main result of the paper.
 
 % Theorem 1
 \begin{thm}
-There exist at least four classes of approximate state-aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{bolt}}$ and $\ep_{\text{mult}}$ for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\epsilon$:
+There exist at least four classes of approximate state-aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{mult}}$ and $\ep_{\text{bolt}}$ for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\epsilon$:
 \begin{equation}
 \forall_{s \in \mathcal{S}_G}: | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq poly(\epsilon).
 \end{equation}
-
 \end{thm}
 
 \enote{Consider moving definition of $V^{\pi^*_{A}}(s)$ so it's fresh for reader.}
@@ -71,6 +70,7 @@ Let $Q_G: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_G: \ma
 Let $Q_A: \mathcal{S}_A \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_A: \mathcal{S}_A \rightarrow \mathbb{R}$  stand for the Q and value functions in the abstract \ac{MDP}.
 
 % zzz I don't understand what ``the'' Q function means. if it's the optimal values, we already had a notation for these and I don't see why there should be another.
+% "The" q function is the optimal one.
 
 Let $X(s) = \{g \in \mathcal{S}_G | \epQ(g) = s\}$, the set of ground states that correspond to abstract state $s$.
 
