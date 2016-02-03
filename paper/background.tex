@@ -55,9 +55,10 @@ We refer to the weight associated with a ground state, $s \in \mathcal{S}_G$ by 
 
 % Abstract policy in ground.
 In general, we are interested in how policies defined over the abstract \ac{MDP} perform in the ground \ac{MDP}. To evaluate a policy $\pi_A:\mathcal{A}\rightarrow\mathcal{A}$, we map a ground state into the abstract state space, and query the abstract policy for behavior. Specifically:
-\begin{equation}
-V^{\pi_A}(s) = \mathcal{R}_G(s,\pi_A(\phi(s))) + \gamma \sum_{s' \in \mathcal{S}_G} \mathcal{T}_G(s,\pi_A(\phi(s)),s')V^{\pi_A}(s').
-\end{equation}
+\begin{multline}
+V^{\pi_A}(s) = \mathcal{R}_G(s,\pi_A(\phi(s))) + \\
+\gamma \sum_{s' \in \mathcal{S}_G} \mathcal{T}_G(s,\pi_A(\phi(s)),s')V^{\pi_A}(s').
+\end{multline}
 \dnote{I don't think this is right. Should be the max action? Or am I confused? My reading of the Q function from above is then possibly confused...}
 
 %\enote{Define $V_G$ and $V_A$ (value function in ground and value function in abstract)}
