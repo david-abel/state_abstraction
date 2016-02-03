@@ -47,11 +47,11 @@ public class EpsilonExperiments {
 	static String resultsDir = filePath + "/src/plotting/";
 
 	// Iterate over epsilon and compute the number of states.
-	final static double startEpsilon = 0.00;
-	final static double endEpsilon = 0.5;
+	final static double startEpsilon = 0.15;
+	final static double endEpsilon = 0.25;
 	final static double epsilonIncrement = 0.01;
-	final static int numTrials = 20;
-	final static String task = "RANDOM"; // ALL, NCHAIN, TRENCH, TAXI, UPWORLD, RANDOM, MINEFIELD
+	final static int numTrials = 3;
+	final static String task = "MINEFIELD"; // ALL, NCHAIN, TRENCH, TAXI, UPWORLD, RANDOM, MINEFIELD
 	final static boolean clearOldResults = false; //IF THIS IS TRUE, WILL DELETE ALL OLD ACCUMULATED RESULTS
 
 	/**
@@ -211,7 +211,7 @@ public class EpsilonExperiments {
 		GraphDefinedDomain minefieldGen = MinefieldGenerator.getMinefield(minefieldHeight, minefieldWidth);
 		Domain minefieldDomain = minefieldGen.generateDomain();
 		State initialMinefieldState = GraphDefinedDomain.getState(minefieldDomain, 0);
-		RewardFunction minefieldRF = new MinefieldGenerator.MinefieldRF(numMineStates, minefieldHeight * minefieldWidth);
+		RewardFunction minefieldRF = new MinefieldGenerator.MinefieldRF(numMineStates, minefieldHeight * minefieldWidth, minefieldHeight, minefieldWidth);
 
 		if (task.equals("ALL")) {
 			generateEpsilonResults(nChainGen, nChainRF, initialNChainState, "nchain");

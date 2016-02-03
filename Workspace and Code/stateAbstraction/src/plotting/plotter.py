@@ -102,7 +102,7 @@ def plot(xData, yData, yAxisLabel, taskName, scatter=False, xAxisLabel="Epsilon"
 	# plt.show()
 	
 
-def	plotWithConfidenceIntervals(xData, allYData, yAxisLabel, taskName, confidence=.95, xAxisLabel="Epsilon", yDataNames=[]):
+def	plotWithConfidenceIntervals(xData, allYData, yAxisLabel, taskName, confidence=.95, xAxisLabel="Epsilon", yDataNames=[], annotateWithTrialNumber=False):
 	
 	maxY = -99999
 
@@ -134,10 +134,11 @@ def	plotWithConfidenceIntervals(xData, allYData, yAxisLabel, taskName, confidenc
 				numTrials.append(numTrial)
 			maxY = max(maxY, max(means))
 			plt.errorbar(xData, means, yerr=errors, label=legendInfo)
-			#Add annotation of # trials
-			for (i, x), y in zip(enumerate(xData), means):
-				matplotlib.rcParams.update({'font.size': 8})
-				plt.annotate(numTrials[i], xy=(x, y))
+			if (annotateWithTrialNumber):
+				#Add annotation of # trials
+				for (i, x), y in zip(enumerate(xData), means):
+					matplotlib.rcParams.update({'font.size': 8})
+					plt.annotate(numTrials[i], xy=(x, y))
 
 	#Set x axis limits	
 	plt.xlim([min(0,min(xData)), max(xData)*1.01])

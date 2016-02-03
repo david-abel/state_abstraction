@@ -1,6 +1,7 @@
 package domains.minefield;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -10,9 +11,9 @@ import burlap.oomdp.singleagent.GroundedAction;
 import burlap.oomdp.singleagent.RewardFunction;
 
 public class MinefieldGenerator {
-	
+
 	private static double slipProbability = 0.01;
-	
+
 	/**
 	 * 
 	 * @param width
@@ -21,7 +22,7 @@ public class MinefieldGenerator {
 	 */
 	public static GraphDefinedDomain getMinefield(int width, int height) {
 		GraphDefinedDomain dg = new GraphDefinedDomain(height*width);
-		
+
 		// Set up transitions for left/right.
 		for (int j = 0; j < height; j++){
 			for (int i = 0; i < width; i++) {
@@ -35,89 +36,111 @@ public class MinefieldGenerator {
 				if (i == width-1) rightIndex = currentStateIndex;
 				else rightIndex = currentStateIndex+1;
 
-				//Set up left action.
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 0/*action*/, leftIndex, 1.0 - slipProbability);
-				
-				//Set up right action.
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 1/*action*/, rightIndex, 1.0 - slipProbability);
-				
-				// Set slip probs for Up:
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 2/*up action*/, leftIndex, slipProbability/2.0);
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 2/*up action*/, rightIndex, slipProbability/2.0);
-				
-				// Set slip probs for down:
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 3/*down action*/, leftIndex, slipProbability/2.0);
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 3/*down action*/, rightIndex, slipProbability/2.0);
+				int aboveIndex = currentStateIndex+width;
+				if (aboveIndex >= height*width) aboveIndex = currentStateIndex;
+
+				int belowIndex = currentStateIndex-width;
+				if (belowIndex < 0) belowIndex = currentStateIndex; // Self loop at bottom
+
+
+
+				//Left
+				HashMap<Integer, Double> leftHM = new HashMap<Integer, Double>();
+				addToExistingValue(leftHM, leftIndex, 1.0-slipProbability);
+				addToExistingValue(leftHM, aboveIndex, slipProbability/2.0);
+				addToExistingValue(leftHM, belowIndex, slipProbability/2.0);
+				//Convert HM to transitions
+				for (Integer resultingStateIndex : leftHM.keySet()) {
+					((GraphDefinedDomain) dg).setTransition(currentStateIndex, 0/*left action*/, resultingStateIndex, leftHM.get(resultingStateIndex));
+				}
+
+				//Right
+				HashMap<Integer, Double> rightHM = new HashMap<Integer, Double>();
+				addToExistingValue(rightHM, rightIndex, 1.0-slipProbability);
+				addToExistingValue(rightHM, aboveIndex, slipProbability/2.0);
+				addToExistingValue(rightHM, belowIndex, slipProbability/2.0);
+				//Convert HM to transitions
+				for (Integer resultingStateIndex : rightHM.keySet()) {
+					((GraphDefinedDomain) dg).setTransition(currentStateIndex, 1/*right action*/, resultingStateIndex, rightHM.get(resultingStateIndex));
+				}
+
+				//Down
+				HashMap<Integer, Double> downHM = new HashMap<Integer, Double>();
+				addToExistingValue(downHM, belowIndex, 1.0-slipProbability);
+				addToExistingValue(downHM, rightIndex, slipProbability/2.0);
+				addToExistingValue(downHM, leftIndex, slipProbability/2.0);
+				for (Integer resultingStateIndex : downHM.keySet()) {
+					((GraphDefinedDomain) dg).setTransition(currentStateIndex, 2/*down action*/, resultingStateIndex, downHM.get(resultingStateIndex));
+				}
+
+				//Up
+				HashMap<Integer, Double> upHM = new HashMap<Integer, Double>();
+				addToExistingValue(upHM, aboveIndex, 1.0-slipProbability);
+				addToExistingValue(upHM, rightIndex, slipProbability/2.0);
+				addToExistingValue(upHM, leftIndex, slipProbability/2.0);
+				for (Integer resultingStateIndex : upHM.keySet()) {
+					((GraphDefinedDomain) dg).setTransition(currentStateIndex, 3/*up action*/, resultingStateIndex, upHM.get(resultingStateIndex));
+				}
 			}
 		}
 
-		// Set up transition for up.
-		for (int j = 0; j < height-1; j++){
-			for (int i = 0; i < width; i++) {
-				int currentStateIndex = i +j*width;
-				// Set normal transition for up.
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 2/*up action*/, currentStateIndex+width, 1.0 - slipProbability);
-				
-				// Set slip for Left and Right
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 0/*left action*/, currentStateIndex+width, slipProbability/2.0);
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 1/*right action*/, currentStateIndex+width, slipProbability/2.0);
+			return dg;
+		}	
+
+		private static void addToExistingValue(HashMap<Integer, Double> hm, Integer key, Double prob) {
+			if (hm.containsKey(key)) {
+				Double oldVal = hm.get(key);
+				hm.put(key, oldVal+prob);
 			}
-		}
-		// Set up transition for down.
-		for (int j = 0; j < height-1; j++){
-			for (int i = 0; i < width; i++) {
-				int currentStateIndex = i +j*width;
-				int stateBelowIndex = currentStateIndex-width;
-				if (stateBelowIndex < 0) stateBelowIndex = currentStateIndex; // Self loop at bottom
-				System.out.println("sbelow: " + stateBelowIndex);
-				
-				// Set normal transition for down.
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 3/*down action*/, stateBelowIndex, 1.0 - slipProbability);
-				
-				// Set slip for Left and Right
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 0/*left action*/, stateBelowIndex, slipProbability/2.0);
-				((GraphDefinedDomain) dg).setTransition(currentStateIndex, 1/*right action*/, stateBelowIndex, slipProbability/2.0);
+			else {
+				hm.put(key, prob);
 			}
 		}
 
-		// Set up self-loops at the end.
-		for (int i = 0; i < width; i++) {
-			int j = height-1;
-			int currentStateIndex = i +j*width;
-			((GraphDefinedDomain) dg).setTransition(currentStateIndex, 2/*action*/, currentStateIndex, 1.0);
-		}
+		/**
+		 * Minefield reward function -- returns 10 if action 1 is taken in the last state, 2 if
+		 * action 0 is taken ever and 0 otherwise.
+		 * @author Dhershkowitz
+		 *
+		 */
+		public static class MinefieldRF implements RewardFunction {
 
-		return dg;
-	}	
+			private List<Integer> mineStates = new ArrayList<Integer>();
+			private List<Integer> topNodeIndices = new ArrayList<Integer>();
+			private Random prf = new Random();
 
-	/**
-	 * Minefield reward function -- returns 10 if action 1 is taken in the last state, 2 if
-	 * action 0 is taken ever and 0 otherwise.
-	 * @author Dhershkowitz
-	 *
-	 */
-	public static class MinefieldRF implements RewardFunction {
-
-		private List<Integer> mineStates = new ArrayList<Integer>();
-		private Random prf = new Random();
-		
-		public MinefieldRF(int numMineStates, int numTotalStates) {
-			for (int i = 0; i < numMineStates; i++) {
-				mineStates.add(prf.nextInt(numTotalStates));
+			/**
+			 * 
+			 * @param numMineStates
+			 * @param numTotalStates
+			 * @param height
+			 * @param width
+			 */
+			public MinefieldRF(int numMineStates, int numTotalStates, int height, int width) {
+				//Randomize mines
+				for (int i = 0; i < numMineStates; i++) {
+					mineStates.add(prf.nextInt(numTotalStates));
+				}
+				//Add to topNodes
+				for (int i = 0; i < width; i++) {
+					int indexToAdd = numTotalStates-1-i;
+					topNodeIndices.add(indexToAdd);
+				}
 			}
-		}
-		
-		@Override
-		public double reward(State s, GroundedAction a, State sprime) {
-			if (s.equals(sprime) && a.actionName().equals("action2")){ 
-				return 1;
-			}
-			else if (mineStates.contains(sprime)) {
-				return 0;
-			} else{
-				return 0.1;
-			}
-		}
 
+			@Override
+			public double reward(State s, GroundedAction a, State sprime) {
+				int sIndex = GraphDefinedDomain.getNodeId(s);
+				int sPrimeIndex = GraphDefinedDomain.getNodeId(sprime);
+				if (topNodeIndices.contains(sIndex) && sIndex == sPrimeIndex && a.actionName().equals("action3")){ 
+					return 1;
+				}
+				else if (mineStates.contains(sPrimeIndex)) {
+					return 0;
+				} else{
+					return 0.1;
+				}
+			}
+
+		}
 	}
-}
