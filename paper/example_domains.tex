@@ -1,19 +1,8 @@
 \section{Example Domains}
-
-\enote{Note somewhere why we selected these MDPs -- b/c a wide variety}
-
-To demonstrate the efficacy of these approximate abstraction functions, we test functions in the $\ep{Q^*}$ abstraction family on a variety of domains. We compare the number of states in the abstract MDP to different values of $\epsilon$, as well as the value difference between the optimal policy in the abstract MDP compared to the ground MDP. More specifically, we relate $\epsilon$ to:
-\begin{equation}
-|V^{\pi_G^*}(s_{init}) - V^{\pi_A^*}(s_{init})|
-\end{equation}
-For different values of $\epsilon$.
+To demonstrate the efficacy of these approximate abstraction functions, we test functions in the $\ep{Q^*}$ abstraction family on four domains -- NChain, Taxi, Minefield and Random MDP, which we dub ``Random". These domains were selected for the variety they offer -- Nchain is relatively simple domain, Taxi is goal-based and hierarchical in nature, Minefield is stochastic and Random MDP has a high number of near-optimal behavior.
 
 % Description of visuals.
-Our code base provides implementations to abstract, visualize, and evaluate an arbitrary MDP to promote further investigation into approximate abstraction. The included visuals of compressed MDPs always converts MDPs into a graph so that an arbitrary MDP may be visualized when abstracted. We use the graph visualization library GraphStream~\cite{graphstream}. In our visuals, a grey circle indicates a state, while the colored arrows indicate transitions. The thickness of the arrow indicates how much reward is associated with that transition. In the ground MDPs, states are labeled with a number. In some abstract MDPs, we indicate which ground states were collapsed to each abstract state (some are visually unwieldy and so were ignored).
-
-\dnote{One thing we want to add is a description of how diverse these domains are!}
-\dnote{Also put in a note that we're using a uniform weighting scheme}
-\enote{Also put in a note how we're randomly choosing a Q*}
+Our code base provides implementations to abstract, visualize, and evaluate an arbitrary MDP to promote further investigation into approximate abstraction. The included visuals of compressed MDPs always converts MDPs into a graph so that an arbitrary MDP may be visualized when abstracted. We use the graph visualization library GraphStream~\cite{graphstream}. In our visuals, a grey circle indicates a state, while the colored arrows indicate transitions. The thickness of the arrow indicates how much reward is associated with that transition. In the ground MDPs, states are labeled with a number. In some abstract MDPs, we indicate which ground states were collapsed to each abstract state by labelling the abstract states with their constituent ground states (some are visually unwieldy and so were ignored).
 
 % Subsection: NChain.
 \subsection{NChain}
