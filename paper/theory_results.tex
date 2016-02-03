@@ -23,11 +23,14 @@ Here, we introduce our formal method for analyzing approximate state abstraction
 We now introduce some additional notation to formally discuss these results:
 
 % Abstract policy in ground.
-We are interested in how the optimal policy in the abstract \ac{MDP} performs in the ground \ac{MDP}. To evaluate a policy $\pi_A:\mathcal{A}\rightarrow\mathcal{A}$, we map a ground state into the abstract state space, and query the abstract policy for behavior. Specifically:
+We are interested in how the optimal policy in the abstract \ac{MDP} performs in the ground \ac{MDP}. 
+
+\begin{defn}
+To evaluate a policy $\pi_A:\mathcal{A}\rightarrow\mathcal{A}$, we map a ground state into the abstract state space, and query the abstract policy for behavior. Specifically:
 \begin{equation}
 V^{\pi_A}(s) = \mathcal{R}_G(s,\pi_A(\phi(s))) + \gamma \sum_{s' \in \mathcal{S}_G} \mathcal{T}_G(s,\pi_A(\phi(s)),s')V^{\pi_A}(s').
 \end{equation}
-\dnote{I don't think this is right. Should be the max action? Or am I confused? My reading of the Q function from above is then possibly confused...}
+\end{defn}
 
 \begin{defn}
 Given a function $f: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathcal{R}$ and a fixed non-negative $\epsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state-aggregation function that satisfies the following for any two ground states $s_1$ and $s_2$: 
@@ -39,13 +42,21 @@ Given a function $f: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathcal{R}$ a
 
 That is, when $\ep_f$ aggregates states, all aggregated states have values of $f$ within $\epsilon$ of each other for all actions. Note that, for any $f$, there are many functions that satisfy the $\ep_f$ criterion.
 
+\begin{defn}
+Let $Q_G: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_G: \mathcal{S}_G \rightarrow \mathbb{R}$ denote the optimal Q and optimal value functions in the ground \ac{MDP}.
+\end{defn}
+
+\begin{defn}
+Let $Q_A: \mathcal{S}_A \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_A: \mathcal{S}_A \rightarrow \mathbb{R}$  stand for the optimal Q and optimal value functions in the abstract \ac{MDP}.
+\end{defn}
+
 We now introduce the main result of the paper.
 
 % Theorem 1
 \begin{thm}
 There exist at least four classes of approximate state-aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{mult}}$ and $\ep_{\text{bolt}}$ for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\epsilon$:
 \begin{equation}
-\forall_{s \in \mathcal{S}_G}: | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq poly(\epsilon).
+\forall_{s \in \mathcal{S}_G}: | V_G^{\pi^*_G}(s) - V_G^{\pi^*_{A}}(s) | \leq poly(\epsilon).
 \end{equation}
 \end{thm}
 
@@ -75,9 +86,7 @@ When $\ep_{Q^*}$ is used to create the abstract state space $\mathcal{S}_A$:
 \textbf{Proof:}
 We begin by showing that Q values in the abstract \ac{MDP} closely resemble those in the ground \ac{MDP}.
 
-Let $Q_G: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_G: \mathcal{S}_G \rightarrow \mathbb{R}$ denote the Q and value functions in the ground \ac{MDP}.
 
-Let $Q_A: \mathcal{S}_A \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_A: \mathcal{S}_A \rightarrow \mathbb{R}$  stand for the Q and value functions in the abstract \ac{MDP}.
 
 % zzz I don't understand what ``the'' Q function means. if it's the optimal values, we already had a notation for these and I don't see why there should be another.
 % "The" q function is the optimal one.
