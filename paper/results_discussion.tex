@@ -14,28 +14,35 @@ Here we discuss the results shown in states blah blah \dnote{Description of this
 % Figure: Epsilon vs. #States for all three sample domains.
 \begin{figure}
 \centering
-\subfigure[NChain]{
-\includegraphics[width=0.48\columnwidth]{figures/nchain_epsilon_vs_num_abstract_states.png}}
-\subfigure[Taxi]{
-\includegraphics[width=0.48\columnwidth]{figures/taxi_epsilon_vs_num_abstract_states.png}}
-\subfigure[Minefield]{
-\includegraphics[width=0.48\columnwidth]{figures/minefield_epsilon_vs_num_abstract_states.png}}
-\subfigure[Random]{
-\includegraphics[width=0.48\columnwidth]{figures/random_epsilon_vs_num_abstract_states.png}}
-\label{fig:eps-states}
-\caption{$\epsilon$ vs. Num States}
-\end{figure} 
 
-% Figure: Epsilon vs. Error in Abstract Value Function
-\begin{figure}
 \subfigure[NChain]{
-\includegraphics[width=0.48\columnwidth]{figures/nchain_epsilon_vs_value_of_abstract_policy_init_ground_state.png}}
+\includegraphics[width=0.46\columnwidth]{figures/nchain_epsilon_vs_num_abstract_states.png}
+}
+\subfigure[NChain]{
+\includegraphics[width=0.46\columnwidth]{figures/nchain_epsilon_vs_value_of_abstract_policy_init_ground_state.png}
+}
+
 \subfigure[Taxi]{
-\includegraphics[width=0.48\columnwidth]{figures/taxi_epsilon_vs_value_of_abstract_policy_init_ground_state.png}}
+\includegraphics[width=0.46\columnwidth]{figures/taxi_epsilon_vs_num_abstract_states.png}
+}
+\subfigure[Taxi]{
+\includegraphics[width=0.46\columnwidth]{figures/taxi_epsilon_vs_value_of_abstract_policy_init_ground_state.png}
+}
+
 \subfigure[Minefield]{
-\includegraphics[width=0.48\columnwidth]{figures/minefield_epsilon_vs_value_of_abstract_policy_init_ground_state}}
-\subfigure[Random]{
-\includegraphics[width=0.48\columnwidth]{figures/random_epsilon_vs_value_of_abstract_policy_init_ground_state}}
-\label{fig:eps-states}
-\caption{$\epsilon$ vs. the Value under the Abstract Policy in the Initial Ground State}
+\includegraphics[width=0.46\columnwidth]{figures/minefield_epsilon_vs_num_abstract_states.pdf}
+}
+\subfigure[Minefield]{
+\includegraphics[width=0.46\columnwidth]{figures/minefield_epsilon_vs_value_of_abstract_policy_init_ground_state.pdf}
+}
+
+\subfigure[RandomStates]{
+\includegraphics[width=0.46\columnwidth]{figures/random_epsilon_vs_num_abstract_states.pdf}
+}
+\subfigure[RandomVal]{
+\includegraphics[width=0.46\columnwidth]{figures/random_epsilon_vs_value_of_abstract_policy_init_ground_state.pdf}
+}
+
+\label{fig:main results}
+\caption{$\epsilon$ vs. Num States and $\epsilon$ vs. Abstract Policy Value}
 \end{figure} 
