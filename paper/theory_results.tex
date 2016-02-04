@@ -66,22 +66,32 @@ There exist at least four classes of approximate state-aggregation functions, $\
 \end{thm}
 \enote{Axe the absolute values here and elsewhere}
 
+\enote{Unify the use of $\forall$ and ``:"s}
+
+\enote{Add for 0-1 normalized reward}
+
+\enote{Add note relating this all to Lihong for eps=0 and cut down the Lihong section}
+
 % Subsection: Optimal Q Function
 \subsection{Optimal Q Function: $\ep_{Q^*}$}
 \label{sec:Q*}
 
-% Q* Lemma
-We consider an approximate version of the $Q^*$-irrelevance abstraction. An approximate $Q$ function has the same form as Equation~\ref{eq:phi_f}:
+% Q* Lemma -- lemma 1
+We consider an approximate version of the $Q^*$-irrelevance abstraction. 
+
+\bdefn{$\epQ$}
+An approximate $Q$ function has the same form as Equation~\ref{eq:phi_f}:
 \begin{equation}
 \ep_{Q^*}(s_1) = \ep_{Q^*}(s_2) \rightarrow \forall_a \left|Q_G^*(s_1, a) - Q_G^*(s_2, a)\right| \leq \epsilon.
 \end{equation}
+\edefn
 
 % Q^* Lemma
 \begin{lma}
 \label{lma:Q*}
 When $\ep_{Q^*}$ is used to create the abstract state space $\mcS_A$:
 \begin{equation}
-\forall_{s \in \mcS_G}: | V^{\pi_G^*}(s) - V^{\pi_{GA}}(s) | \leq \frac{2\epsilon}{(1-\gamma)^2}.
+\forall_{s \in \mcS_G}: | V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) | \leq \frac{2\epsilon}{(1-\gamma)^2}.
 \end{equation}
 \end{lma}
 
@@ -184,7 +194,7 @@ Applying our inductive hypothesis yields,
 %&\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \sum_{g \in X(s_A)}w(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'}Q_0      \right]\\
 Then:
 \begin{equation*}
-\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \sum_{g \in X(s_A)}\left[ w(g)\ Q_G(g,a)\right]
+\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \sum_{g \in G(s_A)}\left[ w(g)\ Q_G(g,a)\right]
 \end{equation*}
 Since all aggregated states have Q-values within $\epsilon$ of one another:
 \begin{align*}
@@ -324,43 +334,41 @@ Thus, we conclude
 
 
 
-% Subsection: Model Similarity
+% Subsection: Model Similarity -- lemma 2
 \subsection{Model Similarity: $\ep_{model}$}
 \label{sec:model}
 
-Inspired by the model-irrelevance abstraction, we consider the approximate case. We let $\phi_{model}$ define a type of abstraction that, for fixed $\epsilon$, satisfies:
+Inspired by the model-irrelevance abstraction, we consider the approximate case. 
+\bdefn{$\epM$}
+We let $\epM$ define a type of abstraction that, for fixed $\epsilon$, satisfies:
 \begin{multline}
 \epM(s_1) = \epM(s_2) \rightarrow \\
 \forall_a \left| \mcR_G(s_1, a) - \mcR_G(s_2, a)\right| \leq \epsilon \wedge\ \\
-\forall_{s_A \in \mcS_A} \left|\sum_{g' \in G(s_A)} \left[\mcT_G(s_1, a, g') - \mcT_G(s_2, a,g')\right] \right| \leq \epsilon
+\forall_{s_A \in \mcS_A} \left|\sum_{{s_G}' \in G(s_A)} \left[\mcT_G(s_1, a, {s_G}') - \mcT_G(s_2, a,{s_G}')\right] \right| \leq \epsilon
 \end{multline}
-where $X(s_A) = \{ g' \in \mcS | \epM(g') = s_A \}$
-
-\enote{Do we want to make it clear that this is ground transitions and rewards?}
-
-\enote{Note that it is possible }
+\edefn
 
 %Model Lemma
 \begin{lma}
 \label{lma:model}
-When $S_A$ is created using a function of the $\ep_{model}$ type:
+When $\mcS_A$ is created using a function of the $\ep_{model}$ type:
 \begin{equation}
-\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{2\epsilon + 2\gamma((|\mcS_G|-1)\epsilon)}{(1-\gamma)^3}
+\forall_{s \in \mcS_G} : | V_G(s) - V_G^{\pi_{GA}}(s) | \leq \frac{2\epsilon + 2\gamma((|\mcS_G|-1)\epsilon)}{(1-\gamma)^3}
 \end{equation}
 \end{lma}
 
-{\bf Proof:} Our proof proceeds as follows: we demonstrate that states grouped aggregated under $\epM$ have Q values all within a particular bound. Consequently $\epM$ abstractions are interpretable as an instantiation of $\epQ$ with a particular $\epsilon$ -- understanding $\epM$ abstractions allows us to conclude our bound by applying Lemma \ref{lma:Q*}.
+{\bf Proof:} Our proof proceeds as follows: we demonstrate that states aggregated under $\epM$ have $Q$-values all within a particular bound. Consequently $\epM$ abstractions are interpretable as an instantiation of $\epQ$ with a particular $\epsilon$. Understanding $\epM$ as such abstractions allows us to conclude our bound by applying Lemma \ref{lma:Q*}.
 
-
-Let $B$ stand for the maximum Q difference between any pair of ground states in the same abstract state under $\epM$:
+Let $B$ stand for the maximum $Q$-value difference between any pair of ground states in the same abstract state under $\epM$:
 
 \begin{align*}
-B = &\max_{s_A \in \mcS_A, s_1, s_2 \in X(s_A), a} |Q(s_1, a) - Q(s_2, a)|\\
-=&\max_{s_A \in \mcS_A, s_1, s_2 \in X(s_A), a}      |R(s_1, a) - R(s_2, a) +\\
-& \gamma \sum_{g' \in \mcS_G}(\mcT(s_1,a,g')-\mcT(s_2, a, g'))\max_{a'}Q(g', a')|
+B = &\max_{s_A, s_1, s_2, a}  |Q_G(s_1, a) - Q_G(s_2, a)|\\
+&\text{Where $s_A \in \mcS_G$ and $s_1, s_2 \in G(s_A)$.}\\
+=&\max_{s_A, s_1, s_2, a}      |\mcR_G(s_1, a) - \mcR_G(s_2, a) +\\
+& \gamma \sum_{{s_G}' \in \mcS_G}(\mcT_G(s_1,a,{s_G}')-\mcT_G(s_2, a, {s_G}'))\max_{a'}Q_G({s_G}', a')|
 \end{align*}
 \begin{multline*}
-\leq \epsilon + \gamma \sum_{s_A \in \mcS_A}\sum_{g' \in X(s_A)} \\ \left[(T(s_1, a, g')-T(s_2, a, g')) 		\max_{a'}Q(g', a')	\right]
+\leq \epsilon + \gamma \sum_{s_A \in \mcS_A}\sum_{{s_G}' \in G(s_A)} \\ \left[(T_G(s_1, a, {s_G}')-T_G(s_2, a, {s_G}')) 		\max_{a'}Q_G({s_G}', a')	\right]
 \end{multline*}
 By the similarity of transitions of grouped states under $\epM$:
 \begin{align*}
@@ -372,6 +380,8 @@ Applying 0-1 reward normalization and algebra:
  \leq \frac{\epsilon + \gamma(|\mcS_G| - 1) \epsilon}{1-\gamma}
 \end{equation*}
 
+\enote{Do we need to state what Q max is and that it is upper bounded by 1 over 1 minus gamma or is this common knowledge?}
+
 Since the Q values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\epsilon = B$. Applying Lemma \ref{lma:Q*} yields Lemma \ref{lma:model}.
 
 
@@ -380,12 +390,14 @@ Since the Q values of ground states grouped under $\epM$ are strictly less than 
 
 Here we introduce the approximate abstraction family, $\phi_{bolt}$, which aggregates states with similar Boltzmann distributions on optimal Q values as equivalent. This family of abstractions is appealing as the Boltzmman distribution over Q-values has been of interest in the reinforcement learning literature due to its natural balancing of exploration and exploitation~\cite{sutton1998reinforcement}.
 
+\bdefn{$\phi_{bolt}$}
 We let $\phi_{bolt}$ define a family of abstractions that, for fixed $\epsilon$ satisfies:
 \begin{multline}
 \ep_{bolt}(s_1) = \ep_{bolt}(s_2) \rightarrow \\
-\forall_{a} \left|\frac{e^{Q^*(s_1,a)}}{\sum_b e^{Q^*(s_1,b)}} - \frac{e^{Q^*(s_2,a)}}{\sum_b e^{Q^*(s_2,b)}}\right| \leq \epsilon
+\forall_{a} \left|\frac{e^{Q_G^*(s_1,a)}}{\sum_b e^{Q_G^*(s_1,b)}} - \frac{e^{Q_G^*(s_2,a)}}{\sum_b e^{Q_G^*(s_2,b)}}\right| \leq \epsilon
 \label{eq:phi_bolt}
 \end{multline}
+\edefn
 
 We also assume that the difference in normalizing terms is bounded by some non-negative constant, $k\in \mathbb{R}$, of $\epsilon$:
 \begin{equation}
@@ -395,7 +407,7 @@ We also assume that the difference in normalizing terms is bounded by some non-n
 
 \begin{lma} When $S_A$ is created using a function of the $\ep_{bolt}$ type, for some non-negative constant $k \in \mathbb{R}$::
 \begin{equation}
-\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{2\epsilon\left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k\right)}{(1-\gamma)^2}
+\forall_{s \in \mcS_G} : | V^{\pi^*_G}(s) - V^{\pi_{GA}}(s) | \leq \frac{2\epsilon\left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k\right)}{(1-\gamma)^2}
 \end{equation}
 \label{lma:bolt_lemma}
 \end{lma}
@@ -427,11 +439,15 @@ Consequently, we can consider $\widetilde{\phi}_{bolt}$ as a type of $\epQ$, whe
 \subsection{Multinomial over Optimal Q: $\ep_{mult}$}
 \label{sec:mult}
 
-We consider a multinomial distribution over $Q^*$ for similar reasons as the Boltzmann. We let $\phi_{mult}$ define a type of abstraction that, for fixed $\epsilon$ satisfies.
+We consider a multinomial distribution over $Q^*$ for similar reasons as the Boltzmann.
+
+\bdefn{$\ep_{mult}$}
+We let $\phi_{mult}$ define a type of abstraction that, for fixed $\epsilon$ satisfies.
 \begin{multline}
 \ep_{mult}(s_1) = \ep_{mult}(s_2) \rightarrow \\
 \forall_{a} \left|\frac{Q^*(s_1,a)}{\sum_b Q^*(s_1,b)} - \frac{Q^*(s_1,a)}{\sum_b Q^*(s_1,b)}\right| \leq \epsilon
 \end{multline}
+\edefn
 
 We also assume that the difference in normalizing terms is bounded by some positive factor, $k \in \mathbb{R}$, of $\epsilon$:
 \begin{equation}
