@@ -1,27 +1,5 @@
 \section{Introduction}
-Abstraction plays a fundamental role in learning. Through abstraction, intelligent agents may reason about only the salient features of their environment while ignoring what is irrelevant. Consequently, agents are able to solve considerably more complex problems than without the use of abstraction. However, perfect abstractions require complete knowledge that is often computationally intractable to compute. Furthermore, in natural environments, no two states are identical, so perfect abstraction is ineffective. To overcome these issues, we investigate the space of approximate abstractions that enable agents to treat sufficiently similar states as identical. This work characterizes the impact of combining ``sufficiently similar'' states in the context of planning and \ac{RL} in \acp{MDP}.
-
-% What is approx abstraction, why good.
-%However, because of the difficulty of acquiring perfect knowledge, agents must often perform abstraction on the basis of incomplete knowledge. We call such abstractions {\it approximate}.
-
-
-
-
-%Agents are often faced with imperfect knowledge, so abstracting using complete knowledge is infeasible. However, agents may still perform abstractions by treating sufficiently similar situations as identical. We call such an abstraction {\it approximate}.
-
-
-
-%However, faced with imperfect knowledge, agents must often perform approximate abstractions on the basis of treating sufficiently similar situations as identical.
-
-% One like "natural environment", "states aren't identical" sentence.
-%However, in natural environments, no two situations are identical; approximate abstractions enable learning agents to treat sufficiently similar situations as equivalent.
-
-
-
-% One like "approx abstract because of approx knowledge"
-
-
-%This work characterizes the impact of combining ``sufficiently similar'' states in the context of planning and \ac{RL} in \acp{MDP}.
+Abstraction plays a fundamental role in learning. Through abstraction, intelligent agents may reason about only the salient features of their environment while ignoring what is irrelevant. Consequently, agents are able to solve considerably more complex problems than they would be able to without the use of abstraction. However, perfect abstractions require complete knowledge that is often computationally intractable. Furthermore, in natural environments, no two states are identical, so perfect abstraction is ineffective. To overcome these issues we investigate the space of approximate abstractions that enable agents to treat sufficiently similar states as identical. This work characterizes the impact of combining ``sufficiently similar'' states in the context of planning and \ac{RL} in \acp{MDP}.
 
 % Abstraction is a good idea b/c MDP has poly comp comp and samp comp in S, but S grows fast.
 Solving for optimal behavior in \acp{MDP} in a planning setting is known to be P-Complete in the size of the state space~\cite{papadimitriou1987complexity,littman1995complexity}. Similarly, many \ac{RL} algorithms for solving \acp{MDP} are known to require a number of samples polynomial in the size of the state space~\cite{strehl2009reinforcement}. Although polynomial runtime or sample complexity may seem like a reasonable constraint, due to Bellman's curse of dimensionality, the size of the state space of an \ac{MDP} grows super-polynomially with the number of variables that characterize the domain. Thus, bounds polynomial in state space size often translate to intractable problems for sufficiently complicated tasks. \dnote{Would prefer a different example} For instance, a robot involved in a pick and place task might be able to employ planning algorithms to solve for how to manipulate some objects into a desired configuration in time polynomial in the number of states, but the number of states it must consider to do so grows exponentially with the number of objects it plans over \enote{Cite Dabe Icaps}.
@@ -29,10 +7,15 @@ Solving for optimal behavior in \acp{MDP} in a planning setting is known to be P
 % Existing work on state abstraction.
 Thus, a key research agenda for planning and \ac{RL} is leveraging abstraction to reduce large state spaces~\cite{andre2002state,jong2005state,dietterich2000hierarchical,Bean2011}. These methods are characterized by reducing \textit{ground} MDPs with large state spaces to \textit{abstract} MDPs with smaller state spaces by aggregating states according to some notion of equality or similarity. Existing work has characterized how aggregation of states with equal values of particular quantities fully maintains optimality~\cite{li2006towards,dean1997modelmin}. However, exactly solving for these quantities is itself computationally taxing and often as difficult as solving for optimal behavior in the ground \ac{MDP}, thereby defeating the purpose of abstraction.
 
-% Approximate abstraction
-The thesis of this work is that that aggregation of states on the basis of various approximate criteria incur only bounded error in the resulting policy. Relaxing the aggregation criteria from equality of quantities to $\varepsilon$-closeness offers three benefits. First, state aggregation algorithms that satisfy these criteria employ the sort of knowledge that we expect a planning or learning algorithm to approximate without fully solving the \ac{MDP}. Second, because the state-aggregation criteria are relaxed to approximate equality, methods that employ approximate equality are able to tune the aggressiveness of state aggregation all the while incurring bounded error.
-\dnote{Pick a version of this (either sentence 1 or 2)}
-Third, (1) approximate abstractions can achieve greater degrees of compression due to their relaxed criteria of equality. (2) In natural environments, no two states are identical, so approximate abstraction may be useful but exact abstraction is completely ineffective.
+% Thesis: Approximate abstraction for three reasons.
+The thesis of this work is that that aggregation of states on the basis of various approximate criteria incur only bounded error in the resulting policy. Relaxing the aggregation criteria from equality of quantities to $\epsilon$-closeness offers three benefits. First, state aggregation algorithms that satisfy these criteria employ the sort of knowledge that we expect a planning or learning algorithm to approximate without fully solving the \ac{MDP}. 
+
+Second, approximate abstractions can achieve greater degrees of compression compared to perfect abstractions due to their relaxed criteria of equality. Approximate abstractions can be particularly effective in natural environments where no two states are identical.
+
+, so approximate abstraction may be useful but exact abstraction is completely ineffective.
+
+
+Third, because the state-aggregation criteria are relaxed to approximate equality, methods that employ approximate equality are able to tune the aggressiveness of state aggregation all the while incurring bounded error.
 
 
 % Summary	
