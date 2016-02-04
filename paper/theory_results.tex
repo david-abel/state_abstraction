@@ -356,7 +356,7 @@ Where $s_A \in \mcS_G$ and $s_1, s_2 \in G(s_A)$:
 \leq \epsilon + \gamma \sum_{s_A \in \mcS_A}\sum_{{s_G}' \in G(s_A)} \biggl[(T_G(s_1, a, {s_G}') -\\ 
 T_G(s_2, a, {s_G}')) \max_{a'}Q_G({s_G}', a') \biggr]
 \end{multline*}
-By the similarity of transitions of grouped states under $\epM$:
+By similarity of transitions under $\epM$:
 \begin{align*}
  \leq &\epsilon + \gamma Q_{max} \sum_{s_A \in \mcS_A} \epsilon \\
 \leq& \epsilon + \gamma|\mcS_G|\epsilon Q_{max}
@@ -365,11 +365,8 @@ Applying 0-1 reward normalization and algebra:
 \begin{equation*}
  \leq \frac{\epsilon + \gamma(|\mcS_G| - 1) \epsilon}{1-\gamma}
 \end{equation*}
-
 \enote{Do we need to state what Q max is and that it is upper bounded by 1 over 1 minus gamma or is this common knowledge?}
-
 Since the $Q$-values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\epsilon = B$. Applying Lemma \ref{lma:Q*} yields Lemma \ref{lma:model}.
-
 \subsection{Boltzmann over Optimal Q: $\ep_{bolt}$}
 \label{sec:boltz}
 
