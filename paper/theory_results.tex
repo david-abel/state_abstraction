@@ -109,25 +109,23 @@ Optimal $Q$ values in the abstract \ac{MDP} closely resemble optimal $Q$ values 
 \end{clm}
 
 Consider a temporally heterogeneous \ac{MDP}, $M^T = \langle \mathcal{S}_T, \mathcal{A}_G, \mathcal{R}_T, \mathcal{T}_T, \gamma \rangle$, parameterized by integer $T$, such that for the first $T$ time steps the reward function, transition dynamics and state space are those of the abstract MDP, $M_A$, and after $T$ time steps the reward function, transition dynamics and state spaces are those of the ground MDP, $M_G$. Thus,
-\begin{equation}
-\mathcal{S}_T = \begin{cases}
+\begin{align*}
+\mathcal{S}_T &= \begin{cases}
 \mathcal{S}_G,& T \leq 0, \\
-\mathcal{S}_A,& \text{o/w},
-\end{cases}
-\end{equation}
-\begin{equation}
-\mathcal{R}_T(s,a) = \begin{cases}
+\mathcal{S}_A,& \text{o/w}
+\end{cases}\\
+%--
+\mathcal{R}_T(s,a) &= \begin{cases}
 \mathcal{R}_G(s,a),& T \leq 0, \\
-\mathcal{R}_A(s, a),& \text{o/w},
-\end{cases}
-\end{equation}
-\begin{equation}
-\mcT_T(s,a,s') = \begin{cases}
+\mathcal{R}_A(s, a),& \text{o/w}
+\end{cases}\\
+%--
+\mcT_T(s,a,s') &= \begin{cases}
 \mcT_G(s,a,s'),& T \leq 0, \\
 \underset{{g \in G(s)}}{\sum}\left[w(g)\mcT_G(g, a, s')\right],& T = 1, \\
-\mcT_A(s,a,s'),& \text{o/w}.
-\end{cases}
-\end{equation}
+\mcT_A(s,a,s'),& \text{o/w}
+\end{cases}\\
+\end{align*}
 
 It follows that the $Q$-value of a state $s$ in $M^T$ for action $a$ is defined by:
 % zzz too long... needs to be broken up.
