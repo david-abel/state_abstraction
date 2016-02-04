@@ -1,8 +1,11 @@
 \section{Example Domains}
-To demonstrate the efficacy of these approximate abstraction functions, we test functions in the $\ep{Q^*}$ abstraction family on four domains -- NChain, Taxi, Minefield and Random MDP, which we dub ``Random". These domains were selected for their variety -- NChain is relatively simple, Taxi is goal-based and hierarchical in nature, Minefield is stochastic, and Random MDP has many near-optimal policies.
+To demonstrate the efficacy of these approximate abstraction functions, we test functions in the $\epQ$ abstraction family on four domains -- NChain, Taxi, Minefield and Random. These domains were selected for their variety -- NChain is relatively simple, Taxi is goal-based and hierarchical in nature, Minefield is stochastic, and Random MDP has many near-optimal policies.
 
 % Description of visuals.
-Our code base provides implementations to abstract, visualize, and evaluate an arbitrary MDP to promote further investigation into approximate abstraction. The included visuals of compressed MDPs always converts MDPs into a graph so that an arbitrary MDP may be visualized when abstracted. We use the graph visualization library GraphStream~\cite{graphstream}. In our visuals, a grey circle indicates a state, while the colored arrows indicate transitions. The thickness of the arrow indicates how much reward is associated with that transition. In the ground MDPs, states are labeled with a number. In some abstract MDPs, we indicate which ground states were collapsed to each abstract state by labelling the abstract states with their constituent ground states (some are visually unwieldy and so were ignored).
+We provide graphical visuals of both ground $\acp{MDP}$ and resulting abstract $\acp{MDP}$. In our visuals, a grey circle indicates a state, while the colored arrows indicate transitions. The thickness of the arrow indicates how much reward is associated with that transition. In the ground \acp{MDP}, states are labeled with a number. In some abstract \acp{MDP}, we indicate which ground states were collapsed to each abstract state by labelling the abstract states with their constituent ground states (some are visually unwieldy and so were not labelled).
+
+%Description of code base
+Additionally, in hopes of promoting further investigation into approximate abstraction, we provide our code base (link redacted for review) which provides implementations for abstracting arbitrary \acp{MDP} and visualizing and evaluating the resulting abstract \acp{MDP}. We use the graph visualization library GraphStream~\cite{graphstream} and planning and \ac{RL} library, BURLAP~\cite{BURLAPCITATION}.
 
 % Subsection: NChain.
 \subsection{NChain}
@@ -57,7 +60,7 @@ Taxi has long been studied by the hierarchical reinforcement learning literature
 % Subsection: Minefield.
 \subsection{Minefield}
 
-Minefield is a slight variant of Grid World. The transitions and rewards are perturbed, and there is no down action available to the agent. There is some slip probability associated with movement; when the agent moves left or right, it has probability $x$ of moving up, when the agent moves up, it has probability $\frac{x}{2}$ of moving left, and probability $\frac{x}{2}$ of moving right. The reward function is such that transitions to the top row in the grid receive $1.0$ reward, all other transitions receive $0.2$ reward, except for a random set of $\kappa$ states (which may include the top row) that receive $0$ reward (these are the states with mines in them, thus the name). During experimentation, we set $N=10, M=4, \epsilon=1.1, \kappa = 5, x = 0.01$. We visualize the original Minefield, represented as a graph, and the abstract Minefield in ~\ref{ref:minefield-visual}.
+Minefield is a particular variant of Grid World \cite{russell1995modern} with slip probability of $.2$.  The reward function is such that moving up in the top row of the grid receive $1.0$ reward, all other transitions receive $0.2$ reward, except for transitions to a random set of $\kappa$ states (which may include the top row) that receive $0$ reward (these are the states with mines in them, thus the name). During experimentation, we set $N=10, M=4, \epsilon=1.1, \kappa = 5, x = 0.01$. We visualize the original Minefield and the abstract Minefield in ~\ref{ref:minefield-visual}.
 
 % Minefield Compression Visuals
 \begin{figure}
