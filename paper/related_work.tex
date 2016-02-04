@@ -2,55 +2,14 @@
 
 Several other projects have addressed similar topics.
 
-% Approximate abstraction work.
-%Dean: 
-%\begin{itemize}
-%\item \citep{dean1997model} Does abstraction with model equality.
-%\item \citep{dean1997modelmin} Does approximate abstraction with model similarity.
-%\end{itemize}
-%
-%Boutilier:
-%\begin{itemize}
-%\item ~\citep{dearden1997abstraction} Abstraction: a similar ish bound with a similar is agenda.
-%\item ~\citep{Boutilier2000} Stochastic DP: tree based policies, sort of bound thingies.
-%\end{itemize}
-%
-%Even~\cite{even2003approximate}: COLT paper on different metrics
-%
-%Ortner:
-%\begin{itemize}
-%\item ~\cite{ortner2013adaptive}: Uses Dean results to do UCRL online learning of abstraction. 
-%\item ~\cite{odalric2013optimal}: Learn which abstraction to use online (similar to the Nan paper)
-%\end{itemize}
-
-
 \subsection{Approximate State Abstraction}
 \citeauthor*{dean1997model} investigated partitioning an \ac{MDP}'s state space into $\epsilon$-homogenous blocks, which are defined as clusters of states whose transition model and reward function are within $\epsilon$ of each other. They develop an algorithm called Interval Value Iteration (IVI) that converges to the correct bounds on a family of abstracted MDPs called a Bounded MDP. This method of abstraction is effectively characterized as a function belonging to the approximate class $\phi_{model}$.
-Several approaches build on the notion of $\epsilon$-homogeneity. \citeauthor*{even2003approximate} analyzed different distance metrics used in the process of identifying $\epsilon$-homogenous partitions. \citeauthor*{ortner2013adaptive} developed an algorithm for learning partitions in an online setting by taking advantage of the confidence bounds for $T$ and $R$ provided by UCRL~\cite{auer2009near}.
-
-%Prior work considers abstractions related to transition model similarity, or both transition model and reward function similarity with the aim of reducing the state space size required for planning and learning while still achieving a bounded error solution~\cite{even2003approximate,ortner2013adaptive,Boutilier2000}. All of this work is closely in line with our own agenda; they investigate rules for abstractions that may inform a reduced, abstract MDP, the solution to which has bounded error in the original MDP. However, all prior results explore model similarity abstraction rules, whereas we consider several broader classes of approximate abstraction. Furthermore, our results depend on no assumptions regarding the structure of the MDPs in which we apply our abstraction, and generalize to both the reinforcement learning or the planning setting, while many previous approaches require simplifying assumptions about the space of MDPs\dnote{a comment about what assumptions are made would be nice}, or only work target planning.
+Several approaches build on the notion of $\epsilon$-homogeneity. \citeauthor*{even2003approximate} analyzed different distance metrics used in the process of identifying $\epsilon$-homogenous partitions. \citeauthor*{ortner2013adaptive} developed an algorithm for learning partitions in an online setting by taking advantage of the confidence bounds for $T$ and $gR$ provided by UCRL~\cite{auer2009near}.
 
 \subsection{Specific Abstraction Algorithms}
 Many previous works have targeted the creation of algorithms that enable state abstraction for MDPs. \citeauthor*{andre2002state} investigated a method for state abstraction in hierarchical reinforcement learning leveraging a programming language called ALISP that promotes the notion of {\it safe} state abstraction. Agents programmed using ALISP can ignore irrelevant parts of the state, achieving abstractions that maintain optimality. \citeauthor{dietterich2000hierarchical} developed the MAXQ algorithm, a framework for composing tasks into an abstracted hierarchy where state aggregation can be applied. \citeauthor*{jong2005state} introduced a method called {\it policy-irrelevance} in which agents identify (online) which state variables may be safely abstracted away ignored in a factored-state \ac{MDP}. The agent will learn to ignore state variables that don't impact optimal behavior, making this method a version of the approximate $\phi_{a^*}$ work. For a full survey of algorithms that leverage state abstraction in past reinforcement-learning papers, see \citeauthor{li2006towards}.
 
-% Other? Selecting abstractions
-%\subsection{Selecting Abstractions}
-%\citep{jiang2015abstraction} investigate the question of choosing between two abstractions during learning. They provide analysis for an online approach to identifying the better abstraction. 
+\subsection{Exact Abstraction Framework}
 
-% Defining 
+\citeauthor*{li2006towards} developed a framework for exact state abstraction in \acp{MDP}. In particular, the authors define five classes of state-aggregation functions, inspired by existing methods for state aggregation in \acp{MDP}. We generalize two of these five classes, $\phi_{Q^*}$ and $\phi_{model}$, to the approximate abstraction case. Note that when $\epsilon=0$ our generalizations are equivalent to $\phi_{Q^*}$ and $\phi_{model}$. Additionally, when $\epsilon=0$ our bounds indicate that no value is a lost, which is one of core results of \citeauthor{li2006towards}.
 
-% Critically, our work differs from these in that our primary aim is to achieve understanding of what methods of abstraction in reinforcement learning can maintain bounded error solutions, while these focus on particular strategies that fit within our framework.
-
-% Lihong/Walsh/Littman: Towards a unified theory...
-
-%\begin{itemize}
-%\item {\bf Approximate equivalence of MDP}~\cite{even2003approximate}
-%\item ALisp~\cite{andre2002state}
-%\item Aggregation in DP~\cite{Bean2011}
-%\item {\bf Does approximate aggregation and then UCRL}~\cite{ortner2013adaptive}
-%Very similar to our overall goal: learn an abstraction function online using confidence bounds as the epsilon. Wowza. Only uses the whole model similarity business though. Seems to be the case for all of the approximate aggregation work (just does the bisimulation or $\epsilon-homogeneity$)
-%
-%\item Selecting the state rep in RL~\cite{maillard2011selecting}
-%\item Near optimal state reps~\cite{ortner2014selecting}
-%\item SMDP homomorphisms~\cite{ravindran2003smdp}
-%\end{itemize}
