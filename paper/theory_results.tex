@@ -214,11 +214,11 @@ As $T \rightarrow \infty$, $Q_T$ becomes $Q_A$ and $\sum_{t=0}^{T-1} \epsilon \g
 
 Consider a fixed but arbitrary state, $s_G \in \mathcal{S}_G$ and its corresponding abstract state $s_A=\epQ(s_G)$.
 
-Let $a^*_G$ stand for the optimal action in $s_G$:
-\[a^*_G = \argmin Q_G(s_G, a)\]
-
-Let $a^*_A$ stand for the optimal action in $s_A$:
- \[a^*_A = \argmin Q_A(s_A, a)\]
+Let $a^*_G$ stand for the optimal action in $s_G$, and $a^*_A$ stand for the optimal action in $s_A$:
+\begin{align*}
+a^*_G = \argmin Q_G(s_G, a) \hspace{4mm}
+a^*_A = \argmin Q_A(s_A, a)
+\end{align*}
 
 The optimal action in the abstract MDP has a $Q$-value in the ground which is nearly optimal:
 \begin{equation}
