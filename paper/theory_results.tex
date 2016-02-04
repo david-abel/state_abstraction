@@ -188,7 +188,7 @@ Q_T(s_A, a) = \sum_{g \in G(s_A)}w(g)\ * \\
 \end{multline*}
 Applying our inductive hypothesis yields,
 \begin{multline*}
-\leq \sum_{g \in G(s_A)}w(g)\ * \\ \left[ R_G(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_G(g,a,g') \max_{a'}(Q_G(g', a') + \sum_{t=0}^{T-2} \epsilon \gamma^t)      \right]
+\leq \sum_{g \in G(s_A)}w(g) * \biggl[ R_G(g,a)\ + \\ \gamma \sum_{g' \in \mathcal{S}_G} T_G(g,a,g') \max_{a'}(Q_G(g', a') + \sum_{t=0}^{T-2} \epsilon \gamma^t) \biggr]
 \end{multline*}
 %&\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \sum_{g \in X(s_A)}w(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'}Q_0      \right]\\
 Then:
@@ -347,14 +347,14 @@ Let $B$ stand for the maximum $Q$-value difference between any pair of ground st
 \begin{equation*}
 B = \max_{s_A, s_1, s_2, a}  |Q_G(s_1, a) - Q_G(s_2, a)|
 \end{equation*}
-Where $s_A \in \mcS_G$ and $s_1, s_2 \in G(s_A)$.:
+Where $s_A \in \mcS_G$ and $s_1, s_2 \in G(s_A)$:
 \begin{multline*}
-=\max_{s_A, s_1, s_2, a}      |\mcR_G(s_1, a) - \mcR_G(s_2, a) +\\
-\gamma \sum_{{s_G}' \in \mcS_G}(\mcT_G(s_1,a,{s_G}')-\mcT_G(s_2, a, {s_G}'))\max_{a'}Q_G({s_G}', a')|
+=\max_{s_A, s_1, s_2, a}      \biggl|\mcR_G(s_1, a) - \mcR_G(s_2, a)\ + \gamma \sum_{{s_G}' \in \mcS_G} \\
+\biggl[(\mcT_G(s_1,a,{s_G}') -\mcT_G(s_2, a, {s_G}'))\max_{a'}Q_G({s_G}', a')\biggr]\biggr|
 \end{multline*}
 \begin{multline*}
-\leq \epsilon + \gamma \sum_{s_A \in \mcS_A}\sum_{{s_G}' \in G(s_A)} \\
-\left[(T_G(s_1, a, {s_G}')-T_G(s_2, a, {s_G}')) \max_{a'}Q_G({s_G}', a') \right]
+\leq \epsilon + \gamma \sum_{s_A \in \mcS_A}\sum_{{s_G}' \in G(s_A)} \biggl[(T_G(s_1, a, {s_G}') -\\ 
+T_G(s_2, a, {s_G}')) \max_{a'}Q_G({s_G}', a') \biggr]
 \end{multline*}
 By the similarity of transitions of grouped states under $\epM$:
 \begin{align*}
@@ -394,7 +394,6 @@ We also assume that the difference in normalizing terms is bounded by some non-n
 \end{equation}
 \label{lma:bolt_lemma}
 \end{lma}
-
 We prove Lemma~\ref{lma:bolt_lemma} by using the approximation for $e^x$:
 \begin{equation}
  e^x = 1 + x + \delta  \approx 1 + x
@@ -406,12 +405,12 @@ Where $\delta$ is the error associated with the approximation.
 
 By the approximation in Equation~\ref{eq:e_to_x_approx} and the assumption in Equation~\ref{eq:bolt_denom}:
 \begin{align*}
-|\frac{1 + Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}} - \frac{1 + Q_G(s_2,a) + \delta_2}{\sum_j e^{Q_G(s_1,a_j)} \pm k\epsilon}| \leq \epsilon
+\left|\frac{1 + Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}} - \frac{1 + Q_G(s_2,a) + \delta_2}{\sum_j e^{Q_G(s_1,a_j)} \pm k\epsilon}\right| \leq \epsilon
 \end{align*}
 
 It follows that:
 \begin{equation}
-|Q_G(s_1,a) - Q_G(s_2,a)| \leq \epsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k \right)
+\left|Q_G(s_1,a) - Q_G(s_2,a)\right| \leq \epsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k \right)
 \label{eq:bolt_qs}
 \end{equation}
 
