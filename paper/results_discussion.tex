@@ -1,6 +1,6 @@
 \section{Approximate Abstraction on Example Domains}
 %Explanation of what abstraction is used
-We run experiments on aggregation functions the $\ep{Q^*}$ abstraction. For each trial our aggregation greedily groups ground states into abstract states that satisfy the $\ep{Q^*}$ criteria. The order in which ground states are selected and then greedily added is randomized so there is randomization across trials. Every ground state is equally weighted in its abstract state.
+We run experiments on aggregation functions the $\epQ$ abstraction. For each trial our aggregation greedily groups ground states into abstract states that satisfy the $\epQ$ criteria. The order in which ground states are selected and then greedily added is randomized so there is randomization across trials. Every ground state is equally weighted in its abstract state.
 
 %Explanation of what plots done
 For each domain we report two quantities as a function of epsilon with \%95 confidence bars. First, we compare the number of states in the abstract \ac{MDP} to different values of $\epsilon$, shown in Figure~\ref{fig:main_empirical_results1}. The smaller this value, the smaller the state space of the $\ac{MDP}$ that the agent must plan over. Second, we report the value under the abstract policy of the initial ground state, shown in Figure~\ref{fig:main_empirical_results2}. 200 Trials are run for each data point.
