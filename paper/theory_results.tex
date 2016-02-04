@@ -65,6 +65,7 @@ There exist at least four classes of approximate state-aggregation functions, $\
 \end{equation}
 \end{thm}
 \enote{Axe the absolute values here and elsewhere}
+\enote{Unify the use of $\forall$ and ``:"s}
 
 % Subsection: Optimal Q Function
 \subsection{Optimal Q Function: $\ep_{Q^*}$}
@@ -328,39 +329,34 @@ Thus, we conclude
 \subsection{Model Similarity: $\ep_{model}$}
 \label{sec:model}
 
-Inspired by the model-irrelevance abstraction, we consider the approximate case. We let $\phi_{model}$ define a type of abstraction that, for fixed $\epsilon$, satisfies:
+Inspired by the model-irrelevance abstraction, we consider the approximate case. We let $\epM$ define a type of abstraction that, for fixed $\epsilon$, satisfies:
 \begin{multline}
 \epM(s_1) = \epM(s_2) \rightarrow \\
 \forall_a \left| \mcR_G(s_1, a) - \mcR_G(s_2, a)\right| \leq \epsilon \wedge\ \\
-\forall_{s_A \in \mcS_A} \left|\sum_{g' \in G(s_A)} \left[\mcT_G(s_1, a, g') - \mcT_G(s_2, a,g')\right] \right| \leq \epsilon
+\forall_{s_A \in \mcS_A} \left|\sum_{{s_G}' \in G(s_A)} \left[\mcT_G(s_1, a, {s_G}') - \mcT_G(s_2, a,{s_G}')\right] \right| \leq \epsilon
 \end{multline}
-where $X(s_A) = \{ g' \in \mcS | \epM(g') = s_A \}$
-
-\enote{Do we want to make it clear that this is ground transitions and rewards?}
-
-\enote{Note that it is possible }
 
 %Model Lemma
 \begin{lma}
 \label{lma:model}
-When $S_A$ is created using a function of the $\ep_{model}$ type:
+When $\mcS_A$ is created using a function of the $\ep_{model}$ type:
 \begin{equation}
-\forall_{s \in S_M} : | V^{\pi^*_G}(s) - V^{\pi^*_{A}}(s) | \leq \frac{2\epsilon + 2\gamma((|\mcS_G|-1)\epsilon)}{(1-\gamma)^3}
+\forall_{s \in \mcS_G} : | V_G(s) - V^{\pi_{GA}}(s) | \leq \frac{2\epsilon + 2\gamma((|\mcS_G|-1)\epsilon)}{(1-\gamma)^3}
 \end{equation}
 \end{lma}
 
-{\bf Proof:} Our proof proceeds as follows: we demonstrate that states grouped aggregated under $\epM$ have Q values all within a particular bound. Consequently $\epM$ abstractions are interpretable as an instantiation of $\epQ$ with a particular $\epsilon$ -- understanding $\epM$ abstractions allows us to conclude our bound by applying Lemma \ref{lma:Q*}.
+{\bf Proof:} Our proof proceeds as follows: we demonstrate that states aggregated under $\epM$ have $Q$-values all within a particular bound. Consequently $\epM$ abstractions are interpretable as an instantiation of $\epQ$ with a particular $\epsilon$. Understanding $\epM$ as such abstractions allows us to conclude our bound by applying Lemma \ref{lma:Q*}.
 
-
-Let $B$ stand for the maximum Q difference between any pair of ground states in the same abstract state under $\epM$:
+Let $B$ stand for the maximum $Q$-value difference between any pair of ground states in the same abstract state under $\epM$:
 
 \begin{align*}
-B = &\max_{s_A \in \mcS_A, s_1, s_2 \in X(s_A), a} |Q(s_1, a) - Q(s_2, a)|\\
-=&\max_{s_A \in \mcS_A, s_1, s_2 \in X(s_A), a}      |R(s_1, a) - R(s_2, a) +\\
-& \gamma \sum_{g' \in \mcS_G}(\mcT(s_1,a,g')-\mcT(s_2, a, g'))\max_{a'}Q(g', a')|
+B = &\max_{s_A, s_1, s_2, a}  |Q_G(s_1, a) - Q_G(s_2, a)|\\
+&\text{Where $s_A \in \mcS_G$ and $s_1, s_2 \in G(s_A)$.}\\
+=&\max_{s_A, s_1, s_2, a}      |\mcR_G(s_1, a) - \mcR_G(s_2, a) +\\
+& \gamma \sum_{{s_G}' \in \mcS_G}(\mcT_G(s_1,a,{s_G}')-\mcT_G(s_2, a, {s_G}'))\max_{a'}Q_G({s_G}', a')|
 \end{align*}
 \begin{multline*}
-\leq \epsilon + \gamma \sum_{s_A \in \mcS_A}\sum_{g' \in X(s_A)} \\ \left[(T(s_1, a, g')-T(s_2, a, g')) 		\max_{a'}Q(g', a')	\right]
+\leq \epsilon + \gamma \sum_{s_A \in \mcS_A}\sum_{{s_G}' \in G(s_A)} \\ \left[(T_G(s_1, a, {s_G}')-T_G(s_2, a, {s_G}')) 		\max_{a'}Q_G({s_G}', a')	\right]
 \end{multline*}
 By the similarity of transitions of grouped states under $\epM$:
 \begin{align*}
