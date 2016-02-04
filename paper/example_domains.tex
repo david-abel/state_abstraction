@@ -1,5 +1,5 @@
 \section{Example Domains}
-To demonstrate the efficacy of these approximate abstraction functions, we test functions in the $\ep{Q^*}$ abstraction family on four domains -- NChain, Taxi, Minefield and Random MDP, which we dub ``Random". These domains were selected for the variety they offer -- Nchain is relatively simple domain, Taxi is goal-based and hierarchical in nature, Minefield is stochastic and Random MDP has a high number of near-optimal behavior.
+To demonstrate the efficacy of these approximate abstraction functions, we test functions in the $\ep{Q^*}$ abstraction family on four domains -- NChain, Taxi, Minefield and Random MDP, which we dub ``Random". These domains were selected for their variety -- NChain is relatively simple, Taxi is goal-based and hierarchical in nature, Minefield is stochastic, and Random MDP has many near-optimal policies.
 
 % Description of visuals.
 Our code base provides implementations to abstract, visualize, and evaluate an arbitrary MDP to promote further investigation into approximate abstraction. The included visuals of compressed MDPs always converts MDPs into a graph so that an arbitrary MDP may be visualized when abstracted. We use the graph visualization library GraphStream~\cite{graphstream}. In our visuals, a grey circle indicates a state, while the colored arrows indicate transitions. The thickness of the arrow indicates how much reward is associated with that transition. In the ground MDPs, states are labeled with a number. In some abstract MDPs, we indicate which ground states were collapsed to each abstract state by labelling the abstract states with their constituent ground states (some are visually unwieldy and so were ignored).
@@ -7,7 +7,7 @@ Our code base provides implementations to abstract, visualize, and evaluate an a
 % Subsection: NChain.
 \subsection{NChain}
 
-NChain, pictured in Figure~\ref{fig:nchain-visual}, is a simple MDP heavily investigated in the Bayesian Reinforcement Learning literature due to the interesting exploration problem it poses. In all states, the agent has two actions available: advance down the chain, or return to state 0. The agent receives a small positive reward, $r_{small}$ for returning to state 0, and no reward for advancing down the chain, unless the agent transitions to the last state in the chain. This transition provides a large positive reward, $r_{large}$. Thus, the agent must explore down the chain and avoid the intermediate smaller rewards in order to find the large reward at the end. In many implementations, there is also a small slip probability that the applied action has the unintended effect of the opposing action (so advancing down the chain with probability $\rho$ will take the agent back to state 0, and vice versa). In our implementation, we set $N=10$, $\rho=0.2$, $r_{small} = 0.2$, and $r_{large} = 1.0$.
+NChain, pictured in Figure~\ref{fig:nchain-visual}, is a simple MDP heavily investigated in the Bayesian Reinforcement Learning literature due to the interesting exploration problem it poses~\cite{dearden1998bayesian}. In all states, the agent has two actions available: advance down the chain, or return to state 0. The agent receives a small positive reward, $r_{small}$ for returning to state 0, and no reward for advancing down the chain, unless the agent transitions to the last state in the chain. This transition provides a large positive reward, $r_{large}$. Thus, the agent must explore down the chain and avoid the intermediate smaller rewards in order to find the large reward at the end. Transitions also have small slip probability such that the applied action has the unintended effect of the opposing action (so advancing down the chain with probability $\rho$ will take the agent back to state 0, and vice versa). In our implementation, we set $N=10$, $\rho=0.2$, $r_{small} = 0.2$, and $r_{large} = 1.0$.
 
 % NChain Compression Visuals.
 \begin{figure}[h]
@@ -18,7 +18,6 @@ NChain, pictured in Figure~\ref{fig:nchain-visual}, is a simple MDP heavily inve
 \label{fig:nchain-visual}
 \caption{Comparison of Original NChain MDP and Abstract NChain MDP, under an $\epQ$ abstraction, with $\epsilon=0.5$}
 \end{figure} 
-
 
 %% Subsection: UpWorld.
 %\subsection{UpWorld}
@@ -37,17 +36,19 @@ NChain, pictured in Figure~\ref{fig:nchain-visual}, is a simple MDP heavily inve
 % Subsection: Taxi
 \subsection{Taxi}
 
-Taxi has long been studied by the hierarchical reinforcement learning literature due to its natural decomposition into hierarchical subgoals. The agent, operating in a grid world style domain, may move left, right, up, and down, as well as pickup a passenger and drop off a passenger. The agent must seek out passengers and take them to their destination. We visualize the compression on a simple 626 Taxi instance in Figure~\ref{fig:taxi-visual}. As stated above, we visualize the original Taxi problem into a graph representation so that we may visualize both the ground MDP and abstract MDP in the same format.
+Taxi has long been studied by the hierarchical reinforcement learning literature due to its natural decomposition into hierarchical subgoals~\cite{dietterich2000hierarchical}. The agent, operating in a grid world style domain, may move left, right, up, and down, as well as pickup a passenger and drop off a passenger. The goal is achieved when the agent has taken each passenger to its destination.
+
+%We visualize the compression on a simple 626 Taxi instance in Figure~\ref{fig:taxi-visual}. As stated above, we visualize the original Taxi problem into a graph representation so that we may visualize both the ground MDP and abstract MDP in the same format.
 
 % Taxi Compression Visuals
-\begin{figure}[h]
-\subfigure[Ground Taxi]{
-\includegraphics[width=0.48\columnwidth]{figures/ground_taxi.png}}
-\subfigure[Abstract Taxi]{
-\includegraphics[width=0.48\columnwidth]{figures/abs_taxi.png}}
-\label{fig:taxi-visual}
-\caption{Comparison of Original Taxi MDP and Abstract Taxi MDP, under an $\epQ$ abstraction, with $\epsilon=0.03$}
-\end{figure} 
+%\begin{figure}[h]
+%\subfigure[Ground Taxi]{
+%\includegraphics[width=0.48\columnwidth]{figures/ground_taxi.png}}
+%\subfigure[Abstract Taxi]{
+%\includegraphics[width=0.48\columnwidth]{figures/abs_taxi.png}}
+%\label{fig:taxi-visual}
+%\caption{Comparison of Original Taxi MDP and Abstract Taxi MDP, under an $\epQ$ abstraction, with $\epsilon=0.03$}
+%\end{figure} 
 
 
 % Insert visual and/or stats on number of states and performance of VI solving the abstract MDP and evaluating the resulting policy on the original MDP
@@ -72,14 +73,16 @@ Minefield is a slight variant of Grid World. The transitions and rewards are per
 % Subsection: Random.
 \subsection{Random}
 
-The Random MDP domain we consider is as follows. There are $N$ states, and $K$ actions. For each state, each action can transition to two randomly selected (but fixed) states, each with probability $0.5$. The Random MDP and its compression are visualized in Figure~\ref{fig:minefield-visual}.
+The Random MDP domain we consider is as follows. There are $N$ states, and $K$ actions. For each state, each action can transition to two randomly selected (but fixed) states, each with probability $0.5$.
+
+%The Random MDP and its compression are visualized in Figure~\ref{fig:minefield-visual}.
 
 % Random Compression Visuals
-\begin{figure}
-\subfigure[Ground Random]{
-\includegraphics[width=0.48\columnwidth]{figures/ground_random.png}}
-\subfigure[Abstract Random]{
-\includegraphics[width=0.48\columnwidth]{figures/abs_random.png}}
-\label{fig:minefield-visual}
-\caption{Comparison of Original Random MDP and Abstract Random MDP, under an $\epQ$ abstraction, with $\epsilon=0.2$}
-\end{figure} 
+%\begin{figure}
+%\subfigure[Ground Random]{
+%\includegraphics[width=0.48\columnwidth]{figures/ground_random.png}}
+%\subfigure[Abstract Random]{
+%\includegraphics[width=0.48\columnwidth]{figures/abs_random.png}}
+%\label{fig:minefield-visual}
+%\caption{Comparison of Original Random MDP and Abstract Random MDP, under an $\epQ$ abstraction, with $\epsilon=0.2$}
+%\end{figure} 
