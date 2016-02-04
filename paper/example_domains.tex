@@ -1,8 +1,11 @@
 \section{Example Domains}
-To demonstrate the efficacy of these approximate abstraction functions, we test functions in the $\ep{Q^*}$ abstraction family on four domains -- NChain, Taxi, Minefield and Random MDP, which we dub ``Random". These domains were selected for their variety -- NChain is relatively simple, Taxi is goal-based and hierarchical in nature, Minefield is stochastic, and Random MDP has many near-optimal policies.
+To demonstrate the efficacy of these approximate abstraction functions, we test functions in the $\epQ$ abstraction family on four domains -- NChain, Taxi, Minefield and Random. These domains were selected for their variety -- NChain is relatively simple, Taxi is goal-based and hierarchical in nature, Minefield is stochastic, and Random MDP has many near-optimal policies.
 
 % Description of visuals.
-Our code base provides implementations to abstract, visualize, and evaluate an arbitrary MDP to promote further investigation into approximate abstraction. The included visuals of compressed MDPs always converts MDPs into a graph so that an arbitrary MDP may be visualized when abstracted. We use the graph visualization library GraphStream~\cite{graphstream}. In our visuals, a grey circle indicates a state, while the colored arrows indicate transitions. The thickness of the arrow indicates how much reward is associated with that transition. In the ground MDPs, states are labeled with a number. In some abstract MDPs, we indicate which ground states were collapsed to each abstract state by labelling the abstract states with their constituent ground states (some are visually unwieldy and so were ignored).
+In our visuals, a grey circle indicates a state, while the colored arrows indicate transitions. The thickness of the arrow indicates how much reward is associated with that transition. In the ground \acp{MDP}, states are labeled with a number. In some abstract \acp{MDP}, we indicate which ground states were collapsed to each abstract state by labelling the abstract states with their constituent ground states (some are visually unwieldy and so were not labelled).
+
+%Description of code base
+Additionally, in hopes of promoting further investigation into approximate abstraction, we provide our code base (link redacted for review) which provides implementations for abstracting arbitrary \acp{MDP} and visualizing and evaluating the resulting abstract \acp{MDP}. We use the graph visualization library GraphStream~\cite{graphstream} and planning and \ac{RL} library, BURLAP~\cite{BURLAPCITATION}.
 
 % Subsection: NChain.
 \subsection{NChain}
