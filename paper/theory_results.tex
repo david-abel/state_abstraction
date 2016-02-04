@@ -66,6 +66,7 @@ There exist at least four classes of approximate state-aggregation functions, $\
 \end{thm}
 \enote{Axe the absolute values here and elsewhere}
 \enote{Unify the use of $\forall$ and ``:"s}
+\enote{Add for 0-1 normalized reward}
 
 % Subsection: Optimal Q Function
 \subsection{Optimal Q Function: $\ep_{Q^*}$}
@@ -367,6 +368,8 @@ Applying 0-1 reward normalization and algebra:
 \begin{equation*}
  \leq \frac{\epsilon + \gamma(|\mcS_G| - 1) \epsilon}{1-\gamma}
 \end{equation*}
+
+\enote{Do we need to state what Q_max is and that it is upper bounded by 1/(1-gamma) or is this common knowledge?}
 
 Since the Q values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\epsilon = B$. Applying Lemma \ref{lma:Q*} yields Lemma \ref{lma:model}.
 
