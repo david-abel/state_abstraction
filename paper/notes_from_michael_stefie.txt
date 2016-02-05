@@ -1,0 +1,41 @@
+SPACE SAVERS:
+	Possibly remove outline to save space
+	Possibly remove Nchain visual
+
+Quick mathy fixes:
+	Q_{max}
+	phi_{model}
+	dangling inequalities
+	cases being aligned, using if
+	epsilon to varepsilon
+
+Other fixes from Michael:
+
+	Lemma 1 proof should have roadmap
+	
+	Describe the approximate phi thingies much earlier (in the intro?) Maybe a table?
+	Sentences about what each abstraction function is
+	Introduce abstraction types in intro/earlier, that way Bolt/Mult don't need motivation when we're proving them
+		> Michael's note on this one: %zzz all this theory is quite abstract. is there some way to weave in a running example and/or to at least provide some more motiviation for why phiBoltz is desirable. Balancing exploration/exploitation isn't really a motivation for why values should be abstracted together. What do the first two abstraction types miss that this one provides? We didn't Lihong et al. study it in the exact case?
+
+	Redo visuals
+		> Make lines thicker
+		> (for Minefield, do it so it's vertical, that we we can say "top row")
+
+	Redo plots
+		> Make font bigger
+
+	Why didn't we do all 4 abstraction classes: the other 3 reduce to Q*
+
+Go over bibliography make sure it looks nice.
+	Citations
+
+Titles/Section titles/Orgo talk
+
+1 pass each
+
+1 pass together?
+
+Turn in.
+
+
