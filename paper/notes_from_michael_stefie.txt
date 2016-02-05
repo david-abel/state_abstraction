@@ -8,10 +8,13 @@ Quick mathy fixes:
 	dangling inequalities
 	cases being aligned, using if
 	epsilon to varepsilon
+	No abs in final bounds
+	Use of : and forall
+	Q value Vs Q-value
 
 Other fixes from Michael:
 
-	Lemma 1 proof should have roadmap
+	Lemma 1 proof should have roadmap -- DONE
 	
 	Describe the approximate phi thingies much earlier (in the intro?) Maybe a table?
 	Sentences about what each abstraction function is
@@ -24,8 +27,9 @@ Other fixes from Michael:
 
 	Redo plots
 		> Make font bigger
+		> Why are CIs consistently worse
 
-	Why didn't we do all 4 abstraction classes: the other 3 reduce to Q*
+	Why didn't we do all 4 abstraction classes: the other 3 reduce to Q* -- DONE
 
 Go over bibliography make sure it looks nice.
 	Citations
