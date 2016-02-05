@@ -3,7 +3,7 @@
 We build upon the notation used by \citet{li2006towards}, who introduced a unifying theoretical framework for state abstraction in \acp{MDP} and sequential decision making.
 
 \bdefn{$M_G$, $M_A$}
-We understand an abstraction as a mapping from the state space of a ground MDP $M_G$ to that of an abstract MDP $M_A$ using a state-aggregation scheme. Consequently, this mapping induces an abstract MDP. Let $M_G = \langle \mathcal{S}_G, \mathcal{A}, \mathcal{T}_G, \mathcal{R}_G, \gamma \rangle$ and $M_A = \langle \mathcal{S}_A, \mathcal{A}, \mathcal{T}_A, \mathcal{R}_A, \gamma \rangle$.
+We understand an abstraction as a mapping from the state space of a ground \ac{MDP}, $M_G$, to that of an abstract MDP, $M_A$, using a state-aggregation scheme. Consequently, this mapping induces an abstract \ac{MDP}. Let $M_G = \langle \mathcal{S}_G, \mathcal{A}, \mathcal{T}_G, \mathcal{R}_G, \gamma \rangle$ and $M_A = \langle \mathcal{S}_A, \mathcal{A}, \mathcal{T}_A, \mathcal{R}_A, \gamma \rangle$.
 \edefn
 
 % States
@@ -32,7 +32,7 @@ The abstract reward function and abstract transition dynamics for each abstract 
 %zzz it's weird that s is bound twice in this formula. is that needed/intentional?
 
 \bdefn{$\omega(s)$}
-We refer to the weight associated with a ground state, $s \in \mathcal{S}_G$ by $\omega(s)$. The only restriction placed on the weighting scheme is that it induces a probability distribution on the states:
+We refer to the weight associated with a ground state, $s \in \mathcal{S}_G$ by $\omega(s)$. The only restriction placed on the weighting scheme is that it induces a probability distribution on the ground states of each abstract state:
 \begin{equation}
 \forall s \in \mcS_G \left(\sum_{s \in G(s)} \omega(s)\right) = 1 \textrm{ and }\hspace{6mm}  \omega(s) \in [0,1].
 \end{equation}
