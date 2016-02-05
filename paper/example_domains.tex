@@ -42,7 +42,7 @@ NChain is a simple \ac{MDP} investigated in the Bayesian \ac{RL} literature due 
 % Subsection: Taxi
 %\subsection{Taxi}
 
-Taxi has long been studied by the hierarchical RL literature~\cite{dietterich2000hierarchical}. The agent, operating in a grid-world style domain, may move left, right, up, and down, as well as pick up a passenger and drop off a passenger. The goal is achieved when the agent has taken all passengers to their destinations.
+Taxi has long been studied by the hierarchical RL literature~\cite{dietterich2000hierarchical}. The agent, operating in a Grid World style domain~\cite{russell1995modern}, may move left, right, up, and down, as well as pick up a passenger and drop off a passenger. The goal is achieved when the agent has taken all passengers to their destinations.
 
 %We visualize the compression on a simple 626 Taxi instance in Figure~\ref{fig:taxi-visual}. As stated above, we visualize the original Taxi problem into a graph representation so that we may visualize both the ground MDP and abstract MDP in the same format.
 
@@ -68,9 +68,9 @@ Minefield is a test problem we are introducing that uses the Grid World dynamics
 \begin{figure}
 \centering
 \subfigure[Ground Minefield]{
-\includegraphics[width=0.32\columnwidth]{figures/ground_minefield.png}}
+\includegraphics[width=0.34\columnwidth]{figures/ground_minefield.png}}
 \subfigure[Abstract Minefield]{
-\includegraphics[width=0.32\columnwidth]{figures/abs_minefield.png}}
+\includegraphics[width=0.34\columnwidth]{figures/abs_minefield.png}}
 \label{fig:minefield-visual}
 \caption{Comparison of ground Minefield \ac{MDP} and abstract \ac{MDP}, under a $\epQ$ abstraction with $\varepsilon=0.5$}
 \end{figure} 

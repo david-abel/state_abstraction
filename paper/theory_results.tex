@@ -190,24 +190,24 @@ a^*_A = \argmin Q_A(s_A, a).
 The optimal action in the abstract MDP has a $Q$-value in the ground MDP that is nearly optimal:
 \begin{equation}
 \label{eq:Q*Claim2}
-V_G(s_G) \leq Q_G(s_A, a^*_A) + \frac{2\varepsilon}{1-\gamma}.
+V_G(s_G) \leq Q_G(s_G, a^*_A) + \frac{2\varepsilon}{1-\gamma}.
 \end{equation}
 \end{clm}
 
 By Claim~\ref{clm:closeQs},
 \begin{align}
-&V_G(s_G) = Q_G(s_G, a^*_G) \leq Q_A(s_G, a^*_G) + \frac{\varepsilon}{1-\gamma}.
+&V_G(s_G) = Q_G(s_G, a^*_G) \leq Q_A(s_A, a^*_G) + \frac{\varepsilon}{1-\gamma}.
 \label{eq:Q*OptActionResult}
 \end{align}
 
 By the definition of $a^*_A$, we know that 
 \begin{align}
-Q_A(s_G, a^*_G) + \frac{\varepsilon}{1-\gamma} \leq Q_A(s_A, a^*_A) + \frac{\varepsilon}{1-\gamma}.
+Q_A(s_A, a^*_G) + \frac{\varepsilon}{1-\gamma} \leq Q_A(s_A, a^*_A) + \frac{\varepsilon}{1-\gamma}.
 \end{align}
 
 Lastly, again by Claim~\ref{clm:closeQs}, we know
 \begin{align}
-Q_A(s_A, a^*_A) + \frac{\varepsilon}{1-\gamma} \leq Q_G(s_A, a^*_A) + \frac{2\varepsilon}{1-\gamma}.
+Q_A(s_A, a^*_A) + \frac{\varepsilon}{1-\gamma} \leq Q_G(s_g, a^*_A) + \frac{2\varepsilon}{1-\gamma}.
 \end{align}
 Therefore, Equation~\ref{eq:Q*Claim2} follows.
 
@@ -388,7 +388,7 @@ We let $\epMu$ define a type of abstraction that, for fixed $\varepsilon$, satis
 \end{multline}
 \edefn
 
-We also assume that the difference in normalizing terms is bounded by some positive factor, $k \in \mathbb{R}$, of $\varepsilon$:
+We also assume that the difference in normalizing terms is bounded by some non-negative constant, $k \in \mathbb{R}$, of $\varepsilon$:
 \begin{equation}
 \left |\sum_i Q_G(s_1,a_i) - \sum_j Q_G(s_2,a_j) \right | \leq k\varepsilon.
 \end{equation}
