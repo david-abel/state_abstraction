@@ -1,21 +1,22 @@
 \section{Conclusion}
 
 % Summary of contributions.
-Approximate abstraction in \acp{MDP} offers considerable advantages over exact abstraction. In this work we prove bounds for the value lost when behaving according to the optimal policy of the abstract \ac{MDP}. We also empirically demonstrate that approximate abstractions can reduce state space size with negligible loss in the quality of the behavior.
+Approximate abstraction in \acp{MDP} offers considerable advantages over exact abstraction. In this work, we proved bounds for the value lost when behaving according to the optimal policy of the abstract \ac{MDP}. We also empirically demonstrate that approximate abstractions can reduce state space size with negligible loss in the quality of the behavior.
 
 %First, approximate abstraction relies on criteria that we imagine a planning or learning algorithm to be able to learn without solving the full \ac{MDP}. Second, approximate abstractions can achieve greater degrees of compression due to their relaxed criteria of equality. Third, methods that employ approximate aggregation techniques are able to tune the aggressiveness of abstraction all the while incurring bounded error. We empirically demonstrate the relationship between $\epsilon$ and the degree of compression, as well as the value of the abstract policy on four dramatically different \acs{MDP}. We provide a code base that provides implementations to abstract, visualize, and evaluate an arbitrary MDP to promote further investigation into approximate abstraction.
 
 % Future work.
 There are many directions for future work.
 % Learning abs functions online.
-First, we are interested investigating learning various approximate abstraction functions online in the planning or \ac{RL} setting, a strategy first demonstrated by \citeauthor{ortner2013adaptive}.
+First, we are interested in investigating learning various approximate abstraction functions online in the planning or \ac{RL} setting, a strategy first demonstrated by \citeauthor{ortner2013adaptive}.
+zzz what does that mean?
+% Necessary conditions.
+Another question of interest is what the necessary conditions are for an abstraction that will preserve any notion of optimality (i.e. the bound between the values under $\pi_G^*$, $\pi_{GA}$ is less than $\textsc{VMax}$).
+zzz perhaps too vague
+% Options/termporal abstraction
+We investigated the use of Options~\cite{sutton1999between} in the Taxi domain, and found a negligible difference in the degree and quality of compression compared to compression without Options. In the future, we are interested in characterizing the relationship between temporal abstractions, such as those afforded by Options, and approximate abstractions.
+% Compressibility
+Lastly, we are interested in understanding the relationship between various approximate abstractions and the information theoretical limitations on the compressibility of certain classes of \acp{MDP}.
 
 % Exploration is interesting.
 %Learning abstraction functions online also has interesting implications for the exploration problem. If certain information informs the agent's ability to abstract more quickly, then exploration directed at learning the abstraction function introduces a new notion of exploration, as an abstraction function will enable the agent to identify near-optimal behavior more quickly, 
-
-% Necessary conditions.
-Another question of interest is what the necessary conditions are for an abstraction that will preserve any notion of optimality (i.e. the bound between the values under $\pi_G^*$, $\pi_{GA}$ is less than $\textsc{VMax}$). In future work, we hope to identify these conditions.
-% Options/termporal abstraction
-In the future, we are also interested in characterizing the relationship between temporal abstractions, such as those afforded by Options~\cite{sutton1999between}, and approximate abstractions. Options have been discussed at length in reinforcement learning and planning~\cite{konidaris2007building,chentanez2004intrinsically}. We investigated the use of options in the Taxi domain, and found a negligible difference in the degree and quality of compression compared to compression without Options.
-% Compressibility
-Lastly, we are interested in understanding the relationship between various approximate abstractions and the information theoretical limitations on the compressibility of certain classes of \acp{MDP}.
