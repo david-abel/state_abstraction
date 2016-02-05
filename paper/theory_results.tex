@@ -49,13 +49,6 @@ There exist at least four classes of approximate state-aggregation functions, $\
 \forall_{s \in \mathcal{S}_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) \leq poly \left (\frac{1}{\epsilon} \right).
 \end{equation}
 \end{thm}
-\enote{Axe the absolute values here and elsewhere}
-
-\enote{Unify the use of $\forall$ and ``:"s}
-
-\enote{Add for 0-1 normalized reward}
-
-\enote{Add note relating this all to Lihong for eps=0 and cut down the Lihong section}
 
 % Subsection: Optimal Q Function
 \subsection{Optimal Q Function: $\ep_{Q^*}$}
@@ -280,7 +273,7 @@ Thus, from our base case and induction, we conclude that
 \forall_{t, s_G \in \mathcal{S}_g} V_G^{\pi_G^*}(s_G) \leq  V_G^{\pi_{A,t}}(s_G) + \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma}.
 \end{equation}
 
-Note that as $t \rightarrow \infty$, $\sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma} \rightarrow \frac{2\epsilon}{(1-\gamma)^2}$ by the sum of geometric series and $\pi_{A,t}(s) \rightarrow \pi_{GA}$.
+Note that as $t \rightarrow \infty$, $\sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma} \rightarrow \frac{2\epsilon}{(1-\gamma)^2}$ by the sum of infinite geometric series and $\pi_{A,t}(s) \rightarrow \pi_{GA}$.
 Thus, we conclude Lemma~\ref{lma:Q*}.
 %\begin{equation*}
 %\forall_{s_G \in \mathcal{S}_g} V_G(s_G) \leq  V_G^{\pi_{GA}}(s_G) + \frac{2\epsilon}{(1-\gamma)^2}
