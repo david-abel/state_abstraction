@@ -23,25 +23,25 @@ Here, we introduce our formal analysis of approximate state abstraction, includi
 We now introduce some additional notation to formally discuss these results.
 
 \bdefn{$\pi_A^*$, $\pi_G^*$}
-We let $\pi_A^* : \mcS_A \rightarrow \mcA$ and $\pi_G^* : \mcS_G \rightarrow \mcA$ stand for the optimal policies in the abstract and ground \acp{MDP} respectively.
+We let $\pi_A^* : \mcS_A \rightarrow \mcA$ and $\pi_G^* : \mcS_G \rightarrow \mcA$ stand for the optimal policies in the abstract and ground \acp{MDP}, respectively.
 \edefn
 
 % Abstract policy in ground.
-We are interested in how the optimal policy in the abstract \ac{MDP} performs in the ground \ac{MDP}. As such we formally define the policy in the ground \ac{MDP} derived from optimal behavior in the abstract \ac{MDP}:
+We are interested in how the optimal policy in the abstract \ac{MDP} performs in the ground \ac{MDP}. As such, we formally define the policy in the ground \ac{MDP} derived from optimal behavior in the abstract \ac{MDP}:
 
 \bdefn{$\pi_{GA}$}
-Given a $s \in \mcS_G$ and a state aggregation function, $\phi$, 
+Given a state $s \in \mcS_G$ and a state aggregation function, $\phi$, 
 \begin{equation}
-\pi_{GA}(s)=\pi_A^*(\phi(s))
+\pi_{GA}(s)=\pi_A^*(\phi(s)).
 \end{equation}
 \edefn
 
-We now define classes of abstraction based on functions state, action pairs.
+We now define classes of abstraction based on functions of state--action pairs.
 \bdefn{$\ep_f$}
 Given a function $f: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathcal{R}$ and a fixed non-negative $\epsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state-aggregation function that satisfies the following for any two ground states $s_1$ and $s_2$: 
 \begin{equation}
 \label{eq:phi_f}
-\ep_f(s_1) = \ep_f(s_2) \rightarrow \forall_a \left|f(s_1, a) - f(s_2, a)\right| \leq \epsilon
+\ep_f(s_1) = \ep_f(s_2) \rightarrow \forall_a \left|f(s_1, a) - f(s_2, a)\right| \leq \epsilon.
 \end{equation}
 \edefn
 
@@ -59,9 +59,9 @@ We now introduce the main result of the paper.
 
 % Theorem 1
 \begin{thm}
-There exist at least four classes of approximate state-aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{bolt}}$ and $\ep_{\text{mult}}$ for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\epsilon$:
+There exist at least four classes of approximate state-aggregation functions, $\ep_{Q^*}$, $\ep_{\text{model}}$, $\ep_{\text{bolt}}$ and $\ep_{\text{mult}}$, for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $1/\epsilon$:
 \begin{equation}
-\forall_{s \in \mathcal{S}_G}: | V_G^{\pi_{GA}}(s) - V_G^{\pi_G^*}(s) | \leq poly(\epsilon).
+\forall_{s \in \mathcal{S}_G} | V_G^{\pi_{GA}}(s) - V_G^{\pi_G^*}(s) | \leq poly(1/\epsilon).
 \end{equation}
 \end{thm}
 \enote{Axe the absolute values here and elsewhere}
@@ -127,21 +127,18 @@ Consider a temporally heterogeneous \ac{MDP}, $M^T = \langle \mathcal{S}_T, \mat
 \end{cases}\\
 \end{align*}
 
-It follows that the $Q$-value of a state $s$ in $M^T$ for action $a$ is defined by:
-% zzz too long... needs to be broken up.
+It follows that the $Q$ value of a state $s$ in $M^T$ for action $a$ is defined by:
 \begin{equation}
 Q_T(s, a) = 
 \begin{cases}
-	   Q_G(s, a) &  T=0\\
-	   \underset{g \in G(s)}{\sum} \left[ w(g)Q_G(g,a) \right] & T = 1\\
-	   \mathcal{R}_A(\epQ(s),a) + \sigma_{T-1}(s,a) &\text{o/w}
-
+	   Q_G(s, a), &  T=0,\\
+	   \underset{g \in G(s)}{\sum} \left[ w(g)Q_G(g,a) \right], & T = 1,\\
+	   \mathcal{R}_A(\epQ(s),a) + \sigma_{T-1}(s,a), &\text{o/w},
 \end{cases}
 \end{equation}
-
-Where:
+where
 \begin{equation}
-\sigma_{T-1}(s,a) = \gamma \underset{{s_A}' \in \mathcal{S}_A}{\sum} \mathcal{T}_A(\epQ(s),a,{s_A}') \max_{a'} Q_{T-1}({s_A}', a')
+\sigma_{T-1}(s,a) = \gamma \underset{{s_A}' \in \mathcal{S}_A}{\sum} \mathcal{T}_A(\epQ(s),a,{s_A}') \max_{a'} Q_{T-1}({s_A}', a').
 \end{equation}
 
 We proceed by induction on $T$ to show that:
@@ -159,13 +156,13 @@ When $T = 0$, $Q_T = Q_G$, so the result trivially follows.
 \begin{align*}
 &Q_1(s,a) = \underset{g \in G(s)}{\sum} \left[ w(g)Q_G(g,a) \right].
 \end{align*}
-Since all co-aggregated states have Q-values within $\epsilon$ of one another and $w(g)$ induces a convex combination,
+Since all co-aggregated states have $Q$ values within $\epsilon$ of one another and $w(g)$ induces a convex combination,
 \begin{align*}
-&Q_1(s,a) \leq \epsilon \gamma^t + \epsilon + Q_G(s_G, a),
+&Q_1(s,a) \leq \epsilon \gamma^t + \epsilon + Q_G(s_G, a).
 \end{align*}
 Thus,
 \begin{equation}
-\left| Q_{1}(s_A, a) - Q_G(s_G,a) \right| \leq \sum_{t=0}^{1}\epsilon \gamma^t
+\left| Q_{1}(s_A, a) - Q_G(s_G,a) \right| \leq \sum_{t=0}^{1}\epsilon \gamma^t.
 \end{equation}
 % Inductive Case
 \textit{Inductive Case: $T > 1$}
@@ -176,139 +173,133 @@ We assume as our inductive hypothesis that:
 \end{equation}
 
 Consider a fixed but arbitrary state, $s_G \in \mathcal{S}_G$, and fixed but arbitrary action $a$.
-
 We denote $\epQ(s_G)$ as $s_A$. 
-
 By definition of $Q_{T}(s_A, a)$, $\mathcal{R}_A$, $\mathcal{T}_A$:
 \begin{multline*}
-Q_T(s_A, a) = \sum_{g \in G(s_A)}w(g)\ * \\ 
- \left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'} Q_{T-1}(g', a')      \right]
+Q_T(s_A, a) = \sum_{g \in G(s_A)}w(g)\ \times \\ 
+ \left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'} Q_{T-1}(g', a')      \right].
 \end{multline*}
-Applying our inductive hypothesis yields,
+Applying our inductive hypothesis yields
+zzz what is it less than or equal to?
 \begin{multline*}
-\leq \sum_{g \in G(s_A)}w(g) * \biggl[ R_G(g,a)\ + \\ \gamma \sum_{g' \in \mathcal{S}_G} T_G(g,a,g') \max_{a'}(Q_G(g', a') + \sum_{t=0}^{T-2} \epsilon \gamma^t) \biggr]
+\leq \sum_{g \in G(s_A)}w(g) * \biggl[ R_G(g,a)\ + \\ \gamma \sum_{g' \in \mathcal{S}_G} T_G(g,a,g') \max_{a'}(Q_G(g', a') + \sum_{t=0}^{T-2} \epsilon \gamma^t) \biggr].
 \end{multline*}
 %&\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \sum_{g \in X(s_A)}w(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'}Q_0      \right]\\
-Then:
+Then,
 \begin{equation*}
-\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \sum_{g \in G(s_A)}\left[ w(g)\ Q_G(g,a)\right]
+\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \sum_{g \in G(s_A)}\left[ w(g)\ Q_G(g,a)\right].
 \end{equation*}
-Since all aggregated states have Q-values within $\epsilon$ of one another:
+zzz again, doesn't say what it is less than or equal to
+since all aggregated states have $Q$ values within $\epsilon$ of one another:
 \begin{align*}
-\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \epsilon + Q_G(s_G, a) \\
+\leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \epsilon + Q_G(s_G, a). \\
 \therefore \left| Q_{T}(s_A, a) - Q_G(s_G,a) \right| &\leq \gamma\sum_{t=0}^{T-1}\epsilon \gamma^t
 \end{align*}
-Since $s_G$ and $s_A$ are arbitrary we conclude
+Since $s_G$ and $s_A$ are arbitrary, we conclude
 \begin{equation}
-\forall_{T, s_G \in \mathcal{S}_G, a} |Q_G(s_G, a) - Q_T(\epQ(s_G), a)| \leq \sum_{t=0}^{T-1} \epsilon \gamma^t
+\forall_{T, s_G \in \mathcal{S}_G, a} |Q_G(s_G, a) - Q_T(\epQ(s_G), a)| \leq \sum_{t=0}^{T-1} \epsilon \gamma^t.
 \end{equation}
 
-As $T \rightarrow \infty$, $Q_T$ becomes $Q_A$ and $\sum_{t=0}^{T-1} \epsilon \gamma^t$ becomes $\frac{\epsilon}{1-\gamma}$. Therefore we conclude Equation $\ref{eq:Q*Claim1}$. \\
+As $T \rightarrow \infty$, $Q_T$ becomes $Q_A$ and $\sum_{t=0}^{T-1} \epsilon \gamma^t$ becomes $\frac{\epsilon}{1-\gamma}$. Therefore, Equation $\ref{eq:Q*Claim1}$ follows. \\
 
 %Claim 2
 \begin{clm}
 \label{clm:optAbsActionNearOptGround}
-%The optimal action in the abstract MDP has a $Q$-value in the ground which is nearly optimal:
+%The optimal action in the abstract MDP has a $Q$ value in the ground which is nearly optimal:
 
 Consider a fixed but arbitrary state, $s_G \in \mathcal{S}_G$ and its corresponding abstract state $s_A=\epQ(s_G)$.
-
 Let $a^*_G$ stand for the optimal action in $s_G$, and $a^*_A$ stand for the optimal action in $s_A$:
 \begin{align*}
-a^*_G = \argmin Q_G(s_G, a) \hspace{4mm}
-a^*_A = \argmin Q_A(s_A, a)
+a^*_G = \argmin Q_G(s_G, a), \hspace{4mm}
+a^*_A = \argmin Q_A(s_A, a).
 \end{align*}
-
-The optimal action in the abstract MDP has a $Q$-value in the ground which is nearly optimal:
+The optimal action in the abstract MDP has a $Q$ value in the ground MDP that is nearly optimal:
 \begin{equation}
 \label{eq:Q*Claim2}
-V_G(s_G) \leq Q_G(s_A, a^*_A) + \frac{2\epsilon}{1-\gamma}
+V_G(s_G) \leq Q_G(s_A, a^*_A) + \frac{2\epsilon}{1-\gamma}.
 \end{equation}
 \end{clm}
 
-By Claim \ref{clm:closeQs}:
+By Claim~\ref{clm:closeQs},
 \begin{align}
-&V_G(s_G) = Q_G(s_G, a^*_G) \leq Q_A(s_G, a^*_G) + \frac{\epsilon}{1-\gamma}
+&V_G(s_G) = Q_G(s_G, a^*_G) \leq Q_A(s_G, a^*_G) + \frac{\epsilon}{1-\gamma}.
 \label{eq:Q*OptActionResult}
 \end{align}
-
-By the definition of $a^*_A$ we know that 
+By the definition of $a^*_A$, we know that 
 \begin{align}
-Q_A(s_G, a^*_G) + \frac{\epsilon}{1-\gamma} \leq Q_A(s_A, a^*_A) + \frac{\epsilon}{1-\gamma}
+Q_A(s_G, a^*_G) + \frac{\epsilon}{1-\gamma} \leq Q_A(s_A, a^*_A) + \frac{\epsilon}{1-\gamma}.
 \end{align}
-
-Lastly again by Claim \ref{clm:closeQs} we know
+Lastly, again by Claim~\ref{clm:closeQs}, we know
 \begin{align}
-Q_A(s_A, a^*_A) + \frac{\epsilon}{1-\gamma} \leq Q_G(s_A, a^*_A) + \frac{2\epsilon}{1-\gamma}
+Q_A(s_A, a^*_A) + \frac{\epsilon}{1-\gamma} \leq Q_G(s_A, a^*_A) + \frac{2\epsilon}{1-\gamma}.
 \end{align}
-
-Therefore, we conclude Equation \ref{eq:Q*Claim2}.
+Therefore, Equation~\ref{eq:Q*Claim2} follows.
 
 %Claim 3
 \begin{clm}
 Lemma \ref{lma:Q*} follows from Claim \ref{clm:optAbsActionNearOptGround}.
 \end{clm}
 
-Consider the policy for $M_G$ of following the optimal abstract policy $\pi^*_A$ for t steps and then following the optimal ground policy $\pi^*_G$ in $M_G$:
+Consider the policy for $M_G$ of following the optimal abstract policy $\pi^*_A$ for $t$ steps and then following the optimal ground policy $\pi^*_G$ in $M_G$:
 \begin{equation}
 \pi_{A,t}(s)=
 \begin{cases}
-\pi_G^*(s), \text{if $t<=0$}\\
-\pi_{GA}(s), \text{if $t > 0$}
+\pi_G^*(s), \text{if $t<=0$},\\
+\pi_{GA}(s), \text{if $t > 0$}.
 \end{cases}
 \end{equation}
+zzz inconsistent notation for cases. I like the ifs, but that's not how it appeared earlier.
 
 For a particular $t$, the value of this policy for $s_G \in \mathcal{S}_G$ in the ground \ac{MDP} is as follows:
 \begin{multline*}
 V_G^{\pi_{A,t}}(s_G) = \\
-R_G(s, \pi_{A,t}(s_G)) +\ \gamma \sum_{{s_G}' \in \mathcal{S}_G}\mathcal{T}_G(s_G, a, {s_G}')V_G^{\pi_{A,t-1}}({s_G}')
+R_G(s, \pi_{A,t}(s_G)) +\ \gamma \sum_{{s_G}' \in \mathcal{S}_G}\mathcal{T}_G(s_G, a, {s_G}')V_G^{\pi_{A,t-1}}({s_G}').
 \end{multline*}
 %Start induction on following the optimal abstract policy
 We now show by induction on $t$ that
 \begin{equation}
-\forall_{t, s_G \in \mathcal{S}_g} V_G(s_G) \leq  V_G^{\pi_{A,t}}(s_G) + \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma}
+\forall_{t, s_G \in \mathcal{S}_g} V_G(s_G) \leq  V_G^{\pi_{A,t}}(s_G) + \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma}.
 \end{equation}
 
 \textit{Base case: $t=0$}
 
-By definition when $t=0$, $V_G^{\pi_{A,t}} = V_G$, so our bound trivially holds in this case.
+By definition, when $t=0$, $V_G^{\pi_{A,t}} = V_G$, so our bound trivially holds in this case.
 
 \textit{Inductive case: $t > 0$}
 
-Consider a fixed but arbitrary state in $\mathcal{S}_G$, $s_G$.
-
+Consider a fixed but arbitrary state $s_G \in \mathcal{S}_G$.
 We assume for our inductive hypothesis that
 \begin{equation}
-V_G(s_G) \leq V_G^{\pi_{A,t-1}}(s_G) + \sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma}
+V_G(s_G) \leq V_G^{\pi_{A,t-1}}(s_G) + \sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma}.
 \end{equation}
-By definition 
+By definition,
 \begin{multline*}
-V_G^{\pi_{A,t}}(s_G) = R_G(s, \pi_{A,t}(s_G)) + \\ \gamma \sum_{g'}\mathcal{T}_G(s_G, a, {s_G}')V_G^{\pi_{A,t-1}}({s_G}')
+V_G^{\pi_{A,t}}(s_G) = R_G(s, \pi_{A,t}(s_G)) + \\ \gamma \sum_{g'}\mathcal{T}_G(s_G, a, {s_G}')V_G^{\pi_{A,t-1}}({s_G}').
 \end{multline*}
 Applying our inductive hypothesis yields:
 \begin{multline*}
-V_G^{\pi_{A,t}}(s_G, a) \geq R_G(s_G, \pi_{A,t}(s_G, a))\ + \\ \gamma \sum_{{s_G}'}\mathcal{T}_G(s_G, a, {s_G}')\left(V_G({s_G}') - \sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} \right)
+V_G^{\pi_{A,t}}(s_G, a) \geq R_G(s_G, \pi_{A,t}(s_G, a))\ + \\ \gamma \sum_{{s_G}'}\mathcal{T}_G(s_G, a, {s_G}')\left(V_G({s_G}') - \sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} \right).
 \end{multline*}
-Therefore:
+Therefore,
+zzz more dangling inequalities below.
 \begin{align*}
 %&\geq -\gamma\sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} + R_G(s, \pi_{A,t}(g)) + \gamma \sum_{g'}\mathcal{T}_G(g, a, g')V^{\pi^*}(g')\\
-&\geq -\gamma\sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} + Q_G(s_G, \pi_{A,t} (s_G))
+&\geq -\gamma\sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} + Q_G(s_G, \pi_{A,t} (s_G)).
 \end{align*}
-Applying Claim \ref{clm:optAbsActionNearOptGround} yields:
+Applying Claim~\ref{clm:optAbsActionNearOptGround} yields:
 \begin{align*}
 \geq -\gamma\sum_{i=0}^{t-1}\gamma^i \frac{2\epsilon}{1-\gamma} - \frac{2\epsilon}{1-\gamma} + V_{G}(s_G) \\
 %&\leq \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma} + V_G(s_G)
-\therefore V_G(s_G) \leq V_G^{\pi_{A,t}}(s_G)  + \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma}
+\therefore V_G(s_G) \leq V_G^{\pi_{A,t}}(s_G)  + \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma}.
 \end{align*}
 Since $s_G$ was arbitrary, we conclude that our bound holds for all states in $\mathcal{S}_G$ for the inductive case.
-
-Thus, from our base case and induction we conclude that
+Thus, from our base case and induction, we conclude that
 \begin{equation}
-\forall_{t, s_G \in \mathcal{S}_g} V_G^{\pi^*}(s_G) \leq  V_G^{\pi_{A,t}}(s_G) + \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma}
+\forall_{t, s_G \in \mathcal{S}_g} V_G^{\pi^*}(s_G) \leq  V_G^{\pi_{A,t}}(s_G) + \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma}.
 \end{equation}
 
 Note that as $t \rightarrow \infty$, $\sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma} \rightarrow \frac{2\epsilon}{(1-\gamma)^2}$ by the sum of geometric series and $\pi_{A,t}(s) \rightarrow \pi_{GA}$.
-
-Thus, we conclude Lemma~\ref{lma:Q*}
+Thus, we conclude Lemma~\ref{lma:Q*}.
 %\begin{equation*}
 %\forall_{s_G \in \mathcal{S}_g} V_G(s_G) \leq  V_G^{\pi_{GA}}(s_G) + \frac{2\epsilon}{(1-\gamma)^2}
 %\end{equation*}
@@ -320,13 +311,13 @@ Thus, we conclude Lemma~\ref{lma:Q*}
 \subsection{Model Similarity: $\ep_{model}$}
 \label{sec:model}
 
-Now consider an approximate version of \citeauthor{li2006towards}'s $\phi_{model}$. 
+Now, consider an approximate version of \citeauthor{li2006towards}'s $\phi_{model}$. 
 \bdefn{$\epM$}
 We let $\epM$ define a type of abstraction that, for fixed $\epsilon$, satisfies:
 \begin{multline}
 \epM(s_1) = \epM(s_2) \rightarrow \\
-\forall_a \left| \mcR_G(s_1, a) - \mcR_G(s_2, a)\right| \leq \epsilon \wedge\ \\
-\forall_{s_A \in \mcS_A} \left|\sum_{{s_G}' \in G(s_A)} \left[\mcT_G(s_1, a, {s_G}') - \mcT_G(s_2, a,{s_G}')\right] \right| \leq \epsilon
+\forall_a \left| \mcR_G(s_1, a) - \mcR_G(s_2, a)\right| \leq \epsilon\; \wedge\ \\
+\forall_{s_A \in \mcS_A} \left|\sum_{{s_G}' \in G(s_A)} \left[\mcT_G(s_1, a, {s_G}') - \mcT_G(s_2, a,{s_G}')\right] \right| \leq \epsilon.
 \end{multline}
 \edefn
 
@@ -335,66 +326,73 @@ We let $\epM$ define a type of abstraction that, for fixed $\epsilon$, satisfies
 \label{lma:model}
 When $\mcS_A$ is created using a function of the $\ep_{model}$ type:
 \begin{equation}
-\forall_{s \in \mcS_G} : | V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) | \leq \frac{2\epsilon + 2\gamma((|\mcS_G|-1)\epsilon)}{(1-\gamma)^3}
+\forall_{s \in \mcS_G} | V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) | \leq \frac{2\epsilon + 2\gamma((|\mcS_G|-1)\epsilon)}{(1-\gamma)^3}.
 \end{equation}
 \end{lma}
 
-{\bf Proof:} Our proof proceeds as follows: we demonstrate that states aggregated under $\epM$ have $Q$-values all within a particular bound. Consequently $\epM$ abstractions are interpretable as an instantiation of $\epQ$ with a particular $\epsilon$. Understanding $\epM$ as such abstractions allows us to conclude our bound by applying Lemma \ref{lma:Q*}.
+{\bf Proof:} Our proof proceeds as follows. We demonstrate that states aggregated under $\epM$ have $Q$ values all within a particular bound. Consequently, $\epM$ abstractions are interpretable as an instantiation of $\epQ$ with a particular $\epsilon$. Understanding $\epM$ as such an abstraction allows us to conclude our bound by applying Lemma \ref{lma:Q*}.
 
-Let $B$ stand for the maximum $Q$-value difference between any pair of ground states in the same abstract state under $\epM$:
+zzz so, these Qmodel things are formatted better. use the same formatting earlier?
+
+Let $B$ stand for the maximum $Q$ value difference between any pair of ground states in the same abstract state under $\epM$:
 \begin{equation*}
-B = \max_{s_A, s_1, s_2, a}  |Q_G(s_1, a) - Q_G(s_2, a)|
+B = \max_{s_A, s_1, s_2, a}  |Q_G(s_1, a) - Q_G(s_2, a)|,
 \end{equation*}
-Where $s_A \in \mcS_G$ and $s_1, s_2 \in G(s_A)$:
+where $s_A \in \mcS_G$ and $s_1, s_2 \in G(s_A)$:
+zzz again... this dangling comparison operator thing is highly non-standard.
 \begin{multline*}
 =\max_{s_A, s_1, s_2, a}      \biggl|\mcR_G(s_1, a) - \mcR_G(s_2, a)\ + \gamma \sum_{{s_G}' \in \mcS_G} \\
 \biggl[(\mcT_G(s_1,a,{s_G}') -\mcT_G(s_2, a, {s_G}'))\max_{a'}Q_G({s_G}', a')\biggr]\biggr|
 \end{multline*}
 \begin{multline*}
 \leq \epsilon + \gamma \sum_{s_A \in \mcS_A}\sum_{{s_G}' \in G(s_A)} \biggl[(T_G(s_1, a, {s_G}') -\\ 
-T_G(s_2, a, {s_G}')) \max_{a'}Q_G({s_G}', a') \biggr]
+T_G(s_2, a, {s_G}')) \max_{a'}Q_G({s_G}', a') \biggr].
 \end{multline*}
 By similarity of transitions under $\epM$:
 \begin{align*}
- \leq &\epsilon + \gamma Q_{max} \sum_{s_A \in \mcS_A} \epsilon \\
-\leq& \epsilon + \gamma|\mcS_G|\epsilon Q_{max}
+ \leq \epsilon + \gamma Q_{max} \sum_{s_A \in \mcS_A} \epsilon \leq \epsilon + \gamma|\mcS_G|\epsilon Q_{max}.
 \end{align*}
+zzz similarly, Qmax needs to be formatting differently.
 Applying 0-1 reward normalization and algebra:
 \begin{equation*}
- \leq \frac{\epsilon + \gamma(|\mcS_G| - 1) \epsilon}{1-\gamma}
+ \leq \frac{\epsilon + \gamma(|\mcS_G| - 1) \epsilon}{1-\gamma}.
 \end{equation*}
-\enote{Do we need to state what Q max is and that it is upper bounded by 1 over 1 minus gamma or is this common knowledge?}
-Since the $Q$-values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\epsilon = B$. Applying Lemma \ref{lma:Q*} yields Lemma \ref{lma:model}.
+\enote{Do we need to state what Q max is and that it is upper bounded by 1 over 1 minus gamma or is this common knowledge? zzz not common knowledge, no.}
+Since the $Q$ values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\epsilon = B$. Applying Lemma \ref{lma:Q*} yields Lemma \ref{lma:model}.
 \subsection{Boltzmann over Optimal Q: $\ep_{bolt}$}
 \label{sec:boltz}
 
-Here we introduce the approximate abstraction family, $\phi_{bolt}$, which aggregates states with similar Boltzmann distributions on optimal $Q$-values as equivalent. This family of abstractions is appealing as the Boltzmman distribution over $Q$-values has been of interest in the reinforcement learning literature due to its natural balancing of exploration and exploitation~\cite{sutton1998reinforcement}.
+zzz same with Qbolt.
+
+Here, we introduce the approximate abstraction family, $\phi_{bolt}$, which aggregates states with similar Boltzmann distributions on optimal $Q$ values as equivalent. This family of abstractions is appealing as the Boltzmman distribution over $Q$ values has been of interest in the RL literature due to its natural balancing of exploration and exploitation~\cite{sutton1998reinforcement}.
+zzz all this theory is quite abstract. is there some way to weave in a running example and/or to at least provide some more motiviation for why phiBoltz is desirable. Balancing exploration/exploitation isn't really a motivation for why values should be abstracted together. What do the first two abstraction types miss that this one provides? We didn't Lihong et al. study it in the exact case?
 \bdefn{$\phi_{bolt}$}
-We let $\phi_{bolt}$ define a family of abstractions that, for fixed $\epsilon$ satisfies:
+We let $\phi_{bolt}$ define a family of abstractions that, for fixed $\epsilon$, satisfies:
 \begin{multline}
 \ep_{bolt}(s_1) = \ep_{bolt}(s_2) \rightarrow \\
-\forall_{a} \left|\frac{e^{Q_G^*(s_1,a)}}{\sum_b e^{Q_G^*(s_1,b)}} - \frac{e^{Q_G^*(s_2,a)}}{\sum_b e^{Q_G^*(s_2,b)}}\right| \leq \epsilon
+\forall_{a} \left|\frac{e^{Q_G^*(s_1,a)}}{\sum_b e^{Q_G^*(s_1,b)}} - \frac{e^{Q_G^*(s_2,a)}}{\sum_b e^{Q_G^*(s_2,b)}}\right| \leq \epsilon.
 \label{eq:phi_bolt}
 \end{multline}
 \edefn
+That is, zzz explain.
 
 We also assume that the difference in normalizing terms is bounded by some non-negative constant, $k\in \mathbb{R}$, of $\epsilon$:
 \begin{equation}
-\left| \sum_b e^{Q_G^*(s_1,b)} - \sum_b e^{Q_G^*(s_2,b)} \right| \leq k*\epsilon
+\left| \sum_b e^{Q_G^*(s_1,b)} - \sum_b e^{Q_G^*(s_2,b)} \right| \leq k\times\epsilon.
 \label{eq:bolt_denom}
 \end{equation}
-\begin{lma} When $S_A$ is created using a function of the $\ep_{bolt}$ type, for some non-negative constant $k \in \mathbb{R}$::
+\begin{lma} When $S_A$ is created using a function of the $\ep_{bolt}$ type, for some non-negative constant $k \in \mathbb{R}$:
 \begin{equation}
-\forall_{s \in \mcS_G} : \left| V_G^{\pi^*_G}(s) - V_G^{\pi_{GA}}(s) \right| \leq \frac{2\epsilon\left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k\right)}{(1-\gamma)^2}
+\forall_{s \in \mcS_G} \left| V_G^{\pi^*_G}(s) - V_G^{\pi_{GA}}(s) \right| \leq \frac{2\epsilon\left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k\right)}{(1-\gamma)^2}.
 \end{equation}
 \label{lma:bolt_lemma}
 \end{lma}
-We prove Lemma~\ref{lma:bolt_lemma} by using the approximation for $e^x$:
+We prove Lemma~\ref{lma:bolt_lemma} using the approximation for $e^x$:
 \begin{equation}
  e^x = 1 + x + \delta  \approx 1 + x
 \label{eq:e_to_x_approx}
 \end{equation}
-Where $\delta$ is the error associated with the approximation.
+where $\delta$ is the error associated with the approximation.
 
 {\bf Proof Sketch:}
 
@@ -402,39 +400,40 @@ By the approximation in Equation~\ref{eq:e_to_x_approx} and the assumption in Eq
 \begin{align*}
 \left|\frac{1 + Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}} - \frac{1 + Q_G(s_2,a) + \delta_2}{\sum_j e^{Q_G(s_1,a_j)} \pm k\epsilon}\right| \leq \epsilon
 \end{align*}
-
 It follows that:
 \begin{equation}
-\left|Q_G(s_1,a) - Q_G(s_2,a)\right| \leq \epsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k \right)
+\left|Q_G(s_1,a) - Q_G(s_2,a)\right| \leq \epsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k \right).
 \label{eq:bolt_qs}
 \end{equation}
-
-Consequently, we can consider $\widetilde{\phi}_{bolt}$ as a type of $\epQ$, where the difference in Q values is bounded by: $\epsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k \right)$. Lemma \ref{lma:bolt_lemma} follows directly from Lemma \ref{lma:Q*}.
+Consequently, we can consider $\widetilde{\phi}_{bolt}$ as a variation of $\epQ$, where the difference in $Q$ values is bounded by $\epsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k \right)$. Lemma~\ref{lma:bolt_lemma} then follows directly from Lemma~\ref{lma:Q*}.
 
 % Subsection: Multinomial over Optimal Q
 \subsection{Multinomial over Optimal Q: $\ep_{mult}$}
 \label{sec:mult}
 
 We consider approximate abstractions derived from a multinomial distribution over $Q^*$ for similar reasons to our motivation in considering the Boltzmann distribution.
+zzz a bit more info is needed. what advantages does it have over qboltz. if none, why do we need it?
 \bdefn{$\ep_{mult}$}
-We let $\phi_{mult}$ define a type of abstraction that, for fixed $\epsilon$ satisfies.
+We let $\phi_{mult}$ define a type of abstraction that, for fixed $\epsilon$, satisfies
 \begin{multline}
 \ep_{mult}(s_1) = \ep_{mult}(s_2) \rightarrow \\
-\forall_{a} \left|\frac{Q_G^*(s_1,a)}{\sum_b Q_G^*(s_1,b)} - \frac{Q_G^*(s_1,a)}{\sum_b Q_G^*(s_1,b)}\right| \leq \epsilon
+\forall_{a} \left|\frac{Q_G^*(s_1,a)}{\sum_b Q_G^*(s_1,b)} - \frac{Q_G^*(s_1,a)}{\sum_b Q_G^*(s_1,b)}\right| \leq \epsilon.
 \end{multline}
 \edefn
+That is, zzz.
 
 We also assume that the difference in normalizing terms is bounded by some positive factor, $k \in \mathbb{R}$, of $\epsilon$:
 \begin{equation}
-\left |\sum_i Q_G(s_1,a_i) - \sum_j Q_G(s_2,a_j) \right | \leq k\epsilon
+\left |\sum_i Q_G(s_1,a_i) - \sum_j Q_G(s_2,a_j) \right | \leq k\epsilon.
 \end{equation}
+zzz why is that ok? why is it useful? (overall, I think we should take a slightly more pedagogical perspective. we're not writing programs, we're writing explanations.
 \begin{lma} When $S_A$ is created using a function of the $\ep_{mult}$ type, for some non-negative constant $k \in \mathbb{R}$:
 \begin{equation}
-\forall_{s \in S_M} : | V_G^{\pi^*_G}(s) - V_G^{\pi_{GA}}(s) | \leq \frac{\frac{2\epsilon|\mathcal{A}|}{1-\gamma} + k \epsilon^2 + k}{(1-\gamma)^2}
+\forall_{s \in S_M} | V_G^{\pi^*_G}(s) - V_G^{\pi_{GA}}(s) | \leq \frac{\frac{2\epsilon|\mathcal{A}|}{1-\gamma} + k \epsilon^2 + k}{(1-\gamma)^2}.
 \end{equation}
 \end{lma}
 
-{\bf Proof Sketch:} The proof follows an identical strategy to that of Lemma~\ref{lma:bolt_lemma} but without the use of the approximation for $e^x$.
+{\bf Proof Sketch:} The proof follows an identical strategy to that of Lemma~\ref{lma:bolt_lemma}, except the approximation for $e^x$ is not needed.
 
 \dnote{Bounds for multi and bolt suspiciously similar. Double check math}
 
