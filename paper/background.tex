@@ -21,11 +21,11 @@ V^\pi(s) = \max_a Q^\pi(s,a).
 
 zzz no, that is not the standard definition. it would normally be $V^\pi(s) = Q^\pi(s,\pi(s))$.
 
-Lastly, we denote the value and $Q$ functions under the optimal policy as $V^*$ or $V^{\pi^*}$ and $Q^*$ or $Q^{\pi^*}$, respectively. For further background, see~\namecite{kaelbling1996reinforcement}.
+Lastly, we denote the value and $Q$ functions under the optimal policy as $V^*$ or $V^{\pi^*}$ and $Q^*$ or $Q^{\pi^*}$, respectively. For further background, see~\citep{kaelbling1996reinforcement}.
 
 %Lihong Section
 \subsection{Abstraction Notation}
-We build upon the notation used by \citeauthoryear{li2006towards}, who introduced a unifying theoretical framework for state abstraction in \acp{MDP} and sequential decision making. We build heavily on their notation, and discuss other similarities to our work in the next section.
+We build upon the notation used by \citep{li2006towards}, who introduced a unifying theoretical framework for state abstraction in \acp{MDP} and sequential decision making. We build heavily on their notation, and discuss other similarities to our work in the next section.
 
 \bdefn{$M_G$, $M_A$}
 We understand an abstraction as a mapping from the state space of a ground MDP $M_G$ to that of an abstract MDP $M_A$ using a state-aggregation scheme. Consequently, this mapping induces an abstract MDP. Let $M_G = \langle \mathcal{S}_G, \mathcal{A}, \mathcal{T}_G, \mathcal{R}_G, \gamma \rangle$ and $M_A = \langle \mathcal{S}_A, \mathcal{A}, \mathcal{T}_A, \mathcal{R}_A, \gamma \rangle$.
