@@ -4,22 +4,6 @@
 % Intro to approx state abstraction results.
 Here, we introduce our formal analysis of approximate state abstraction, including results bounding the error associated with these abstraction methods. In particular, we demonstrate that abstractions based on approximate $Q^*$ similarity (\ref{sec:Q*}), approximate model similarity (\ref{sec:model}), and approximate similarity between distributions over $Q^*$, for both Boltzmann (\ref{sec:boltz}) and multinomial (\ref{sec:mult}) distributions, induce abstract \acp{MDP} for which the optimal policy has bounded error in the ground MDP.
 
-%In general, our proof strategy for each of the included results is as follows:
-%\begin{itemize}
-%\item First, we relate the values of states in the ground MDP to the value of states in the abstract \ac{MDP},
-%\item then, we relate the value of states in the ground \ac{MDP} to the value of states in the abstract \ac{MDP} under the optimal abstract policy.
-%\end{itemize}
-
-% Explanation of the above.
-%The first statement is relating Q values defined over the ground MDP with Q values defined over the abstract MDP, while the second statement is comparing the optimal Q values in the ground MDP, with the Q values in the ground MDP under the abstract policy. This is because our learners will solve for the optimal policy in the abstract, and use it in the ground MDP by mapping each ground state to its abstract state and querying the abstract policy for behavior. That is:
-%\begin{equation}
-%\pi_G(s) = \pi_A(\phi(s))
-%\end{equation}
-
-
-% zzz that's odd... sounds like the same thing twice but with optimal policy added. we'll see how that works.
-% In response^^^ Could add a sentence pointing out how these differ.
-
 We now introduce some additional notation to formally discuss these results.
 
 \bdefn{$\pi_A^*$, $\pi_G^*$}
@@ -97,7 +81,7 @@ When $\ep_{Q^*}$ is used to create the abstract state space $\mcS_A$:
 
 % Proof
 \textbf{Proof of Lemma~\ref{lma:Q*}:}
-\enote{I would like a quick overview of the proof here if nobody objects.}
+We first demonstrate that $Q$-values in the abstract \ac{MDP} are boundedly close to $Q$-values in the ground \ac{MDP} (Claim \ref{clm:closeQs}). We next leverage Claim \ref{clm:closeQs} to demonstrate that the optimal action in the abstract \ac{MDP} is nearly optimal in the ground \ac{MDP}  (Claim \ref{clm:optAbsActionNearOptGround}). Lastly, we use Claim \ref{clm:optAbsActionNearOptGround} to conclude Lemma \ref{lma:Q*} (Claim \ref{clm:lmaFromClm}).
 % Claim 1:
 \begin{clm}
 \label{clm:closeQs}
@@ -236,6 +220,7 @@ Therefore, Equation~\ref{eq:Q*Claim2} follows.
 %Claim 3
 \begin{clm}
 Lemma \ref{lma:Q*} follows from Claim \ref{clm:optAbsActionNearOptGround}.
+\label{clm:lmaFromClm}
 \end{clm}
 
 Consider the policy for $M_G$ of following the optimal abstract policy $\pi^*_A$ for $t$ steps and then following the optimal ground policy $\pi^*_G$ in $M_G$:
