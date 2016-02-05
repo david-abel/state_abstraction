@@ -331,7 +331,7 @@ Since the $Q$-values of ground states grouped under $\epM$ are strictly less tha
 \label{sec:boltz}
 
 %zzz all this theory is quite abstract. is there some way to weave in a running example and/or to at least provide some more motiviation for why phiBoltz is desirable. Balancing exploration/exploitation isn't really a motivation for why values should be abstracted together. What do the first two abstraction types miss that this one provides? We didn't Lihong et al. study it in the exact case?
-Here, we introduce $\epB$, which aggregates states with similar Boltzmann distributions on optimal $Q$-values. This family of abstractions is appealing as the Boltzmman distribution naturally balances exploration and exploitation~\cite{sutton1998reinforcement}. We find this family particularly interesting for abstraction purposes as it is much less strict than $\epQ$, and allows for aggregation when $Q$-value ratios are similar but their magnitudes are different.
+Here, we introduce $\epB$, which aggregates states with similar Boltzmann distributions on $Q$-values. This family of abstractions is appealing as Boltzmman distributions balance exploration and exploitation~\cite{sutton1998reinforcement}. We find this family particularly interesting for abstraction purposes as, unlike $\epQ$, it allows for aggregation when $Q$-value ratios are similar but their magnitudes are different.
 
 \bdefn{$\epB$}
 We let $\epB$ define a family of abstractions that, for fixed $\varepsilon$, satisfies:
