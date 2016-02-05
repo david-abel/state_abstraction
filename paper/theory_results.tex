@@ -309,11 +309,12 @@ Let $B$ be the maximum $Q$-value difference between any pair of ground states in
 \begin{equation*}
 B = \max_{s_A, s_1, s_2, a}  |Q_G(s_1, a) - Q_G(s_2, a)|,
 \end{equation*}
-where $s_A \in \mcS_G$ and $s_1, s_2 \in G(s_A)$:
-\begin{multline*}
-B=\max_{s_A, s_1, s_2, a}      \biggl|\mcR_G(s_1, a) - \mcR_G(s_2, a)\ + \gamma \sum_{{s_G}' \in \mcS_G} \\
-\biggl[(\mcT_G(s_1,a,{s_G}') -\mcT_G(s_2, a, {s_G}'))\max_{a'}Q_G({s_G}', a')\biggr]\biggr|
-\end{multline*}
+where $s_A \in \mcS_G$ and $s_1, s_2 \in G(s_A)$. Since difference of rewards is bounded by $\varepsilon$:
+% Removed for space
+%\begin{multline*}
+%B=\max_{s_A, s_1, s_2, a}      \biggl|\mcR_G(s_1, a) - \mcR_G(s_2, a)\ + \gamma \sum_{{s_G}' \in \mcS_G} \\
+%\biggl[(\mcT_G(s_1,a,{s_G}') -\mcT_G(s_2, a, {s_G}'))\max_{a'}Q_G({s_G}', a')\biggr]\biggr|
+%\end{multline*}
 \begin{multline*}
 B\leq \varepsilon + \gamma \sum_{s_A \in \mcS_A}\sum_{{s_G}' \in G(s_A)} \biggl[(T_G(s_1, a, {s_G}')\ -\\ 
 T_G(s_2, a, {s_G}')) \max_{a'}Q_G({s_G}', a') \biggr].
