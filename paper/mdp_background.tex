@@ -13,6 +13,6 @@ Q^\pi(s,a) = \mathcal{R}(s,a) + \gamma \sum_{s'} \mathcal{T}(s,a,s') Q^\pi(s',\p
 \end{equation}
 Similarly, the value function defined under a given policy, denoted $V^\pi(s)$, is defined as:
 \begin{equation}
-V^\pi(s) = Q^\pi(s,a).
+V^\pi(s) = Q^\pi(s,\pi(s)).
 \end{equation}
 Lastly, we denote the value and $Q$ functions under the optimal policy as $V^*$ or $V^{\pi^*}$ and $Q^*$ or $Q^{\pi^*}$, respectively. For further background, see~\citet{kaelbling1996reinforcement}.
