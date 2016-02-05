@@ -5,7 +5,7 @@
 % Intro to approx state abstraction results.
 Here, we introduce our formal analysis of approximate state abstraction, including results bounding the error associated with these abstraction methods. In particular, we demonstrate that abstractions based on approximate $Q^*$ similarity (\ref{sec:Q*}), approximate model similarity (\ref{sec:model}), and approximate similarity between distributions over $Q^*$, for both Boltzmann (\ref{sec:boltz}) and multinomial (\ref{sec:mult}) distributions, induce abstract \acp{MDP} for which the optimal policy has bounded error in the ground MDP.
 
-We now introduce some additional notation to formally discuss these results.
+We first introduce some additional notation.
 
 \bdefn{$\pi_A^*$, $\pi_G^*$}
 We let $\pi_A^* : \mcS_A \rightarrow \mcA$ and $\pi_G^* : \mcS_G \rightarrow \mcA$ stand for the optimal policies in the abstract and ground \acp{MDP}, respectively.
@@ -86,7 +86,7 @@ Optimal $Q$-values in the abstract \ac{MDP} closely resemble optimal $Q$-values 
 \end{equation}
 \end{clm}
 
-Consider a temporally heterogeneous \ac{MDP}, $M^T = \langle \mathcal{S}_T, \mathcal{A}_G, \mathcal{R}_T, \mathcal{T}_T, \gamma \rangle$, parameterized by integer $T$, such that for the first $T$ time steps the reward function, transition dynamics and state space are those of the abstract MDP, $M_A$, and after $T$ time steps the reward function, transition dynamics and state spaces are those of the ground MDP, $M_G$. Thus,
+Consider a temporally heterogeneous \ac{MDP}, $M^T = \langle \mathcal{S}_T, \mathcal{A}_G, \mathcal{R}_T, \mathcal{T}_T, \gamma \rangle$, parameterized by integer $T$, such that for the first $T$ time steps the reward function, transition dynamics and state space are those of the abstract MDP, $M_A$, and after $T$ time steps the reward function, transition dynamics and state spaces are those of $M_G$. Thus,
 \begin{align*}
 \mathcal{S}_T &= \begin{cases}
 \mathcal{S}_G,& \text{if } T \leq 0, \\
