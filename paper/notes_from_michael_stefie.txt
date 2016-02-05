@@ -27,6 +27,7 @@ Other fixes from Michael:
 
 	Redo plots
 		> Make font bigger
+		> Why are CIs consistently worse
 
 	Why didn't we do all 4 abstraction classes: the other 3 reduce to Q* -- DONE
 
