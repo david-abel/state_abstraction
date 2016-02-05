@@ -25,7 +25,7 @@
 \newtheorem{defn}{Definition}
 
 \newcommand{\bdefn}[1]{
-\begin{defn} {\boldmath, #1}\textbf{:}
+\begin{defn} {\boldmath (#1)}\textbf{:}
 }
 
 \newcommand{\edefn}[1]{
@@ -37,6 +37,8 @@
 % --- Notation Commands ---
 \newcommand{\ep}{\widetilde \phi}
 \newcommand{\epQ}{\ep_{Q^*}}
+\newcommand{\epB}{\ep_{\text{bolt}}}
+\newcommand{\epMu}{\ep_{\text{mult}}}
 \newcommand{\epM}{\ep_{\text{model}}}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
@@ -50,11 +52,11 @@
 
 % --- Note Commands ---
 \usepackage{color}
-\newcommand\dnote[1]{\textcolor{blue}{Dave: #1}}
-\newcommand\enote[1]{\textcolor{green}{Ellis: #1}}
+%\newcommand\dnote[1]{\textcolor{blue}{Dave: #1}}
+%\newcommand\enote[1]{\textcolor{green}{Ellis: #1}}
 
-%\newcommand\dnote[1]{\textcolor{blue}{\vspace{-4mm}}}
-%\newcommand\enote[1]{\textcolor{green}{\vspace{-4mm}}}
+\newcommand\dnote[1]{\textcolor{blue}{\vspace{-1mm}}}
+\newcommand\enote[1]{\textcolor{green}{\vspace{-1mm}}}
 
 % --- DOCUMENT ---
 \begin{document}
@@ -105,7 +107,7 @@
 % ---------------------------------------
 % --- SECTION: Background ---
 % ---------------------------------------
-\input{background.tex}
+\input{mdp_background.tex}
 
 
 
@@ -113,6 +115,11 @@
 % --- SECTION: Related Work ---
 % -----------------------------------------
 \input{related_work.tex}
+
+% -----------------------------------------------
+% --- SECTION: Abstraction Notion ---
+% -----------------------------------------------
+\input{abstraction_notation.tex}
 
 
 
