@@ -10,6 +10,7 @@ Quick mathy fixes:
 	epsilon to varepsilon
 	No abs in final bounds
 	Use of : and forall
+	Q value Vs Q-value
 
 Other fixes from Michael:
 

@@ -1,6 +1,7 @@
 % --- SECTION: State Abstraction ---
 \section{Approximate State Abstraction}
 
+\label{sec:theory_results}
 % Intro to approx state abstraction results.
 Here, we introduce our formal analysis of approximate state abstraction, including results bounding the error associated with these abstraction methods. In particular, we demonstrate that abstractions based on approximate $Q^*$ similarity (\ref{sec:Q*}), approximate model similarity (\ref{sec:model}), and approximate similarity between distributions over $Q^*$, for both Boltzmann (\ref{sec:boltz}) and multinomial (\ref{sec:mult}) distributions, induce abstract \acp{MDP} for which the optimal policy has bounded error in the ground MDP.
 
@@ -85,7 +86,7 @@ We first demonstrate that $Q$-values in the abstract \ac{MDP} are boundedly clos
 % Claim 1:
 \begin{clm}
 \label{clm:closeQs}
-Optimal $Q$ values in the abstract \ac{MDP} closely resemble optimal $Q$ values in the ground \ac{MDP}:
+Optimal $Q$-values in the abstract \ac{MDP} closely resemble optimal $Q$-values in the ground \ac{MDP}:
 \begin{equation}
 \label{eq:Q*Claim1}
 \forall_{s_G \in \mathcal{S}_G, a} |Q_G(s_G, a) - Q_A(\epQ(s_G), a)| \leq \frac{\epsilon}{1-\gamma}.
@@ -111,7 +112,7 @@ Consider a temporally heterogeneous \ac{MDP}, $M^T = \langle \mathcal{S}_T, \mat
 \end{cases}\\
 \end{align*}
 
-It follows that the $Q$ value of a state $s$ in $M^T$ for action $a$ is defined by:
+It follows that the $Q$-value of a state $s$ in $M^T$ for action $a$ is defined by:
 \begin{equation}
 Q_T(s, a) = 
 \begin{cases}
@@ -140,7 +141,7 @@ When $T = 0$, $Q_T = Q_G$, so the result trivially follows.
 \begin{align*}
 &Q_1(s,a) = \underset{g \in G(s)}{\sum} \left[ \omega(g)Q_G(g,a) \right].
 \end{align*}
-Since all co-aggregated states have $Q$ values within $\epsilon$ of one another and $\omega(g)$ induces a convex combination,
+Since all co-aggregated states have $Q$-values within $\epsilon$ of one another and $\omega(g)$ induces a convex combination,
 \begin{align*}
 &Q_1(s,a) \leq \epsilon \gamma^t + \epsilon + Q_G(s_G, a).
 \end{align*}
@@ -172,7 +173,7 @@ Then,
 \begin{equation*}
 Q_T(s_A, a) \leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \sum_{g \in G(s_A)}\left[ \omega(g)\ Q_G(g,a)\right].
 \end{equation*}
-since all aggregated states have $Q$ values within $\epsilon$ of one another:
+since all aggregated states have $Q$-values within $\epsilon$ of one another:
 \begin{align*}
 Q_T(s_A, a) \leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \epsilon + Q_G(s_G, a). \\
 \therefore\ \left| Q_{T}(s_A, a) - Q_G(s_G,a) \right| \leq \gamma\sum_{t=0}^{T-1}\epsilon \gamma^t
@@ -187,7 +188,7 @@ As $T \rightarrow \infty$, $Q_T$ becomes $Q_A$ and $\sum_{t=0}^{T-1} \epsilon \g
 %Claim 2
 \begin{clm}
 \label{clm:optAbsActionNearOptGround}
-%The optimal action in the abstract MDP has a $Q$ value in the ground which is nearly optimal:
+%The optimal action in the abstract MDP has a $Q$-value in the ground which is nearly optimal:
 
 Consider a fixed but arbitrary state, $s_G \in \mathcal{S}_G$ and its corresponding abstract state $s_A=\epQ(s_G)$.
 Let $a^*_G$ stand for the optimal action in $s_G$, and $a^*_A$ stand for the optimal action in $s_A$:
@@ -195,7 +196,7 @@ Let $a^*_G$ stand for the optimal action in $s_G$, and $a^*_A$ stand for the opt
 a^*_G = \argmin Q_G(s_G, a), \hspace{4mm}
 a^*_A = \argmin Q_A(s_A, a).
 \end{align*}
-The optimal action in the abstract MDP has a $Q$ value in the ground MDP that is nearly optimal:
+The optimal action in the abstract MDP has a $Q$-value in the ground MDP that is nearly optimal:
 \begin{equation}
 \label{eq:Q*Claim2}
 V_G(s_G) \leq Q_G(s_A, a^*_A) + \frac{2\epsilon}{1-\gamma}.
@@ -311,9 +312,9 @@ When $\mcS_A$ is created using a function of the $\ep_{model}$ type:
 \end{equation}
 \end{lma}
 
-{\bf Proof of Lemma~\ref{lma:model}:} Our proof proceeds as follows. We demonstrate that states aggregated under $\epM$ have $Q$ values all within a particular bound. Consequently, $\epM$ abstractions are interpretable as an instantiation of $\epQ$ with a particular $\epsilon$. Understanding $\epM$ as such an abstraction allows us to conclude our bound by applying Lemma \ref{lma:Q*}.
+{\bf Proof of Lemma~\ref{lma:model}:} Our proof proceeds as follows. We demonstrate that states aggregated under $\epM$ have $Q$-values all within a particular bound. Consequently, $\epM$ abstractions are interpretable as an instantiation of $\epQ$ with a particular $\epsilon$. Understanding $\epM$ as such an abstraction allows us to conclude our bound by applying Lemma \ref{lma:Q*}.
 
-Let $B$ stand for the maximum $Q$ value difference between any pair of ground states in the same abstract state under $\epM$:
+Let $B$ stand for the maximum $Q$-value difference between any pair of ground states in the same abstract state under $\epM$:
 \begin{equation*}
 B = \max_{s_A, s_1, s_2, a}  |Q_G(s_1, a) - Q_G(s_2, a)|,
 \end{equation*}
@@ -334,12 +335,12 @@ Since \textsc{QMax} $\leq \frac{\textsc{RMax}}{1-\gamma}$, and we defined $\text
 \begin{equation*}
 B \leq \frac{\epsilon + \gamma(|\mcS_G| - 1) \epsilon}{1-\gamma}.
 \end{equation*}
-Since the $Q$ values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\epsilon = B$. Applying Lemma \ref{lma:Q*} yields Lemma \ref{lma:model}.
+Since the $Q$-values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\epsilon = B$. Applying Lemma \ref{lma:Q*} yields Lemma \ref{lma:model}.
 \subsection{Boltzmann over Optimal Q: $\epB$}
 \label{sec:boltz}
 
 %zzz all this theory is quite abstract. is there some way to weave in a running example and/or to at least provide some more motiviation for why phiBoltz is desirable. Balancing exploration/exploitation isn't really a motivation for why values should be abstracted together. What do the first two abstraction types miss that this one provides? We didn't Lihong et al. study it in the exact case?
-Here, we introduce the approximate abstraction family, $\epB$, which aggregates states with similar Boltzmann distributions on optimal $Q$ values as equivalent. This family of abstractions is appealing as the Boltzmman distribution naturally balances exploration and exploitation~\cite{sutton1998reinforcement}.
+Here, we introduce the approximate abstraction family, $\epB$, which aggregates states with similar Boltzmann distributions on optimal $Q$-values as equivalent. This family of abstractions is appealing as the Boltzmman distribution naturally balances exploration and exploitation~\cite{sutton1998reinforcement}.
 
 \bdefn{$\epB$}
 We let $\epB$ define a family of abstractions that, for fixed $\epsilon$, satisfies:
@@ -380,7 +381,7 @@ It follows that:
 \left|Q_G(s_1,a) - Q_G(s_2,a)\right| \leq \epsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k \right).
 \label{eq:bolt_qs}
 \end{equation}
-Consequently, we can consider $\epB$ as a variation of $\epQ$, where the difference in $Q$ values is bounded by $\epsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k \right)$. Lemma~\ref{lma:bolt_lemma} then follows directly from Lemma~\ref{lma:Q*}.
+Consequently, we can consider $\epB$ as a variation of $\epQ$, where the difference in $Q$-values is bounded by $\epsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k \right)$. Lemma~\ref{lma:bolt_lemma} then follows directly from Lemma~\ref{lma:Q*}.
 
 % Subsection: Multinomial over Optimal Q
 \subsection{Multinomial over Optimal Q: $\epMu$}
