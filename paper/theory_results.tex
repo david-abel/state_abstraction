@@ -43,9 +43,9 @@ We now introduce the main result of the paper.
 
 % Theorem 1
 \begin{thm}
-There exist at least four classes of approximate state-aggregation functions, $\epQ$, $\epM$, $\epB$ and $\epMu$, for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $1/\epsilon$:
+There exist at least four classes of approximate state-aggregation functions, $\epQ$, $\epM$, $\epB$ and $\epMu$, for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\frac{1}{\epsilon}$:
 \begin{equation}
-\forall_{s \in \mathcal{S}_G} | V_G^{\pi_{GA}}(s) - V_G^{\pi_G^*}(s) | \leq poly(1/\epsilon).
+\forall_{s \in \mathcal{S}_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) \leq poly \left (\frac{1}{\epsilon} \right).
 \end{equation}
 \end{thm}
 \enote{Axe the absolute values here and elsewhere}
@@ -75,7 +75,7 @@ An approximate $Q$ function has the same form as Equation~\ref{eq:phi_f}:
 \label{lma:Q*}
 When $\ep_{Q^*}$ is used to create the abstract state space $\mcS_A$:
 \begin{equation}
-\forall_{s \in \mcS_G}: | V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) | \leq \frac{2\epsilon}{(1-\gamma)^2}.
+\forall_{s \in \mcS_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) \leq \frac{2\epsilon}{(1-\gamma)^2}.
 \end{equation}
 \end{lma}
 
@@ -276,7 +276,7 @@ Applying Claim~\ref{clm:optAbsActionNearOptGround} yields:
 Since $s_G$ was arbitrary, we conclude that our bound holds for all states in $\mathcal{S}_G$ for the inductive case.
 Thus, from our base case and induction, we conclude that
 \begin{equation}
-\forall_{t, s_G \in \mathcal{S}_g} V_G^{\pi^*}(s_G) \leq  V_G^{\pi_{A,t}}(s_G) + \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma}.
+\forall_{t, s_G \in \mathcal{S}_g} V_G^{\pi_G^*}(s_G) \leq  V_G^{\pi_{A,t}}(s_G) + \sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma}.
 \end{equation}
 
 Note that as $t \rightarrow \infty$, $\sum_{i=0}^{t}\gamma^i \frac{2\epsilon}{1-\gamma} \rightarrow \frac{2\epsilon}{(1-\gamma)^2}$ by the sum of geometric series and $\pi_{A,t}(s) \rightarrow \pi_{GA}$.
@@ -307,7 +307,7 @@ We let $\epM$ define a type of abstraction that, for fixed $\epsilon$, satisfies
 \label{lma:model}
 When $\mcS_A$ is created using a function of the $\ep_{model}$ type:
 \begin{equation}
-\forall_{s \in \mcS_G} | V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) | \leq \frac{2\epsilon + 2\gamma((|\mcS_G|-1)\epsilon)}{(1-\gamma)^3}.
+\forall_{s \in \mcS_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) \leq \frac{2\epsilon + 2\gamma((|\mcS_G|-1)\epsilon)}{(1-\gamma)^3}.
 \end{equation}
 \end{lma}
 
@@ -358,7 +358,7 @@ We also assume that the difference in normalizing terms is bounded by some non-n
 \end{equation}
 \begin{lma} When $S_A$ is created using a function of the $\epB$ type, for some non-negative constant $k \in \mathbb{R}$:
 \begin{equation}
-\forall_{s \in \mcS_G} \left| V_G^{\pi^*_G}(s) - V_G^{\pi_{GA}}(s) \right| \leq \frac{2\epsilon\left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k\right)}{(1-\gamma)^2}.
+\forall_{s \in \mcS_G} V_G^{\pi^*_G}(s) - V_G^{\pi_{GA}}(s) \leq \frac{2\epsilon\left(\frac{|\mathcal{A}|}{1-\gamma} + k\epsilon + k\right)}{(1-\gamma)^2}.
 \end{equation}
 \label{lma:bolt_lemma}
 \end{lma}
@@ -404,7 +404,7 @@ We also assume that the difference in normalizing terms is bounded by some posit
 %zzz why is that ok? why is it useful? (overall, I think we should take a slightly more pedagogical perspective. we're not writing programs, we're writing explanations.
 \begin{lma} When $S_A$ is created using a function of the $\epMu$ type, for some non-negative constant $k \in \mathbb{R}$:
 \begin{equation}
-\forall_{s \in S_M} | V_G^{\pi^*_G}(s) - V_G^{\pi_{GA}}(s) | \leq \frac{\frac{2\epsilon|\mathcal{A}|}{1-\gamma} + k \epsilon^2 + k}{(1-\gamma)^2}.
+\forall_{s \in S_M} V_G^{\pi^*_G}(s) - V_G^{\pi_{GA}}(s) \leq \frac{\frac{2\epsilon|\mathcal{A}|}{1-\gamma} + k \epsilon^2 + k}{(1-\gamma)^2}.
 \end{equation}
 \label{lma:mult_lemma}
 \end{lma}

@@ -8,10 +8,12 @@ Quick mathy fixes:
 	dangling inequalities
 	cases being aligned, using if
 	epsilon to varepsilon
+	No abs in final bounds
+	Use of : and forall
 
 Other fixes from Michael:
 
-	Lemma 1 proof should have roadmap
+	Lemma 1 proof should have roadmap -- DONE
 	
 	Describe the approximate phi thingies much earlier (in the intro?) Maybe a table?
 	Sentences about what each abstraction function is
