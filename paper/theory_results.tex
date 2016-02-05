@@ -55,7 +55,7 @@ There exist at least four classes of approximate state-aggregation functions, $\
 \label{sec:Q*}
 
 % Q* Lemma -- lemma 1
-We consider an approximate version of \citeauthor{li2006towards}'s $\phi_Q^*$, where states are aggregated together when their optimal $Q$-values are within $\epsilon$.
+We consider an approximate version of \citet{li2006towards}'s $\phi_Q^*$,. In our abstraction, states are aggregated together when their optimal $Q$-values are within $\epsilon$.
 
 \bdefn{$\epQ$}
 An approximate $Q$ function has the same form as Equation~\ref{eq:phi_f}:
@@ -75,7 +75,7 @@ When $\ep_{Q^*}$ is used to create the abstract state space $\mcS_A$:
 
 % Proof
 \textbf{Proof of Lemma~\ref{lma:Q*}:}
-We first demonstrate that $Q$-values in the abstract \ac{MDP} are boundedly close to $Q$-values in the ground \ac{MDP} (Claim \ref{clm:closeQs}). We next leverage Claim \ref{clm:closeQs} to demonstrate that the optimal action in the abstract \ac{MDP} is nearly optimal in the ground \ac{MDP}  (Claim \ref{clm:optAbsActionNearOptGround}). Lastly, we use Claim \ref{clm:optAbsActionNearOptGround} to conclude Lemma \ref{lma:Q*} (Claim \ref{clm:lmaFromClm}).
+We first demonstrate that $Q$-values in the abstract \ac{MDP} are close to $Q$-values in the ground \ac{MDP} (Claim \ref{clm:closeQs}). We next leverage Claim \ref{clm:closeQs} to demonstrate that the optimal action in the abstract \ac{MDP} is nearly optimal in the ground \ac{MDP}  (Claim \ref{clm:optAbsActionNearOptGround}). Lastly, we use Claim \ref{clm:optAbsActionNearOptGround} to conclude Lemma \ref{lma:Q*} (Claim \ref{clm:lmaFromClm}).
 % Claim 1:
 \begin{clm}
 \label{clm:closeQs}
@@ -115,12 +115,13 @@ Q_T(s, a) =
 \end{cases}
 \end{equation}
 where
-\begin{equation}
+\begin{equation*}
 \sigma_{T-1}(s,a) = \gamma \underset{{s_A}' \in \mathcal{S}_A}{\sum} \mathcal{T}_A(\epQ(s),a,{s_A}') \max_{a'} Q_{T-1}({s_A}', a').
-\end{equation}
+\end{equation*}
 
 We proceed by induction on $T$ to show that:
 \begin{equation}
+\label{eq:clm1Induct}
 \forall_{T, s_G \in \mathcal{S}_G, a} |Q_G(s_G, a) - Q_T(s_G, a)| \leq \sum_{t=0}^{T-1} \epsilon \gamma^{t},
 \end{equation}
 
@@ -146,9 +147,9 @@ Thus,
 \textit{Inductive Case: $T > 1$}
 
 We assume as our inductive hypothesis that:
-\begin{equation}
+\begin{equation*}
 \forall_{s_G \in \mathcal{S}_G, a} |Q_G(s_G, a) - Q_{T-1}(\epQ(s_G), a)| \leq \sum_{t=0}^{T-2} \epsilon \gamma^t.
-\end{equation}
+\end{equation*}
 
 Consider a fixed but arbitrary state, $s_G \in \mathcal{S}_G$, and fixed but arbitrary action $a$.
 We denote $\epQ(s_G)$ as $s_A$. 
@@ -171,12 +172,9 @@ since all aggregated states have $Q$-values within $\epsilon$ of one another:
 Q_T(s_A, a) \leq \gamma\sum_{t=0}^{T-2} \epsilon \gamma^t + \epsilon + Q_G(s_G, a). \\
 \therefore\ \left| Q_{T}(s_A, a) - Q_G(s_G,a) \right| \leq \gamma\sum_{t=0}^{T-1}\epsilon \gamma^t
 \end{align*}
-Since $s_G$ and $s_A$ are arbitrary, we conclude
-\begin{equation}
-\forall_{T, s_G \in \mathcal{S}_G, a} |Q_G(s_G, a) - Q_T(\epQ(s_G), a)| \leq \sum_{t=0}^{T-1} \epsilon \gamma^t.
-\end{equation}
+Since $s_G$ and $s_A$ are arbitrary, we conclude Equation \ref{eq:clm1Induct}.
 
-As $T \rightarrow \infty$, $Q_T$ becomes $Q_A$ and $\sum_{t=0}^{T-1} \epsilon \gamma^t$ becomes $\frac{\epsilon}{1-\gamma}$. Therefore, Equation $\ref{eq:Q*Claim1}$ follows. \\
+As $T \rightarrow \infty$, $\sum_{t=0}^{T-1} \epsilon \gamma^t \rightarrow \frac{\epsilon}{1-\gamma}$ by the sum of infinite geometric series and $Q_T \rightarrow Q_A$, Equation \ref{eq:clm1Induct} allows us to conclude Claim \ref{clm:closeQs}.\\
 
 %Claim 2
 \begin{clm}
@@ -286,7 +284,7 @@ Thus, we conclude Lemma~\ref{lma:Q*}.
 \subsection{Model Similarity: $\ep_{model}$}
 \label{sec:model}
 
-Now, consider an approximate version of \citeauthor{li2006towards}'s $\phi_{model}$, where states are aggregated together when their rewards and transitions are within $\epsilon$.
+Now, consider an approximate version of \citet{li2006towards}'s $\phi_{model}$, where states are aggregated together when their rewards and transitions are within $\epsilon$.
 \bdefn{$\epM$}
 We let $\epM$ define a type of abstraction that, for fixed $\epsilon$, satisfies:
 \begin{multline}
@@ -387,14 +385,11 @@ We let $\epMu$ define a type of abstraction that, for fixed $\epsilon$, satisfie
 \forall_{a} \left|\frac{Q_G(s_1,a)}{\sum_b Q_G(s_1,b)} - \frac{Q_G(s_1,a)}{\sum_b Q_G(s_1,b)}\right| \leq \epsilon.
 \end{multline}
 \edefn
-\dnote{Some explanation of what this one does}
 
 We also assume that the difference in normalizing terms is bounded by some positive factor, $k \in \mathbb{R}$, of $\epsilon$:
 \begin{equation}
 \left |\sum_i Q_G(s_1,a_i) - \sum_j Q_G(s_2,a_j) \right | \leq k\epsilon.
 \end{equation}
-\dnote{Some explanation of why it's okay to assume this. Answer: Q magnitudes can be artbirarily off, making the denominators similar lets us say, Hm. These q magnitudes are roughly in the same ballpark.}
-%zzz why is that ok? why is it useful? (overall, I think we should take a slightly more pedagogical perspective. we're not writing programs, we're writing explanations.
 \begin{lma} When $S_A$ is created using a function of the $\epMu$ type, for some non-negative constant $k \in \mathbb{R}$:
 \begin{equation}
 \forall_{s \in S_M} V_G^{\pi^*_G}(s) - V_G^{\pi_{GA}}(s) \leq \frac{\frac{2\epsilon|\mathcal{A}|}{1-\gamma} + k \epsilon^2 + k}{(1-\gamma)^2}.
