@@ -10,7 +10,9 @@ Our code base (link redacted for review) provides implementations for abstractin
 % Subsection: NChain.
 %\subsection{NChain}
 
-NChain is a simple \ac{MDP} investigated in the Bayesian \ac{RL} literature due to the interesting exploration problem it poses~\cite{dearden1998bayesian}. In all states, the agent has two actions available: advance down the chain, or return to state 0. The agent receives $.2$ reward for returning to state 0, and no reward for advancing down the chain. The exception is that when the agent transitions to the last state in the chain, it receives $1.0$ reward. Transitions also have small slip probability $\rho$, such that the applied action results in the opposite dynamics. In our implementation, we set $N=10$ and $\rho=0.2$.
+NChain is a simple \ac{MDP} investigated in the Bayesian \ac{RL} literature due to the interesting exploration problem it poses~\cite{dearden1998bayesian}. In our implementation, we set $N=10$, normalized rewards between $0$ and $1$, and used a slip probability of $0.2$.
+
+%In all states, the agent has two actions available: advance down the chain, or return to state 0. The agent receives $.2$ reward for returning to state 0, and no reward for advancing down the chain. The exception is that when the agent transitions to the last state in the chain, it receives $1.0$ reward. Transitions also have small slip probability $\rho$, such that the applied action results in the opposite dynamics. In our implementation, we set $N=10$ and $\rho=0.2$.
 
 % NChain Compression Visuals.
 %\begin{figure}[h]
@@ -66,9 +68,9 @@ Minefield is a test problem we are introducing that uses the Grid World dynamics
 \begin{figure}
 \centering
 \subfigure[Ground Minefield]{
-\includegraphics[width=0.35\columnwidth]{figures/ground_minefield.png}}
+\includegraphics[width=0.32\columnwidth]{figures/ground_minefield.png}}
 \subfigure[Abstract Minefield]{
-\includegraphics[width=0.35\columnwidth]{figures/abs_minefield.png}}
+\includegraphics[width=0.32\columnwidth]{figures/abs_minefield.png}}
 \label{fig:minefield-visual}
 \caption{Comparison of ground Minefield \ac{MDP} and abstract \ac{MDP}, under a $\epQ$ abstraction with $\varepsilon=0.5$}
 \end{figure} 
