@@ -346,7 +346,7 @@ Here, we introduce the approximate abstraction family, $\epB$, which aggregates 
 We let $\epB$ define a family of abstractions that, for fixed $\epsilon$, satisfies:
 \begin{multline}
 \epB(s_1) = \epB(s_2) \rightarrow \\
-\forall_{a} \left|\frac{e^{Q_G^*(s_1,a)}}{\sum_b e^{Q_G^*(s_1,b)}} - \frac{e^{Q_G^*(s_2,a)}}{\sum_b e^{Q_G^*(s_2,b)}}\right| \leq \epsilon.
+\forall_{a} \left|\frac{e^{Q_G(s_1,a)}}{\sum_b e^{Q_G(s_1,b)}} - \frac{e^{Q_G(s_2,a)}}{\sum_b e^{Q_G(s_2,b)}}\right| \leq \epsilon.
 \label{eq:phi_bolt}
 \end{multline}
 \edefn
@@ -354,7 +354,7 @@ We let $\epB$ define a family of abstractions that, for fixed $\epsilon$, satisf
 
 We also assume that the difference in normalizing terms is bounded by some non-negative constant, $k\in \mathbb{R}$, of $\epsilon$:
 \begin{equation}
-\left| \sum_b e^{Q_G^*(s_1,b)} - \sum_b e^{Q_G^*(s_2,b)} \right| \leq k\times\epsilon.
+\left| \sum_b e^{Q_G(s_1,b)} - \sum_b e^{Q_G(s_2,b)} \right| \leq k\times\epsilon.
 \label{eq:bolt_denom}
 \end{equation}
 \begin{lma} When $S_A$ is created using a function of the $\epB$ type, for some non-negative constant $k \in \mathbb{R}$:
@@ -392,7 +392,7 @@ We consider approximate abstractions derived from a multinomial distribution ove
 We let $\epMu$ define a type of abstraction that, for fixed $\epsilon$, satisfies
 \begin{multline}
 \epMu(s_1) = \epMu(s_2) \rightarrow \\
-\forall_{a} \left|\frac{Q_G^*(s_1,a)}{\sum_b Q_G^*(s_1,b)} - \frac{Q_G^*(s_1,a)}{\sum_b Q_G^*(s_1,b)}\right| \leq \epsilon.
+\forall_{a} \left|\frac{Q_G(s_1,a)}{\sum_b Q_G(s_1,b)} - \frac{Q_G(s_1,a)}{\sum_b Q_G(s_1,b)}\right| \leq \epsilon.
 \end{multline}
 \edefn
 \dnote{Some explanation of what this one does}

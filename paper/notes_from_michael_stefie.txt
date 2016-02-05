@@ -28,7 +28,7 @@ Other fixes from Michael:
 	Redo plots
 		> Make font bigger
 
-	Why didn't we do all 4 abstraction classes: the other 3 reduce to Q*
+	Why didn't we do all 4 abstraction classes: the other 3 reduce to Q* -- DONE
 
 Go over bibliography make sure it looks nice.
 	Citations
