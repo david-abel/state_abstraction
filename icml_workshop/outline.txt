@@ -1,0 +1,18 @@
+Introduce the setup:
+	- two desiderata of abstraction.
+	- why both are easily satisfied independently.
+	- Mention that options have been studied extensively.
+	- Using our abstraction framework we can characterize how options can fit the two desiderata
+
+Related work:
+	- Mostly options.
+	- Empirically not sufficient
+	- Theoretically not sufficient
+
+Setup of SMDP abstraction stuff:
+
+Preliminary REsults
+
+Empirical pipeline
+
+Future Work
