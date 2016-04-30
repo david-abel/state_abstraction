@@ -2,36 +2,51 @@
 \label{sec:intro}
 
 \dnote{Abstraction pitch}
-% Introduce a pitch about abstraction that's a bit different from our other paper.
-Intelligent agents that leverage abstraction may reason about just the salient features of their environment, while ignoring what is irrelevant. Consequently, agents are able to solve considerably more complex problems than they would be able to without the use of abstraction. However, \textit{exact abstractions}, which treat only fully-identical situations as equivalent, require complete knowledge that is often computationally intractable to obtain. Furthermore, often no two situations are identical, so exact abstractions are often ineffective. To overcome these issues, we investigate \textit{approximate abstractions} that enable agents to treat sufficiently similar situations as identical. This work characterizes the impact of equating ``sufficiently similar'' states in the context of planning and \ac{RL} in \acp{MDP}. The remainder of our introduction contextualizes these intuitions in \acp{MDP}.%This is the paragraph from ICML 2016
+%Abstraction is useful
+Intelligent agents that leverage abstraction may reason about the salient features of their environment, while ignoring what is irrelevant. Consequently, agents that utilize abstraction are able to solve considerably more complex problems than they would be able to without the use of abstraction. 
 
-% Abstraction is a good idea b/c MDP has poly comp comp and samp comp in S, but S grows fast.
-%Solving for optimal behavior in \acp{MDP} in a planning setting is known to be P-Complete in the size of the state space~\cite{papadimitriou1987complexity,littman1995complexity}. Similarly, many \ac{RL} algorithms for solving \acp{MDP} are known to require a number of samples polynomial in the size of the state space~\cite{strehl2009reinforcement}. Although polynomial runtime or sample complexity may seem like a reasonable constraint, the size of the state space of an \ac{MDP} grows super-polynomially with the number of variables that characterize the domain, a result of Bellman's curse of dimensionality. Thus, solutions polynomial in state space size are often ineffective for sufficiently complex tasks. For instance, a robot involved in a pick-and-place task might be able to employ planning algorithms to solve for how to manipulate some objects into a desired configuration in time polynomial in the number of states, but the number of states it must consider grows exponentially with the number of objects with which it is working \cite{abel2015goal}.
+%Planning and RL is hard
+For this reason abstraction is of considerable interest in planning and \ac{RL} work.\cite{LIHONG, US ICML, OTHERS} Although planning for optimal behavior in \acp{MDP} is known to be P-Complete in the size of the state and action space~\cite{papadimitriou1987complexity,littman1995complexity} and many \ac{RL} algorithms for solving \acp{MDP} are known to require a number of samples only polynomial in the size of the state space~\cite{strehl2009reinforcement}, many state spaces are known to grown super-polynomially with the number of variables that characterize the domain \cite{abel2015goal} and robust action spaces are often large or even continuous. \cite{HARD LARGE CONTINOUS ACTION SPACE}. Abstraction, then, promises an alluring avenue through which planning and \ac{RL} techniques might gain traction in complex domains. 
 
-\dnote{Prior work summary}
+%Summarize related work
+Indeed BLAH BLAH BLAH LOOK AT ALL THIS RELATED WORK BLAH BLAH BLAH LOOK AT ALL THIS RELATED WORK BLAH BLAH BLAH LOOK AT ALL THIS RELATED WORK BLAH BLAH BLAH LOOK AT ALL THIS RELATED WORK BLAH BLAH BLAH LOOK AT ALL THIS RELATED WORK BLAH BLAH BLAH LOOK AT ALL THIS RELATED WORK
+
+%We propose desiderata
+In this work, we formalize what it means for an abstraction to be good in planning and \ac{RL}. In particular, we propose  two desiderata that a good abstraction should hope to satisfy. The first we call \textsc{Compressibility}, which stipulates that a theory on abstraction ought to achieve {\it compression}. The second we coin \textsc{Optimality}, which states that abstractions ought to maintain at least some notion of optimality. 
+
+
+
+
+%We summarize framework, propose extension and then ground out desiderata in framework
+Lastly, we summarize our previously proposed formal framework for state-abstraction methods, propose an extension to temporally-extended abstractions and then formally ground out the two desiderata with the extended framework. 
+
+
+
+%Current scrap
+%---------------
+%We summarize the current state of the art theoretical results under this framework and describe how this framework satisfies both desiderata. Moreover, a central goal of this work is to illuminate future work on options and temporally extended actions. We argue that the present state of the literature is inconclusive as to the effectiveness of options in general, and that, the theory of temporal abstraction afforded by the state aggregation approach allows for the satisfaction of both \textsc{Compressibility} and \textsc{Optimality}. We offer a description of this framework, as well as preliminary empirical results, and paths to relevant analysis.
+
+%However, \textit{exact abstractions}, which treat only fully-identical situations as equivalent, require complete knowledge that is often computationally intractable to obtain. Furthermore, often no two situations are identical, so exact abstractions are often ineffective. To overcome these issues, we investigate \textit{approximate abstractions} that enable agents to treat sufficiently similar situations as identical. This work characterizes the impact of equating ``sufficiently similar'' states in the context of planning and \ac{RL} in \acp{MDP}. The remainder of our introduction contextualizes these intuitions in \acp{MDP}.
+
+
+%We defend these desiderata briefly in the next section, and describe the status of current work relative to these two desiderata. 
+
+%\dnote{Prior work summary}
 % Existing work on state abstraction.
-A key research agenda for planning and \ac{RL} is leveraging abstraction to reduce large state spaces~\cite{andre2002state,jong2005state,dietterich2000hierarchical,Bean2011}. This agenda has given rise to various methods of abstraction that reduce the size of \acp{MDP} with large state spaces; \dnote{Overview of abstraction methods}
+%A key research agenda for planning and \ac{RL} is leveraging abstraction to reduce large state spaces~\cite{andre2002state,jong2005state,dietterich2000hierarchical,Bean2011}. This agenda has given rise to various methods of abstraction that reduce the size of \acp{MDP} with large state spaces; \dnote{Overview of abstraction methods}
 
-\dnote{Close with a lack of clarity about what is meaningful to retain from an abstraction theory}
-
-In this work, we propose two desiderata on theories of abstraction in the context of planning or learning in an \ac{MDP}; the first we call \textsc{Compressibility}, which stipulates that a theory on abstraction ought to achieve {\it compression}, while the second we coin \textsc{Optimality}, stating that abstractions ought to maintain at least some notion of optimality. We defend these desiderata briefly in the next section, and describe the status of current work relative to these two desiderata. 
-
-In light of these desiderata, we summarize a formal framework that allows for simple state-abstraction methods as well as propose an extension to temporal abstractions. \enote{Summarize the formal abstraction bit -- MDP} We summarize the current state of the art theoretical results under this framework and describe how this framework satisfies both desiderata. Moreover, a central goal of this work is to illuminate future work on options and temporally extended actions. We argue that the present state of the literature is inconclusive as to the effectiveness of options in general, and that, the theory of temporal abstraction afforded by the state aggregation approach allows for the satisfaction of both \textsc{Compressibility} and \textsc{Optimality}. We offer a description of this framework, as well as preliminary empirical results, and paths to relevant analysis.
-
-%
-
-
+%\dnote{Close with a lack of clarity about what is meaningful to retain from an abstraction theory}
 
 % ---- OLD STUFF ----
-In the context of \acp{MDP}, we understand exact abstractions as those that aggregate states with equal values of particular quantities, for example, optimal $Q$-values. Existing work has characterized how exact abstractions can fully maintain optimality in \acp{MDP}~\cite{li2006towards,dean1997modelmin}. 
+%In the context of \acp{MDP}, we understand exact abstractions as those that aggregate states with equal values of particular quantities, for example, optimal $Q$-values. Existing work has characterized how exact abstractions can fully maintain optimality in \acp{MDP}~\cite{li2006towards,dean1997modelmin}. 
 
 
 
 % Thesis: Approximate abstraction for three reasons.
-The thesis of this work is that performing approximate abstraction in \acp{MDP} by relaxing the state-aggregation criteria from equality of quantities to $\varepsilon$-closeness maintains bounded error in the resulting behavior while offering three benefits. First, approximate abstractions employ the sort of knowledge that we expect a planning or learning algorithm to compute without fully solving the \ac{MDP}. In contrast, exact abstractions often require solving for optimal behavior, thereby defeating the purpose of abstraction. Second, because of their relaxed criteria, approximate abstractions can achieve greater degrees of compression than exact abstractions. This difference is particularly important in environments where no two states are identical. Third, because the state-aggregation criteria are relaxed to near equality, approximate abstractions are able to tune the aggressiveness of abstraction by adjusting what they consider sufficiently similar states. 
+%The thesis of this work is that performing approximate abstraction in \acp{MDP} by relaxing the state-aggregation criteria from equality of quantities to $\varepsilon$-closeness maintains bounded error in the resulting behavior while offering three benefits. First, approximate abstractions employ the sort of knowledge that we expect a planning or learning algorithm to compute without fully solving the \ac{MDP}. In contrast, exact abstractions often require solving for optimal behavior, thereby defeating the purpose of abstraction. Second, because of their relaxed criteria, approximate abstractions can achieve greater degrees of compression than exact abstractions. This difference is particularly important in environments where no two states are identical. Third, because the state-aggregation criteria are relaxed to near equality, approximate abstractions are able to tune the aggressiveness of abstraction by adjusting what they consider sufficiently similar states. 
 
 % Summary of the four abstractions.
-We support this thesis by describing four different classes of approximate abstraction functions that preserve near-optimal behavior by aggregating states on different criteria: $\epQ$, on similar optimal $Q$-values, $\epM$, on similarity of rewards and transitions, $\epB$, on similarity of a Boltzmann distribution over optimal $Q$-values, and $\epMu$, on similarity of a multinomial distribution over optimal $Q$-values. Furthermore, we empirically demonstrate the relationship between the degree of compression and error incurred on a variety of \acp{MDP}.
+%We support this thesis by describing four different classes of approximate abstraction functions that preserve near-optimal behavior by aggregating states on different criteria: $\epQ$, on similar optimal $Q$-values, $\epM$, on similarity of rewards and transitions, $\epB$, on similarity of a Boltzmann distribution over optimal $Q$-values, and $\epMu$, on similarity of a multinomial distribution over optimal $Q$-values. Furthermore, we empirically demonstrate the relationship between the degree of compression and error incurred on a variety of \acp{MDP}.
 
 % Summary	
 %\dnote{If we keep this, add section numbers, make it match the actual sections b/c we changed their order}
