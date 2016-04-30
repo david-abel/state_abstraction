@@ -6,20 +6,16 @@
 Intelligent agents that leverage abstraction may reason about the salient features of their environment, while ignoring what is irrelevant. Consequently, agents that utilize abstraction are able to solve considerably more complex problems than they would be able to without the use of abstraction. 
 
 %Planning and RL is hard
-For this reason abstraction is of considerable interest in planning and \ac{RL} work.\cite{LIHONG, US ICML, OTHERS} Although planning for optimal behavior in \acp{MDP} is known to be P-Complete in the size of the state and action space~\cite{papadimitriou1987complexity,littman1995complexity} and many \ac{RL} algorithms for solving \acp{MDP} are known to require a number of samples only polynomial in the size of the state space~\cite{strehl2009reinforcement}, many state spaces are known to grown super-polynomially with the number of variables that characterize the domain \cite{abel2015goal} and robust action spaces are often large or even continuous. \cite{HARD LARGE CONTINOUS ACTION SPACE}. Abstraction, then, promises an alluring avenue through which planning and \ac{RL} techniques might gain traction in complex domains. 
+For this reason abstraction is of considerable interest in planning and \ac{RL} work.\cite{li2006towards,abelhershko2016approx,konidaris2007building,hauskrecht1998hierarchical,parr1998reinforcement,sutton1999between,konidaris2015constructing,Jiang2015,andre2002state} Although planning for optimal behavior in \acp{MDP} is known to be P-Complete in the size of the state and action space~\cite{papadimitriou1987complexity,littman1995complexity}, and many \ac{RL} algorithms for solving \acp{MDP} are known to require a number of samples only polynomial in the size of the state space~\cite{strehl2009reinforcement}, many state spaces are known to grown super-polynomially with the number of variables that characterize the domain \cite{abel2015goal} and robust action spaces are often large or even continuous. \cite{HARD LARGE CONTINOUS ACTION SPACE}. Abstraction, then, promises an alluring avenue through which planning and \ac{RL} techniques may gain traction in complex domains. 
 
 %Summarize related work
-Indeed BLAH BLAH BLAH LOOK AT ALL THIS RELATED WORK BLAH BLAH BLAH LOOK AT ALL THIS RELATED WORK BLAH BLAH BLAH LOOK AT ALL THIS RELATED WORK BLAH BLAH BLAH LOOK AT ALL THIS RELATED WORK BLAH BLAH BLAH LOOK AT ALL THIS RELATED WORK BLAH BLAH BLAH LOOK AT ALL THIS RELATED WORK
+\dnote{summary of related}
 
 %We propose desiderata
-In this work, we formalize what it means for an abstraction to be good in planning and \ac{RL}. In particular, we propose  two desiderata that a good abstraction should hope to satisfy. The first we call \textsc{Compressibility}, which stipulates that a theory on abstraction ought to achieve {\it compression}. The second we coin \textsc{Optimality}, which states that abstractions ought to maintain at least some notion of optimality. 
-
-
-
+In this work, we formalize what it means for an abstraction to be effective in planning and \ac{RL}. In particular, we propose  two desiderata that a theory of abstraction should satisfy. The first we call \textsc{Compressibility}, which stipulates that a theory on abstraction ought to achieve {\it compression}. The second we coin \textsc{Optimality}, which states that abstractions ought to maintain at least some notion of optimality.
 
 %We summarize framework, propose extension and then ground out desiderata in framework
-Lastly, we summarize our previously proposed formal framework for state-abstraction methods, propose an extension to temporally-extended abstractions and then formally ground out the two desiderata with the extended framework. 
-
+Additionally, we summarize our previously proposed formal framework for state-abstraction methods, and demonstrate that the framework allows for careful formal analysis of temporally-extended abstractions. In particular the framework allows us to characterize what types of temporal abstraction do and do not satisfy the \textsc{Compressibility} and \textsc{Optimality}. Of special interest is determining proving what the necessary or sufficient conditions are for an option to be useful in planning or learning.
 
 
 %Current scrap
