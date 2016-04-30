@@ -1,9 +1,37 @@
 \section{Abstraction Framework}
 
-In previous work~\cite{abelhershko2016approx}, we extended the unifying framework of state abstraction proposed by~\cite{li2006towards}. In this work we develop a theory of approximate abstraction, in which abstraction is interpreted as state aggregation; that is, a state abstraction function $\phi : \mathcal{S}_G \mapsto \mathcal{S}_A$, 
+In previous work~\cite{abelhershko2016approx}, we extended the unifying framework of state abstraction proposed by~\cite{li2006towards}. We develop a theory of approximate abstraction, in which abstraction is interpreted as state aggregation; that is, a state abstraction function $\phi : \mathcal{S}_G \mapsto \mathcal{S}_A$, induces a full abstract \ac{MDP} according to the methods described by~\cite{li2006towards}.
 
-Formalism
+More formally, we think of abstraction in terms of a state aggregation function mapping ground states of a {\it ground} MDP to abstract states of an {\it abstract} MDP.
 
-Extension to Temp Ext
+We consider several {\it types} of aggregation function families; each of which ensures that all aggregated states are within $\varepsilon$ of one another with respect to some function of interest. The four families are:
+\begin{enumerate}
+\item $\epQ$: states that are aggregated have similar $Q^*$ values
+\item $\epM$: states that are aggregated have similar transition functions and reward functions.
+\item $\epMu$: states that are aggregated have similar multinomial distributions over $Q^*$ values.
+\item $\epB$: states that are aggregated have similar Boltzmann distributions over $Q^*$ values.
+\end{enumerate}
+
+Our main result is that, any instance of any of the above abstraction functions will induce an abstract \ac{MDP} such that, the optimal policy of the abstract MDP, denoted $\pi_A^*$, when used to solve the ground MDP, has value that is within a polynomial of $\varepsilon$ of the true optimal value function. Here, $\varepsilon$ determines how aggressive the abstraction is; for a $\varepsilon=0$, the state aggregation functions will only aggregate states that share exact values.
+
+\begin{thm}
+There exist at least four classes of approximate state-aggregation functions, $\epQ$, $\epM$, $\epB$ and $\epMu$, for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\frac{1}{\varepsilon}$:
+\begin{equation}
+\forall_{s \in \mathcal{S}_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{A}^*}(s) \leq poly \left (\frac{1}{\varepsilon} \right).
+\end{equation}
+\end{thm}
+
+This theorem satisfies the \textsc{Value} desiderata. Moreover, we stipulate that functions of these classes are learnable due to the criteria of $\varepsilon$-closeness, as was demonstrated by~\cite{ortner2007logarithmic}. Furthermore, we empirically demonstrate the compressibility of these functions, and consider it an open problem as to what degree of compressibility is achievable under this framework.
+
+% Subsection: Temporal Abstraction
+\subsection{Temporal Abstraction}
+Most critically, however, is the framework's natural extension to temporal abstraction. To do so, we consider a pair of functions: $\{\widetilde{\phi}_f, \Delta_g\}$, where:
+\begin{equation}
+\widetilde{\phi}_f: \mathcal{S}_G \mapsto \mathcal{S}_A, \hspace{16mm} \Delta_g \mathcal{A}_G \mapsto \mathcal{A}_A
+\end{equation}
+
+Now, the abstract MDP is fully distinct from $M_G$, in that it also has a unique set of abstract actions. As before, we can prove bounds on the value lost under different {\it kinds} of functions $\Delta_g$, which will provide a clear distinction between which abstract actions can preserve value, and which do not. In the next section, we show some preliminary empirical results to demonstrate how this process works.
 
 Satisfying Desiderata
+
+\dnote{put epsilon in subscript of phi}
