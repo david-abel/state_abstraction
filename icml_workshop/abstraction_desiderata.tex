@@ -8,10 +8,6 @@ We propose the following two desiderata on theories of abstraction in the contex
 
 \dnote{Defense of the desiderata}
 
-Critically, either desiderata is trivial to satisfy on its own.
-
-Given an \ac{MDP}, $M_G$, we can satisfy \textsc{Compressibility} by replacing $S_G$ with a state space that consists of a single (arbitrary) state from $S_G$. Clearly, such a resulting \ac{MDP} satisfies our first desiderata - we are left with an MDP that is substantially smaller than the original MDP. 
-
-Now consider \textsc{Optimality}. Again, we can develop a simple method for satisfying this desiderata on its own. Namely, consider the MDP $M_A$, that is identical to $M_G$. Thus, the optimal policy for $M_A$ is exactly the optimal policy for $M_G$, consequently satisfying \textsc{Optimality}.
+Critically, either desiderata is trivial to satisfy on its own. Given an \ac{MDP}, $M_G$, we can satisfy \textsc{Compressibility} by replacing $S_G$ with a state space that consists of a single (arbitrary) state from $S_G$. Clearly, such a resulting \ac{MDP} satisfies our first desiderata - we are left with an MDP that is substantially smaller than the original MDP. Now consider \textsc{Optimality}. Again, we can develop a simple method for satisfying this desiderata on its own. Namely, consider the MDP $M_A$, that is identical to $M_G$. Thus, the optimal policy for $M_A$ is exactly the optimal policy for $M_G$, consequently satisfying \textsc{Optimality}.
 
 The interesting case is satisfying {\it both} desiderata. To the best of our knowledge, no theory of temporal abstraction has been formally proven to satisfy the two - in the next section, we discuss prior methods of abstraction, and their relative status to these desiderata.

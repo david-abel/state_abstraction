@@ -1,17 +1,25 @@
 \section{Related Work}
 
-Several other projects have addressed similar topics.
+Considerable work in planning and \ac{RL} has grappled with, either in the form of state aggregation (DEFINE?) or temporally extended actions (DEFINE?).
+
+\subsection{Abstraction as State Aggregation}
 
 \subsection{Approximate State Abstraction}
+
 \citet{dean1997model} investigated partitioning an \ac{MDP}'s state space into $\varepsilon$-homogenous blocks, which are defined as clusters of states whose transition model and reward function are within $\varepsilon$ of each other. They develop an algorithm called Interval Value Iteration (IVI) that converges to the correct bounds on a family of abstract MDPs called Bounded \acp{MDP}. Several approaches build on the notion of $\varepsilon$-homogeneity. \citet{even2003approximate} analyzed different distance metrics used in the process of identifying $\varepsilon$-homogenous partitions. \citet{ortner2013adaptive} developed an algorithm for learning partitions in an online setting by taking advantage of the confidence bounds for $\mcT$ and $\mcR$ provided by UCRL~\cite{auer2009near}.
 
 \dnote{We'll definitely need to discuss Bai, Srivasta, and Russell's new paper at IJCAI 2016.}
 
-\subsection{Specific Abstraction Algorithms}
-Many previous works have targeted the creation of algorithms that enable state abstraction for MDPs. \citet{andre2002state} investigated a method for state abstraction in hierarchical reinforcement learning leveraging a programming language called ALISP that promotes the notion of {\it safe} state abstraction. Agents programmed using ALISP can ignore irrelevant parts of the state, achieving abstractions that maintain optimality. \citet{dietterich2000hierarchical} developed MAXQ, a framework for composing tasks into an abstracted hierarchy where state aggregation can be applied. \citet{jong2005state} introduced a method called {\it policy-irrelevance} in which agents identify (online) which state variables may be safely abstracted away in a factored-state \ac{MDP}. For a more complete survey of algorithms that leverage state abstraction in past reinforcement-learning papers, see \citet{li2006towards}.
+Many previous works have targeted the creation of algorithms that enable state abstraction for MDPs. \citet{andre2002state} investigated a method for state abstraction in hierarchical reinforcement learning leveraging a programming language called ALISP that promotes the notion of {\it safe} state abstraction. Agents programmed using ALISP can ignore irrelevant parts of the state, achieving abstractions that maintain optimality. 
+
+\citet{dietterich2000hierarchical} developed MAXQ, a framework for composing tasks into an abstracted hierarchy where state aggregation can be applied. \citet{jong2005state} introduced a method called {\it policy-irrelevance} in which agents identify (online) which state variables may be safely abstracted away in a factored-state \ac{MDP}. 
+
+For a more complete survey of algorithms that leverage state aggregation in past reinforcement-learning papers, see \citet{li2006towards}.
 
 \subsection{Exact Abstraction Framework}
 
 \citet{li2006towards} developed a framework for exact state abstraction in \acp{MDP}. In particular, the authors defined five classes of state-aggregation functions, inspired by existing methods for state aggregation in \acp{MDP}. We generalize two of these five classes, $\phi_{Q^*}$ and $\phi_{\text{model}}$, to the approximate abstraction case. Our generalizations are equivalent to theirs when exact criteria are used. Additionally, when exact criteria are used our bounds indicate that no value is lost, which is one of core results of \citet{li2006towards}.
 
-%zzz you shouldn't have $\phi_{model}$ because the word model will be typeset as the product of five variables. Some math mode magic is needed.
+
+\subsection{Abstraction as Temporal Extension}
+Previous \textit{macro-action} or \textit{options}
