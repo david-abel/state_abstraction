@@ -1,6 +1,6 @@
 \section{Abstraction Framework}
 
-In previous work~\cite{abelhershko2016approx}, we extended the unifying framework of state abstraction proposed by~\cite{li2006towards}. We develop a theory of approximate abstraction, in which abstraction is interpreted as state aggregation; that is, a state abstraction function $\phi : \mathcal{S}_G \mapsto \mathcal{S}_A$, induces a full abstract \ac{MDP} according to the methods described by~\cite{li2006towards}.
+In previous work~\cite{abelhershko2016approx}, we extended the unifying framework of state abstraction proposed by~\cite{li2006towards}. We developed a theory of approximate abstraction, in which abstraction is interpreted as state aggregation; that is, a state abstraction function $\phi : \mathcal{S}_G \mapsto \mathcal{S}_A$, induces a full abstract \ac{MDP} according to the methods described by~\cite{li2006towards}.
 
 More formally, we think of abstraction in terms of a state aggregation function mapping ground states of a {\it ground} MDP to abstract states of an {\it abstract} MDP.
 
@@ -17,17 +17,17 @@ Our main result is that, any instance of any of the above abstraction functions 
 \begin{thm}
 There exist at least four classes of approximate state-aggregation functions, $\epQ$, $\epM$, $\epB$ and $\epMu$, for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\frac{1}{\varepsilon}$:
 \begin{equation}
-\forall_{s \in \mathcal{S}_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{A}^*}(s) \leq poly \left (\frac{1}{\varepsilon} \right).
+\forall_{s \in \mathcal{S}_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) \leq poly \left (\varepsilon \right).
 \end{equation}
 \end{thm}
 
 This theorem satisfies the \textsc{Value} desiderata. Moreover, we stipulate that functions of these classes are learnable due to the criteria of $\varepsilon$-closeness, as was demonstrated by~\cite{ortner2007logarithmic}. Furthermore, we empirically demonstrate the compressibility of these functions, and consider it an open problem as to what degree of compressibility is achievable under this framework.
 
 % Subsection: Temporal Abstraction
-\subsection{Temporal Abstraction}
-Most critically, however, is the framework's natural extension to temporal abstraction. To do so, we consider a pair of functions: $\{\widetilde{\phi}_f, \Delta_g\}$, where:
+\subsection{Extending to Temporal Abstraction}
+Most critically, however, is the framework's natural extension to temporal abstraction. To do so, we consider a pair of functions: $(\widetilde{\phi}_f, \Delta_g)$, where:
 \begin{equation}
-\widetilde{\phi}_f: \mathcal{S}_G \mapsto \mathcal{S}_A, \hspace{16mm} \Delta_g \mathcal{A}_G \mapsto \mathcal{A}_A
+\widetilde{\phi}_f: \mathcal{S}_G \mapsto \mathcal{S}_A, \hspace{16mm} \Delta_g : \mathcal{A}_G \mapsto \mathcal{A}_A
 \end{equation}
 
 Now, the abstract MDP is fully distinct from $M_G$, in that it also has a unique set of abstract actions. As before, we can prove bounds on the value lost under different {\it kinds} of functions $\Delta_g$, which will provide a clear distinction between which abstract actions can preserve value, and which do not. In the next section, we show some preliminary empirical results to demonstrate how this process works.
@@ -35,3 +35,21 @@ Now, the abstract MDP is fully distinct from $M_G$, in that it also has a unique
 Satisfying Desiderata
 
 \dnote{put epsilon in subscript of phi}
+
+% Subsection: Grounding out Desiderata
+\subsection{Grounding out Desiderata in Framework}
+
+We now ground out the three desiderata with our formal framework:
+
+\begin{enumerate}
+%Compressibility
+\item \textsc{Compressibility}: $|\mcS_G - \mcS_A| \geq B_1$ and $|\mcA_G - \mcA_A| \geq B_2$ where $B_1$ and $B_2$ are ``sufficiently" large.
+
+%Optimality
+\item \textsc{Optimality}: $\forall_{s \in \mathcal{S}_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{A}^*} \leq B_3$ where $B_3$ is not ``unreasonably" large.
+
+%Efficient-Computability
+\item \textsc{Efficient-Computability}: $\widetilde{\phi}_f$ and $\Delta_g$ ought to be polynomially computable in the relevant quantities, namely $\mcS_G$, $\mcA_G$ and the representation of $\mcT$ and $\mcR$.
+\end{enumerate}
+
+
