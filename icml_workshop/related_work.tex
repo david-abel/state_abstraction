@@ -2,6 +2,8 @@
 
 Considerable work in planning and \ac{RL} has grappled with, either in the form of state aggregation (DEFINE?) or temporally extended actions (DEFINE?).
 
+
+
 \subsection{Abstraction as State Aggregation}
 
 \subsection{Approximate State Abstraction}
@@ -23,3 +25,7 @@ For a more complete survey of algorithms that leverage state aggregation in past
 
 \subsection{Abstraction as Temporal Extension}
 Previous \textit{macro-action} or \textit{options}
+
+\subsection{Abstraction as Function Approximation}
+
+The use of function approximators for estimating the value function, model, or policy have seen extraordinary success in a variety of domains~\cite{mnih2015human,sutton1999policy,baird1995residual,stadie2015incentivizing,ormoneit2002kernel}. The use of such techniques achieves abstraction of a certain form - states that share some number of state variables receive similar signal from individual learning instances, thus generalizing knowledge far beyond an individual state. While some theoretical work has been done in this area~\cite{schoknecht2002optimality,thrun1993issues,parr2008analysis}, such analysis involves highly constraining assumptions (such as linearity or smoothness of the function class). Given that the goal of this work is to characterize effective abstractions by evaluating their relative satisfaction of each of our three desiderata, we stipulate that such analysis will prove illusive for these approaches.
