@@ -1,31 +1,28 @@
-\section{Related Work}
+\section{Survey of Abstraction Methods}
 
-Considerable work in planning and \ac{RL} has investigated abstraction. We group prior literature into approaches of state aggregation, temporally extended actions, or function approximation.
-
-% Subsection: Abstraction as State Aggregation
-\subsection{Abstraction as State Aggregation}
-
-\citet{dean1997model} investigated partitioning an \ac{MDP}'s state space into $\varepsilon$-homogenous blocks, which are defined as clusters of states whose transition model and reward function are within $\varepsilon$ of each other. They develop an algorithm called Interval Value Iteration (IVI) that converges to the correct bounds on a family of abstract MDPs called Bounded \acp{MDP}. Several approaches build on the notion of $\varepsilon$-homogeneity. \citet{even2003approximate} analyzed different distance metrics used in the process of identifying $\varepsilon$-homogenous partitions. \citet{ortner2013adaptive} developed an algorithm for learning partitions in an online setting by taking advantage of the confidence bounds for $\mcT$ and $\mcR$ provided by UCRL~\cite{auer2009near}. \citet{andre2002state} investigated a method for state abstraction in hierarchical reinforcement learning leveraging a programming language called ALISP that promotes the notion of {\it safe} state abstraction. Agents programmed using ALISP can ignore irrelevant parts of the state, achieving abstractions that maintain optimality. \citet{dietterich2000hierarchical} developed MAXQ, a framework for composing tasks into an abstracted hierarchy where state aggregation can be applied. \citet{jong2005state} introduced a method called {\it policy-irrelevance} in which agents identify (online) which state variables may be safely abstracted away in a factored-state \ac{MDP}. For a more complete survey of literature on state aggregation, see \citet{li2006towards}.
-
-\dnote{We'll definitely need to discuss Bai, Srivasta, and Russell's new paper at IJCAI 2016.}
+Considerable work in planning and \ac{RL} has investigated abstraction. We group prior literature into approaches of temporal abstraction, function approximation, and state aggregation and discuss the work's relationship to the desiderata.
 
 % Subsection: Abs as Temp Ext.
 \subsection{Temporal Abstraction}
-Previous \textit{macro-action} or \textit{options}
+A major agenda has been developing a formal framework around skills and temporally extended actions, including options~\cite{sutton1999between,barto2004intrinsically} and macro-actions~\cite{hauskrecht1998hierarchical}.~\cite{konidaris2007building} developed a method for building options that are transferable between similar tasks.~\cite{konidaris2014constructing} leveraged options to impose a discretized state space onto a continuous space. Notably, the resulting discretized state space, along with the given options, was shown to have the property that {\it any} plan consisting of these options would be {\it feasible}; i.e. that the sequence of operators would be executable. While this work can considerably compress a given task, no value is guaranteed to be preserved when transferring to the discretized state space. \cite{jong2008utility} demonstrate that options are not always useful in the classic four-room domain. In fact, they demonstrate that options paired with the principle of optimism under uncertainty can increase learning time. Conversely, other work has demonstrated that options can be useful in a variety of domains~\cite{sutton1999between,chentanez2004intrinsically}.
 
-
-
-
+We are not aware of any work that generally characterizes what constitutes a good option, and what constitutes a bad option. Under the guise of the three desiderata, we consider this to be an important direction for future work.
 
 
 % Subsection: Abstraction as Func Approx
 \subsection{Abstraction as Function Approximation}
 
-The use of function approximators for estimating the value function, model, or policy have seen extraordinary success in a variety of domains~\cite{mnih2015human,sutton1999policy,baird1995residual,stadie2015incentivizing,ormoneit2002kernel}. The use of such techniques achieves abstraction of a certain form - states that share some number of state variables receive similar signal from individual learning instances, thus generalizing knowledge far beyond an individual state. While some theoretical work has been done in this area~\cite{schoknecht2002optimality,thrun1993issues,parr2008analysis}, such analysis involves highly constraining assumptions (such as linearity or smoothness of the function class). Given that the goal of this work is to characterize effective abstractions by evaluating their relative satisfaction of each of our three desiderata, we stipulate that such analysis will prove illusive for these approaches.
+The use of function approximators for estimating the value function, model, or policy have seen extraordinary success in a variety of domains with large state spaces~\cite{mnih2015human,sutton1999policy,baird1995residual,stadie2015incentivizing,ormoneit2002kernel}. The use of such techniques achieves abstraction of a certain form - states that share characteristics receive similar signal from individual learning instances, thus generalizing knowledge far beyond an individual state, also achieving a compressed representation. While some theoretical work has been done in this area~\cite{schoknecht2002optimality,thrun1993issues,parr2008analysis}, such analysis involves highly constraining assumptions (such as linearity or smoothness of the function class). Given the sorts of assumptions required, we stipulate that general analysis regarding our three desiderata will prove illusive for these approaches.
 
+% Subsection: Abstraction as State Aggregation
+\subsection{Abstraction as State Aggregation}
 
-% Subsection: Exact Abstraction Framework
-\subsection{Exact Abstraction Framework}
+\citet{li2006towards} developed a unifying framework for state abstraction approaches in \acp{MDP}. In particular, the authors defined five classes of state-aggregation functions, inspired by existing methods for state aggregation in \acp{MDP}. A state-aggregation function maps ground states of a ground MDP, $M_G$, to abstract states of an abstract MDP $M_A$. Their work provides sufficient conditions on a state aggregation function to fully maintain optimality. Consequently, these sufficient conditions satisfy \textsc{Optimality} and potentially\footnote{Degree of compressibility has not been proven, yet.} \textsc{Compressibility} are satisfied. However, the criteria proposed by \cite{li2006towards} are as difficult as solving the ground \ac{MDP} and so this approach does not satisfy \textsc{Efficient-Computability}. 
 
-\citet{li2006towards} developed a framework for exact state abstraction in \acp{MDP}. In particular, the authors defined five classes of state-aggregation functions, inspired by existing methods for state aggregation in \acp{MDP}. We generalize two of these five classes, $\phi_{Q^*}$ and $\phi_{\text{model}}$, to the approximate abstraction case. Our generalizations are equivalent to theirs when exact criteria are used. Additionally, when exact criteria are used our bounds indicate that no value is lost, which is one of core results of \citet{li2006towards}.
+\citet{dean1997model} investigated partitioning an \ac{MDP}'s state space into $\varepsilon$-homogenous blocks, which are defined as clusters of states whose transition model and reward function are within $\varepsilon$ of each other. They develop an algorithm called Interval Value Iteration (IVI) that converges to the correct bounds on a family of abstract MDPs called Bounded \acp{MDP}. Several approaches build on the notion of $\varepsilon$-homogeneity. \citet{even2003approximate} analyzed different distance metrics used in the process of identifying $\varepsilon$-homogenous partitions. \citet{ortner2013adaptive} developed an algorithm for learning partitions in an online setting by taking advantage of the confidence bounds for $\mcT$ and $\mcR$ provided by UCRL~\cite{auer2009near}. \citet{andre2002state} investigated a method for state abstraction in hierarchical reinforcement learning leveraging a programming language called ALISP that promotes the notion of {\it safe} state abstraction. Agents programmed using ALISP can ignore irrelevant parts of the state, achieving abstractions that maintain optimality. \citet{dietterich2000hierarchical} developed MAXQ, a framework for composing tasks into an abstracted hierarchy where state aggregation can be applied. \citet{jong2005state} introduced a method called {\it policy-irrelevance} in which agents identify (online) which state variables may be safely abstracted away in a factored-state \ac{MDP}. For a more complete survey of literature on state aggregation, see \citet{li2006towards}.
+
+\dnote{We'll definitely need to discuss Bai, Srivasta, and Russell's new paper at IJCAI 2016.}
+
+\enote{Add notes about how these relate to desiderata}
+
 
