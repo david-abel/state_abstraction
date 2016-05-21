@@ -21,7 +21,7 @@ Given a state $s \in \mcS_G$ and a state aggregation function, $\phi$,
 \end{equation}
 \edefn
 
-We now define classes of abstraction based on functions of state--action pairs.
+We now define types of abstraction based on functions of state--action pairs.
 \bdefn{$\ep_f$}
 Given a function $f: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}$ and a fixed non-negative $\varepsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state-aggregation function that satisfies the following for any two ground states $s_1$ and $s_2$: 
 \begin{equation}
@@ -44,7 +44,7 @@ We now introduce the main result of the paper.
 
 % Theorem 1
 \begin{thm}
-There exist at least four classes of approximate state-aggregation functions, $\epQ$, $\epM$, $\epB$ and $\epMu$, for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\frac{1}{\varepsilon}$:
+There exist at least four types of approximate state-aggregation functions, $\epQ$, $\epM$, $\epB$ and $\epMu$, for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\frac{1}{\varepsilon}$:
 \begin{equation}
 \forall_{s \in \mathcal{S}_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) \leq poly \left (\frac{1}{\varepsilon} \right).
 \end{equation}
