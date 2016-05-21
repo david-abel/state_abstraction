@@ -23,7 +23,7 @@ Given a state $s \in \mcS_G$ and a state aggregation function, $\phi$,
 
 We now define classes of abstraction based on functions of state--action pairs.
 \bdefn{$\ep_f$}
-Given a function $f: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathcal{R}$ and a fixed non-negative $\varepsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state-aggregation function that satisfies the following for any two ground states $s_1$ and $s_2$: 
+Given a function $f: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}$ and a fixed non-negative $\varepsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state-aggregation function that satisfies the following for any two ground states $s_1$ and $s_2$: 
 \begin{equation}
 \label{eq:phi_f}
 \ep_f(s_1) = \ep_f(s_2) \rightarrow \forall_a \left|f(s_1, a) - f(s_2, a)\right| \leq \varepsilon.
