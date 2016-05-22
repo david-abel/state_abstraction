@@ -12,7 +12,7 @@
 \usepackage{subfigure}
 \usepackage{hyperref}
 \newcommand{\theHalgorithm}{\arabic{algorithm}} % Fixes misbehavior of conflicting packages.
-\usepackage{icml2016/icml2016} 
+\usepackage[accepted] {icml2016/icml2016}
 \usepackage[nolist]{acronym} % Acronym package -- give argument <dua> to suppress acronym usage
 
 %Theorem declarations
@@ -32,7 +32,7 @@
 \end{defn}
 }
 
-\icmltitlerunning{Near Optimal Behavior via Approximate State Abstraction}
+%\icmltitlerunning{Near Optimal Behavior via Approximate State Abstraction}
 
 % --- Notation Commands ---
 \newcommand{\ep}{\widetilde \phi}
@@ -65,20 +65,19 @@
 % Suboptimality Bounds for Approximate State Abstraction
 \icmltitle{Near Optimal Behavior via Approximate State Abstraction}
 
+\begin{center}
+\large{\it To appear at ICML 2016}
+\end{center}
+
 % Paper Meta Info
-\icmlauthor{David Abel}{david_abel@brown.edu}
-\icmladdress{Brown University,
-            115 Waterman Street, Providence, RI 02906}
-\icmlauthor{D. Ellis Hershkowitz}{david_hershkowitz@brown.edu}
-\icmladdress{Brown University,
-            115 Waterman Street, Providence, RI 02906}
-\icmlauthor{Michael L.\ Littman}{michael_littman@brown.edu}
-\icmladdress{Brown University,
-            115 Waterman Street, Providence, RI 02906}
-    
+\icmlauthor{David Abel\dagger}{david\_abel@brown.edu}
+%\icmladdress{Brown University, 115 Waterman Street, Providence, RI 02906}
+\icmlauthor{D. Ellis Hershkowitz\dagger}{david\_hershkowitz@brown.edu}
+%\icmladdress{Brown University, 115 Waterman Street, Providence, RI 02906}
+\icmlauthor{Michael L.\ Littman}{michael\_littman@brown.edu}
+%\icmladdress{Brown University, 115 Waterman Street, Providence, RI 02906}
 \icmlkeywords{Reinforcement Learning, State Aggregation, State Abstraction, Planning, MDP}
-            
-\vskip 0.3in
+\vspace{0.3in}
 ]
 
 %Acronyms -- use \ac for acronym or \acp for plural/capitalization of acronym
@@ -90,13 +89,13 @@
 \end{acronym}
 
 
+
 % ------------------------
 % --- ABSTRACT ---
 % ------------------------
 \begin{abstract}
 \input{abstract.tex}
 \end{abstract}
-
 
 % ---------------------------------------
 % --- SECTION: Introduction ---
