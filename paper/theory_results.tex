@@ -21,9 +21,9 @@ Given a state $s \in \mcS_G$ and a state aggregation function, $\phi$,
 \end{equation}
 \edefn
 
-We now define classes of abstraction based on functions of state--action pairs.
+We now define types of abstraction based on functions of state--action pairs.
 \bdefn{$\ep_f$}
-Given a function $f: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathcal{R}$ and a fixed non-negative $\varepsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state-aggregation function that satisfies the following for any two ground states $s_1$ and $s_2$: 
+Given a function $f: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}$ and a fixed non-negative $\varepsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state-aggregation function that satisfies the following for any two ground states $s_1$ and $s_2$: 
 \begin{equation}
 \label{eq:phi_f}
 \ep_f(s_1) = \ep_f(s_2) \rightarrow \forall_a \left|f(s_1, a) - f(s_2, a)\right| \leq \varepsilon.
@@ -44,7 +44,7 @@ We now introduce the main result of the paper.
 
 % Theorem 1
 \begin{thm}
-There exist at least four classes of approximate state-aggregation functions, $\epQ$, $\epM$, $\epB$ and $\epMu$, for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\frac{1}{\varepsilon}$:
+There exist at least four types of approximate state-aggregation functions, $\epQ$, $\epM$, $\epB$ and $\epMu$, for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\frac{1}{\varepsilon}$:
 \begin{equation}
 \forall_{s \in \mathcal{S}_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) \leq poly \left (\frac{1}{\varepsilon} \right).
 \end{equation}
@@ -275,6 +275,7 @@ Thus, from our base case and induction, we conclude that
 
 Note that as $t \rightarrow \infty$, $\sum_{i=0}^{t}\gamma^i \frac{2\varepsilon}{1-\gamma} \rightarrow \frac{2\varepsilon}{(1-\gamma)^2}$ by the sum of infinite geometric series and $\pi_{A,t}(s) \rightarrow \pi_{GA}$.
 Thus, we conclude Lemma~\ref{lma:Q*}.
+\qed
 %\begin{equation*}
 %\forall_{s_G \in \mathcal{S}_g} V_G(s_G) \leq  V_G^{\pi_{GA}}(s_G) + \frac{2\varepsilon}{(1-\gamma)^2}
 %\end{equation*}
@@ -291,7 +292,7 @@ Now, consider an approximate version of \citet{li2006towards}'s $\phi_{model}$, 
 We let $\epM$ define a type of abstraction that, for fixed $\varepsilon$, satisfies:
 \begin{multline}
 \epM(s_1) = \epM(s_2) \rightarrow \\
-\forall_a \left| \mcR_G(s_1, a) - \mcR_G(s_2, a)\right| \leq \varepsilon\; \wedge\ \\
+\forall_a \left| \mcR_G(s_1, a) - \mcR_G(s_2, a)\right| \leq \varepsilon\; \text{~AND}\ \\
 \forall_{s_A \in \mcS_A} \left|\sum_{{s_G}' \in G(s_A)} \left[\mcT_G(s_1, a, {s_G}') - \mcT_G(s_2, a,{s_G}')\right] \right| \leq \varepsilon.
 \end{multline}
 \edefn
@@ -330,6 +331,8 @@ Since \textsc{QMax} $\leq \frac{\textsc{RMax}}{1-\gamma}$, and we defined $\text
 B \leq \frac{\varepsilon + \gamma(|\mcS_G| - 1) \varepsilon}{1-\gamma}.
 \end{equation*}
 Since the $Q$-values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\varepsilon = B$. Applying Lemma \ref{lma:Q*} yields Lemma \ref{lma:model}.
+\qed
+
 \subsection{Boltzmann over Optimal Q: $\epB$}
 \label{sec:boltz}
 
@@ -374,6 +377,7 @@ It follows that:
 \label{eq:bolt_qs}
 \end{equation}
 Consequently, we can consider $\epB$ as a variation of $\epQ$, where the difference in $Q$-values is bounded by $\varepsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\varepsilon + k \right)$. Lemma~\ref{lma:bolt_lemma} then follows directly from Lemma~\ref{lma:Q*}.
+\qed
 
 % Subsection: Multinomial over Optimal Q
 \subsection{Multinomial over Optimal Q: $\epMu$}
@@ -400,6 +404,7 @@ We also assume that the difference in normalizing terms is bounded by some non-n
 \end{lma}
 
 {\bf Proof Sketch of Lemma~\ref{lma:mult_lemma}} The proof follows an identical strategy to that of Lemma~\ref{lma:bolt_lemma}, but without $e^x \approx 1+x$.
+\qed
 
 
 % Subsection: Other Abstractions
