@@ -15,6 +15,7 @@
 \usepackage[accepted] {icml2016/icml2016}
 \usepackage[nolist]{acronym} % Acronym package -- give argument <dua> to suppress acronym usage
 
+
 %Theorem declarations
 \newtheorem{thm}{Theorem}
 \newtheorem{lma}{Lemma}
@@ -36,10 +37,10 @@
 
 % --- Notation Commands ---
 \newcommand{\ep}{\widetilde \phi}
-\newcommand{\epQ}{\ep_{Q^*}}
-\newcommand{\epB}{\ep_{\text{bolt}}}
-\newcommand{\epMu}{\ep_{\text{mult}}}
-\newcommand{\epM}{\ep_{\text{model}}}
+\newcommand{\epQ}{\ep_{Q^*,\varepsilon}}
+\newcommand{\epB}{\ep_{\text{bolt},\varepsilon}}
+\newcommand{\epMu}{\ep_{\text{mult},\varepsilon}}
+\newcommand{\epM}{\ep_{\text{model},\varepsilon}}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \newcommand{\mc}[1]{\mathcal{#1}}
@@ -48,7 +49,7 @@
 \newcommand{\mcR}{\mathcal{R}}
 \newcommand{\mcA}{\mathcal{A}}
 \newcommand{\pM}{\phi_{\text{model}}}
-
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
 
 % --- Note Commands ---
 \usepackage{color}
@@ -65,20 +66,17 @@
 % Suboptimality Bounds for Approximate State Abstraction
 \icmltitle{Near Optimal Behavior via Approximate State Abstraction}
 
-\begin{center}
-\large{\it To appear at ICML 2016}
-\end{center}
-
 % Paper Meta Info
-\icmlauthor{David Abel\dagger}{david\_abel@brown.edu}
+\icmlauthor{David Abel$^\dagger$}{david\_abel@brown.edu}
 %\icmladdress{Brown University, 115 Waterman Street, Providence, RI 02906}
-\icmlauthor{D. Ellis Hershkowitz\dagger}{david\_hershkowitz@brown.edu}
+\icmlauthor{D. Ellis Hershkowitz$^\dagger$}{david\_hershkowitz@brown.edu}
 %\icmladdress{Brown University, 115 Waterman Street, Providence, RI 02906}
 \icmlauthor{Michael L.\ Littman}{michael\_littman@brown.edu}
-%\icmladdress{Brown University, 115 Waterman Street, Providence, RI 02906}
+\icmladdress{Brown University, 115 Waterman Street, Providence, RI 02906}
 \icmlkeywords{Reinforcement Learning, State Aggregation, State Abstraction, Planning, MDP}
 \vspace{0.3in}
 ]
+
 
 %Acronyms -- use \ac for acronym or \acp for plural/capitalization of acronym
 \begin{acronym}

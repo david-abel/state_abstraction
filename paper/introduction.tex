@@ -9,6 +9,9 @@ Solving for optimal behavior in \acp{MDP} in a planning setting is known to be P
 % Existing work on state abstraction.
 Thus, a key research agenda for planning and \ac{RL} is leveraging abstraction to reduce large state spaces~\cite{andre2002state,jong2005state,dietterich2000hierarchical,Bean2011}. This agenda has given rise to methods that reduce \textit{ground} \acp{MDP} with large state spaces to \textit{abstract} MDPs with smaller state spaces by aggregating states according to some notion of equality or similarity. In the context of \acp{MDP}, we understand exact abstractions as those that aggregate states with equal values of particular quantities, for example, optimal $Q$-values. Existing work has characterized how exact abstractions can fully maintain optimality in \acp{MDP}~\cite{li2006towards,dean1997modelmin}. 
 
+\footnotetext[2]{The first two authors contributed equally.}
+
+
 % Thesis: Approximate abstraction for three reasons.
 The thesis of this work is that performing approximate abstraction in \acp{MDP} by relaxing the state-aggregation criteria from equality of quantities to $\varepsilon$-closeness maintains bounded error in the resulting behavior while offering three benefits. First, approximate abstractions employ the sort of knowledge that we expect a planning or learning algorithm to compute without fully solving the \ac{MDP}. In contrast, exact abstractions often require solving for optimal behavior, thereby defeating the purpose of abstraction. Second, because of their relaxed criteria, approximate abstractions can achieve greater degrees of compression than exact abstractions. This difference is particularly important in environments where no two states are identical. Third, because the state-aggregation criteria are relaxed to near equality, approximate abstractions are able to tune the aggressiveness of abstraction by adjusting what they consider sufficiently similar states. 
 
