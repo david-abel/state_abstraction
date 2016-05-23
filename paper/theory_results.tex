@@ -22,15 +22,15 @@ Given a state $s \in \mcS_G$ and a state aggregation function, $\phi$,
 \edefn
 
 We now define types of abstraction based on functions of state--action pairs.
-\bdefn{$\ep_f$}
-Given a function $f: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}$ and a fixed non-negative $\varepsilon \in \mathbb{R}$, we define $\ep_f$ as a type of approximate state-aggregation function that satisfies the following for any two ground states $s_1$ and $s_2$: 
+\bdefn{$\ep_{f,\varepsilon}$}
+Given a function $f: \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}$ and a fixed non-negative $\varepsilon \in \mathbb{R}$, we define $\ep_{f,\varepsilon}$ as a type of approximate state-aggregation function that satisfies the following for any two ground states $s_1$ and $s_2$: 
 \begin{equation}
 \label{eq:phi_f}
-\ep_f(s_1) = \ep_f(s_2) \rightarrow \forall_a \left|f(s_1, a) - f(s_2, a)\right| \leq \varepsilon.
+\ep_{f,\varepsilon}(s_1) = \ep_{f,\varepsilon}(s_2) \rightarrow \forall_a \left|f(s_1, a) - f(s_2, a)\right| \leq \varepsilon.
 \end{equation}
 \edefn
 
-That is, when $\ep_f$ aggregates states, all aggregated states have values of $f$ within $\varepsilon$ of each other for all actions.
+That is, when $\ep_{f,\varepsilon}$ aggregates states, all aggregated states have values of $f$ within $\varepsilon$ of each other for all actions.
 
 \bdefn{$Q_G$, $V_G$}
 Let $Q_G = Q^{\pi_G^*} : \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R} $ and $V_G = V^{\pi_G^*}: \mathcal{S}_G \rightarrow \mathbb{R} $ denote the optimal Q and optimal value functions in the ground \ac{MDP}.
@@ -44,14 +44,16 @@ We now introduce the main result of the paper.
 
 % Theorem 1
 \begin{thm}
-There exist at least four types of approximate state-aggregation functions, $\epQ$, $\epM$, $\epB$ and $\epMu$, for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in $\frac{1}{\varepsilon}$:
+There exist at least four types of approximate state-aggregation functions, $\epQ$, $\epM$, $\epB$ and $\epMu$, for which the optimal policy in the abstract \ac{MDP}, applied to the ground \ac{MDP}, has suboptimality bounded polynomially in ${\varepsilon}$:
 \begin{equation}
-\forall_{s \in \mathcal{S}_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) \leq poly \left (\frac{1}{\varepsilon} \right).
+\forall_{s \in \mathcal{S}_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) \leq poly \left ({\varepsilon} \right).
 \end{equation}
 \end{thm}
 
+We prove this theorem in the following sections by proving bounds on the error of each individual approximate state-aggregation function type.
+
 % Subsection: Optimal Q Function
-\subsection{Optimal Q Function: $\ep_{Q^*}$}
+\subsection{Optimal Q Function: $\ep_{Q^*,\varepsilon}$}
 \label{sec:Q*}
 
 % Q* Lemma -- lemma 1
@@ -60,14 +62,14 @@ We consider an approximate version of \citet{li2006towards}'s $\phi_Q^*$,. In ou
 \bdefn{$\epQ$}
 An approximate $Q$ function has the same form as Equation~\ref{eq:phi_f}:
 \begin{equation}
-\ep_{Q^*}(s_1) = \ep_{Q^*}(s_2) \rightarrow \forall_a \left|Q_G^*(s_1, a) - Q_G^*(s_2, a)\right| \leq \varepsilon.
+\ep_{Q^*,\varepsilon}(s_1) = \ep_{Q^*,\varepsilon}(s_2) \rightarrow \forall_a \left|Q_G^*(s_1, a) - Q_G^*(s_2, a)\right| \leq \varepsilon.
 \end{equation}
 \edefn
 
 % Q^* Lemma
 \begin{lma}
 \label{lma:Q*}
-When $\ep_{Q^*}$ is used to create the abstract state space $\mcS_A$:
+When $\ep_{Q^*,\varepsilon}$ is used to create the abstract state space $\mcS_A$:
 \begin{equation}
 \forall_{s \in \mcS_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) \leq \frac{2\varepsilon}{(1-\gamma)^2}.
 \end{equation}
@@ -284,7 +286,7 @@ Thus, we conclude Lemma~\ref{lma:Q*}.
 %\end{equation*}
 
 % Subsection: Model Similarity -- lemma 2
-\subsection{Model Similarity: $\ep_{model}$}
+\subsection{Model Similarity: $\ep_{model,\varepsilon}$}
 \label{sec:model}
 
 Now, consider an approximate version of \citet{li2006towards}'s $\phi_{model}$, where states are aggregated together when their rewards and transitions are within $\varepsilon$.
@@ -300,7 +302,7 @@ We let $\epM$ define a type of abstraction that, for fixed $\varepsilon$, satisf
 %Model Lemma
 \begin{lma}
 \label{lma:model}
-When $\mcS_A$ is created using a function of the $\ep_{model}$ type:
+When $\mcS_A$ is created using a function of the $\ep_{model,\varepsilon}$ type:
 \begin{equation}
 \forall_{s \in \mcS_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) \leq \frac{2\varepsilon + 2\gamma((|\mcS_G|-1)\varepsilon)}{(1-\gamma)^3}.
 \end{equation}
@@ -364,20 +366,53 @@ We use the approximation for $e^x$, with $\delta$ error:
  e^x = 1 + x + \delta  \approx 1 + x.
 \label{eq:e_to_x_approx}
 \end{equation}
+We let $\delta_1$ denote the error in approximating $e^{Q_G(s_1,a)}$, and $\delta_2$ denote the error in approximating $e^{Q_G(s_2,a)}$.
 
 {\bf Proof Sketch of Lemma~\ref{lma:bolt_lemma}:}
 
 By the approximation in Equation~\ref{eq:e_to_x_approx} and the assumption in Equation~\ref{eq:bolt_denom}:
 \begin{align*}
 \left|\frac{1 + Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}} - \frac{1 + Q_G(s_2,a) + \delta_2}{\sum_j e^{Q_G(s_1,a_j)} \pm k\varepsilon}\right| \leq \varepsilon
+\label{eq:bolt_with_approx}
 \end{align*}
-It follows that:
+There are two cases of interest - either the $1 + x + \delta$ approximation is maximal or minimal in Equation~\ref{eq:bolt_with_approx}. That is, we either have $\sum_j e^{Q_G(s_1,a_j)} + k\varepsilon$, or $\sum_j e^{Q_G(s_1,a_j)} - k\varepsilon$.
+
+First suppose the former. It follows by algebra that:
+\begin{equation}
+-\varepsilon \leq \frac{1 + Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}} - \frac{1 + Q_G(s_2,a) + \delta_2}{\sum_j e^{Q_G(s_1,a_j)} + k\varepsilon} \leq \varepsilon
+\end{equation}
+
+By algebra, we see that:
+\begin{multline*}
+-\varepsilon \left(k\varepsilon + \sum_j e^{Q_G(s_1,a_j)}\right) - \delta_1 + \delta_2 \leq \\
+k\varepsilon\left(\frac{1+Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}}\right) + Q_G(s_1,a) - Q_G(s_2,a) \leq \\
+\varepsilon \left(k\varepsilon + \sum_j e^{Q_G(s_1,a_j)}\right) - \delta_1 + \delta_2
+\end{multline*}
+
+
+In the minimal case, it follows that:
+\begin{equation}
+-\varepsilon \leq \frac{1 + Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}} - \frac{1 + Q_G(s_2,a) + \delta_2}{\sum_j e^{Q_G(s_1,a_j)} - k\varepsilon} \leq \varepsilon
+\end{equation}
+
+By similar algebra to the maximal case:
+\begin{multline*}
+-\varepsilon \left(-k\varepsilon + \sum_j e^{Q_G(s_1,a_j)}\right) - \delta_1 + \delta_2 \leq \\
+-k\varepsilon\left(\frac{1+Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}}\right) + Q_G(s_1,a) - Q_G(s_2,a) \leq \\
+\varepsilon \left(k\varepsilon + \sum_j e^{Q_G(s_1,a_j)}\right) - \delta_1 + \delta_2
+\end{multline*}
+
+From both cases, it follows that:
 \begin{equation}
 \left|Q_G(s_1,a) - Q_G(s_2,a)\right| \leq \varepsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\varepsilon + k \right).
 \label{eq:bolt_qs}
 \end{equation}
 Consequently, we can consider $\epB$ as a variation of $\epQ$, where the difference in $Q$-values is bounded by $\varepsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\varepsilon + k \right)$. Lemma~\ref{lma:bolt_lemma} then follows directly from Lemma~\ref{lma:Q*}.
 \qed
+
+
+
+
 
 % Subsection: Multinomial over Optimal Q
 \subsection{Multinomial over Optimal Q: $\epMu$}
