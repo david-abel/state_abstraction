@@ -133,7 +133,7 @@ def	plotWithConfidenceIntervals(xData, allYData, yAxisLabel, taskName, confidenc
 				means.append(mean)
 				numTrials.append(numTrial)
 			maxY = max(maxY, max(means))
-			plt.errorbar(xData, means, yerr=errors, label=legendInfo)
+			plt.errorbar(xData, means, yerr=errors, label=legendInfo, marker='x', markersize=15)
 			if (annotateWithTrialNumber):
 				#Add annotation of # trials
 				for (i, x), y in zip(enumerate(xData), means):
