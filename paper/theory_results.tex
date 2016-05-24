@@ -88,95 +88,98 @@ Optimal $Q$-values in the abstract \ac{MDP} closely resemble optimal $Q$-values 
 \end{equation}
 \end{clm}
 
-Consider a temporally heterogeneous \ac{MDP}, $M^T = \langle \mathcal{S}_T, \mathcal{A}_G, \mathcal{R}_T, \mathcal{T}_T, \gamma \rangle$, parameterized by integer $T$, such that for the first $T$ time steps the reward function, transition dynamics and state space are those of the abstract MDP, $M_A$, and after $T$ time steps the reward function, transition dynamics and state spaces are those of $M_G$. Thus,
+Consider a non-Markovian decision process of the same form as an \ac{MDP}, $M^T = \langle \mathcal{S}_T, \mathcal{A}_G, \mathcal{R}_T, \mathcal{T}_T, \gamma \rangle$, parameterized by integer $T$, such that for the first $T$ time steps the reward function, transition dynamics and state space are those of the abstract MDP, $M_A$, and after $T$ time steps the reward function, transition dynamics and state spaces are those of $M_G$. Thus,
 \begin{align*}
 \mathcal{S}_T &= \begin{cases}
-\mathcal{S}_G,& \text{if } T \leq 0, \\
+\mathcal{S}_G,& \text{if } T = 0, \\
 \mathcal{S}_A,& \text{o/w}
 \end{cases}\\
 %--
 \mathcal{R}_T(s,a) &= \begin{cases}
-\mathcal{R}_G(s,a),& \text{if } T \leq 0, \\
+\mathcal{R}_G(s,a),& \text{if } T = 0, \\
 \mathcal{R}_A(s, a),& \text{o/w}
 \end{cases}\\
 %--
 \mcT_T(s,a,s') &= \begin{cases}
-\mcT_G(s,a,s'),& \text{if }T \leq 0, \\
+\mcT_G(s,a,s'),& \text{if }T = 0, \\
 \underset{{g \in G(s)}}{\sum}\left[\omega(g)\mcT_G(g, a, s')\right],& \text{if } T = 1, \\
 \mcT_A(s,a,s'),& \text{o/w}
 \end{cases}\\
 \end{align*}
 
-The $Q$-value of a state $s$ in $M^T$ for action $a$ is:
+The $Q$-value of state $s$ in $\mathcal{S}_T$ for action $a$ is:
 \begin{equation}
 Q_T(s, a) = 
 \begin{cases}
 	   Q_G(s, a), &  \text{if } T=0,\\
 	   \underset{g \in G(s)}{\sum} \left[ \omega(g)Q_G(g,a) \right], & \text{if } T = 1,\\
-	   \mathcal{R}_A(\epQ(s),a) + \sigma_{T-1}(s,a), &\text{o/w},
+	   \mathcal{R}_A(s,a) + \sigma_{T-1}(s,a), &\text{o/w},
 \end{cases}
 \end{equation}
 where
 \begin{equation*}
-\sigma_{T-1}(s,a) = \gamma \underset{{s_A}' \in \mathcal{S}_A}{\sum} \mathcal{T}_A(\epQ(s),a,{s_A}') \max_{a'} Q_{T-1}({s_A}', a').
+\sigma_{T-1}(s,a) = \gamma \underset{{s_A}' \in \mathcal{S}_A}{\sum} \mathcal{T}_A(s,a,{s_A}') \max_{a'} Q_{T-1}({s_A}', a').
 \end{equation*}
 
 We proceed by induction on $T$ to show that:
 \begin{equation}
 \label{eq:clm1Induct}
-\forall_{T, s_G \in \mathcal{S}_G, a} |Q_G(s_G, a) - Q_T(s_G, a)| \leq \sum_{t=0}^{T-1} \varepsilon \gamma^{t},
+\forall_{T, s_G \in \mathcal{S}_G, a} |Q_T(s_T, a) - Q_G(s_G, a) | \leq \sum_{t=0}^{T-1} \varepsilon \gamma^{t},
 \end{equation}
+where $s_T = s_G$ if $T=0$ and $s_T = \epQ(s_G)$ otherwise.
 
 % Base Case t=0
 \textit{Base Case: $T = 0$}
 
-When $T = 0$, $Q_T = Q_G$, so the result trivially follows.
+When $T = 0$, $Q_T = Q_G$, so this base case trivially follows.
 
 % Base Case t=1
-\textit{Base Case: $T = 1$}
+\textit{Base Case: $T = 1$}\\
+By definition of $Q_T$, we have that $Q_1$ is
 \begin{align*}
 &Q_1(s,a) = \underset{g \in G(s)}{\sum} \left[ \omega(g)Q_G(g,a) \right].
 \end{align*}
 Since all co-aggregated states have $Q$-values within $\varepsilon$ of one another and $\omega(g)$ induces a convex combination,
 \begin{align*}
-&Q_1(s,a) \leq \varepsilon \gamma^t + \varepsilon + Q_G(s_G, a).
+&Q_1(s_T,a) \leq \varepsilon \gamma^t + \varepsilon + Q_G(s_G, a).
 \end{align*}
 Thus,
 \begin{equation}
-\left| Q_{1}(s_A, a) - Q_G(s_G,a) \right| \leq \sum_{t=0}^{1}\varepsilon \gamma^t.
+\left| Q_{1}(s_T, a) - Q_G(s_G,a) \right| \leq \sum_{t=0}^{1}\varepsilon \gamma^t.
 \end{equation}
+%
 % Inductive Case
 \textit{Inductive Case: $T > 1$}
 
 We assume as our inductive hypothesis that:
 \begin{equation*}
-\forall_{s_G \in \mathcal{S}_G, a} |Q_G(s_G, a) - Q_{T-1}(\epQ(s_G), a)| \leq \sum_{t=0}^{T-2} \varepsilon \gamma^t.
+\forall_{s_G \in \mathcal{S}_G, a} |Q_{T-1}(s_T, a) - Q_G(s_G, a) | \leq \sum_{t=0}^{T-2} \varepsilon \gamma^t.
 \end{equation*}
 
 Consider a fixed but arbitrary state, $s_G \in \mathcal{S}_G$, and fixed but arbitrary action $a$.
-We denote $\epQ(s_G)$ as $s_A$. 
-By definition of $Q_{T}(s_A, a)$, $\mathcal{R}_A$, $\mathcal{T}_A$:
+Since $T > 1$, $s_T$ is $\epQ(s_G)$.
+By definition of $Q_{T}(s_T, a)$, $\mathcal{R}_A$, $\mathcal{T}_A$:
 \begin{multline*}
-Q_T(s_A, a) = \sum_{g \in G(s_A)}\omega(g)\ \times \\ 
+Q_T(s_T, a) = \sum_{g \in G(s_T)}\omega(g)\ \times \\ 
  \left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'} Q_{T-1}(g', a')      \right].
 \end{multline*}
 Applying our inductive hypothesis yields:
 \begin{multline*}
-Q_T(s_A, a) \leq \sum_{g \in G(s_A)}\omega(g) \times \biggl[ R_G(g,a)\ + \\ \gamma \sum_{g' \in \mathcal{S}_G} T_G(g,a,g') \max_{a'}(Q_G(g', a') + \sum_{t=0}^{T-2} \varepsilon \gamma^t) \biggr].
+Q_T(s_T, a) \leq \sum_{g \in G(s_T)}\omega(g) \times \biggl[ R_G(g,a)\ + \\ \gamma \sum_{g' \in \mathcal{S}_G} T_G(g,a,g') \max_{a'}(Q_G(g', a') + \sum_{t=0}^{T-2} \varepsilon \gamma^t) \biggr].
 \end{multline*}
 %&\leq \gamma\sum_{t=0}^{T-2} \varepsilon \gamma^t + \sum_{g \in X(s_A)}\omega(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'}Q_0      \right]\\
 Then,
 \begin{equation*}
-Q_T(s_A, a) \leq \gamma\sum_{t=0}^{T-2} \varepsilon \gamma^t + \sum_{g \in G(s_A)}\left[ \omega(g)\ Q_G(g,a)\right].
+Q_T(s_T, a) \leq \gamma\sum_{t=0}^{T-2} \varepsilon \gamma^t + \sum_{g \in G(s_T)}\left[ \omega(g)\ Q_G(g,a)\right].
 \end{equation*}
 since all aggregated states have $Q$-values within $\varepsilon$ of one another:
 \begin{align*}
-Q_T(s_A, a) \leq \gamma\sum_{t=0}^{T-2} \varepsilon \gamma^t + \varepsilon + Q_G(s_G, a). \\
-\therefore\ \left| Q_{T}(s_A, a) - Q_G(s_G,a) \right| \leq \gamma\sum_{t=0}^{T-1}\varepsilon \gamma^t
+Q_T(s_T, a) \leq \gamma\sum_{t=0}^{T-2} \varepsilon \gamma^t + \varepsilon + Q_G(s_G, a). \\
+\therefore\ \left| Q_{T}(s_T, a) - Q_G(s_G,a) \right| \leq \gamma\sum_{t=0}^{T-1}\varepsilon \gamma^t
 \end{align*}
-Since $s_G$ and $s_A$ are arbitrary, we conclude Equation \ref{eq:clm1Induct}.
+Since $s_G$ is arbitrary, we conclude Equation \ref{eq:clm1Induct}.
 
-As $T \rightarrow \infty$, $\sum_{t=0}^{T-1} \varepsilon \gamma^t \rightarrow \frac{\varepsilon}{1-\gamma}$ by the sum of infinite geometric series and $Q_T \rightarrow Q_A$, Equation \ref{eq:clm1Induct} allows us to conclude Claim \ref{clm:closeQs}.
+As $T \rightarrow \infty$, $\sum_{t=0}^{T-1} \varepsilon \gamma^t \rightarrow \frac{\varepsilon}{1-\gamma}$ by the sum of infinite geometric series and $Q_T \rightarrow Q_A$. Thus, Equation \ref{eq:clm1Induct} allows us to conclude Claim \ref{clm:closeQs}.
 
 %Claim 2
 \begin{clm}
