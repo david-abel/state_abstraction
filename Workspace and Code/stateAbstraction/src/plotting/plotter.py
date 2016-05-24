@@ -147,16 +147,18 @@ def	plotWithConfidenceIntervals(xData, allYData, yAxisLabel, taskName, confidenc
 	plt.ylim([0,maxY *1.2])
 
 	#Set font
-	font = {'family' : 'normal',
-	        'size'   : 15}
+	fontMed = {'family' : 'normal',
+	        'size'   : 25}
+	fontBig = {'family' : 'normal',
+	        'size'   : 30}
 
-	matplotlib.rc('font', **font)
-	plt.xlabel(xAxisLabel)
-	plt.ylabel(yAxisLabel)
-	plt.title(taskName[0].upper() + taskName[1:] + ': ' + xAxisLabel + ' vs. ' + yAxisLabel)
+	# matplotlib.rc('font', **font)
+	plt.xlabel(xAxisLabel, **fontMed)
+	plt.ylabel(yAxisLabel, **fontMed)
+	plt.title(xAxisLabel + ' vs. ' + yAxisLabel, **fontBig)
 
 	plt.grid(True)
-	plt.legend()
+	plt.legend(prop={'size':22})
 	plt.savefig(taskName.lower() + '/' + xAxisLabel.lower() + '_vs_' + yAxisLabel.lower().replace(" ", "_") + '.pdf', format="pdf")
 	plt.clf()
 	# plt.show()
@@ -220,7 +222,7 @@ def makePlot(taskName):
 
 	# Plot with CIs.
 	plotWithConfidenceIntervals(numAbstractStatesEpsilons, [numAbstractStates, numGroundStates],"Num Abstract States", taskName, yDataNames=["Num. Abstract States", "Num. Ground States"])
-	plotWithConfidenceIntervals(abstratStateValEpsilons, [abstractStateVals, groundStateVals, randPolVal], "Value of Abstract Policy Init Ground State", taskName, yDataNames=["Val. Abstract Policy", "Val. Optimal Policy", "Val. Random Policy"])
+	plotWithConfidenceIntervals(abstratStateValEpsilons, [abstractStateVals, groundStateVals, randPolVal], "Value of Abstract Policy", taskName, yDataNames=["Val. Abstract Policy", "Val. Optimal Policy", "Val. Random Policy"])
 
 	#Old plotting without CIs
 	# plot(epsilons, [numStates, numGroundStatesYData], "Num Abstract States", taskName, yDataNames=["Num. Abstract States", "Num. Ground States"])
