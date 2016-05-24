@@ -63,22 +63,19 @@ Taxi has long been studied by the hierarchical RL literature~\cite{dietterich200
 % Subsection: Minefield.
 %\subsection{Minefield}
 Minefield is a test problem we are introducing that uses the Grid World dynamics of \citet{russell1995modern} with slip probability of $x$. The reward function is such that moving up in the top row of the grid receives $1.0$ reward; all other transitions receive $0.2$ reward, except for transitions to a random set of $\kappa$ states (which may include the top row) that receive $0$ reward. (These are the states with ``mines'' in them.) We set $N=10, M=4, \varepsilon=0.5, \kappa = 5, x = 0.01$. We depict the original Minefield and an abstract Minefield in Figure \ref{fig:minefield-vis}.
-
 % Minefield Compression Visuals
 \begin{figure}
 \centering
 \subfigure[Ground Minefield]{
-\includegraphics[width=0.34\columnwidth]{figures/ground_minefield.png}}
+\includegraphics[width=0.3\columnwidth]{figures/ground_minefield.png}}
 \subfigure[Abstract Minefield]{
 \includegraphics[width=0.34\columnwidth]{figures/abs_minefield.png}}
 \caption{Comparison of ground Minefield \ac{MDP} and abstract \ac{MDP}, under a $\epQ$ abstraction with $
 \varepsilon=0.5$}
 \label{fig:minefield-vis}
 \end{figure} 
-
 % Subsection: Random.
 %\subsection{Random}
-
 In the Random \ac{MDP} domain we consider, there are $100$ states and $3$ actions. For each state, each action transitions to one of two randomly selected states with probability $0.5$.
 
 %The Random MDP and its compression are visualized in Figure~\ref{fig:minefield-visual}.

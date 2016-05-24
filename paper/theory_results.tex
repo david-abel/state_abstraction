@@ -58,9 +58,9 @@ We prove this theorem in the following sections by proving bounds on the error o
 
 % Q* Lemma -- lemma 1
 We consider an approximate version of \citet{li2006towards}'s $\phi_Q^*$,. In our abstraction, states are aggregated together when their optimal $Q$-values are within $\varepsilon$.
-
 \bdefn{$\epQ$}
 An approximate $Q$ function has the same form as Equation~\ref{eq:phi_f}:
+\vspace{-1mm}%vspace for more space
 \begin{equation}
 \ep_{Q^*,\varepsilon}(s_1) = \ep_{Q^*,\varepsilon}(s_2) \rightarrow \forall_a \left|Q_G^*(s_1, a) - Q_G^*(s_2, a)\right| \leq \varepsilon.
 \end{equation}
@@ -69,15 +69,17 @@ An approximate $Q$ function has the same form as Equation~\ref{eq:phi_f}:
 % Q^* Lemma
 \begin{lma}
 \label{lma:Q*}
-When $\ep_{Q^*,\varepsilon}$ is used to create the abstract state space $\mcS_A$:
+When a $\ep_{Q^*,\varepsilon}$ type creates $\mcS_A$:
+\vspace{-2mm}%vspace for more space
 \begin{equation}
 \forall_{s \in \mcS_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) \leq \frac{2\varepsilon}{(1-\gamma)^2}.
 \end{equation}
+\vspace{-4mm}%vspace for more space
 \end{lma}
-
 % Proof
 \textbf{Proof of Lemma~\ref{lma:Q*}:}
 We first demonstrate that $Q$-values in the abstract \ac{MDP} are close to $Q$-values in the ground \ac{MDP} (Claim \ref{clm:closeQs}). We next leverage Claim \ref{clm:closeQs} to demonstrate that the optimal action in the abstract \ac{MDP} is nearly optimal in the ground \ac{MDP}  (Claim \ref{clm:optAbsActionNearOptGround}). Lastly, we use Claim \ref{clm:optAbsActionNearOptGround} to conclude Lemma \ref{lma:Q*} (Claim \ref{clm:lmaFromClm}).
+
 % Claim 1:
 \begin{clm}
 \label{clm:closeQs}
@@ -94,19 +96,20 @@ Consider a non-Markovian decision process of the same form as an \ac{MDP}, $M^T 
 \mathcal{S}_G,& \text{if } T = 0, \\
 \mathcal{S}_A,& \text{o/w}
 \end{cases}\\
-%--
+\end{align*}
+\begin{align*}
 \mathcal{R}_T(s,a) &= \begin{cases}
 \mathcal{R}_G(s,a),& \text{if } T = 0, \\
 \mathcal{R}_A(s, a),& \text{o/w}
 \end{cases}\\
-%--
+\end{align*}
+\begin{align*}
 \mcT_T(s,a,s') &= \begin{cases}
 \mcT_G(s,a,s'),& \text{if }T = 0, \\
 \underset{{g \in G(s)}}{\sum}\left[\omega(g)\mcT_G(g, a, s')\right],& \text{if } T = 1, \\
 \mcT_A(s,a,s'),& \text{o/w}
 \end{cases}\\
 \end{align*}
-
 The $Q$-value of state $s$ in $\mathcal{S}_T$ for action $a$ is:
 \begin{equation}
 Q_T(s, a) = 
@@ -120,7 +123,6 @@ where
 \begin{equation*}
 \sigma_{T-1}(s,a) = \gamma \underset{{s_A}' \in \mathcal{S}_A}{\sum} \mathcal{T}_A(s,a,{s_A}') \max_{a'} Q_{T-1}({s_A}', a').
 \end{equation*}
-
 We proceed by induction on $T$ to show that:
 \begin{equation}
 \label{eq:clm1Induct}
@@ -143,9 +145,8 @@ Since all co-aggregated states have $Q$-values within $\varepsilon$ of one anoth
 \begin{align*}
 &Q_1(s_T,a) \leq \varepsilon \gamma^t + \varepsilon + Q_G(s_G, a).
 \end{align*}
-Thus,
 \begin{equation}
-\left| Q_{1}(s_T, a) - Q_G(s_G,a) \right| \leq \sum_{t=0}^{1}\varepsilon \gamma^t.
+\therefore \left| Q_{1}(s_T, a) - Q_G(s_G,a) \right| \leq \sum_{t=0}^{1}\varepsilon \gamma^t.
 \end{equation}
 %
 % Inductive Case
@@ -168,18 +169,16 @@ Applying our inductive hypothesis yields:
 Q_T(s_T, a) \leq \sum_{g \in G(s_T)}\omega(g) \times \biggl[ R_G(g,a)\ + \\ \gamma \sum_{g' \in \mathcal{S}_G} T_G(g,a,g') \max_{a'}(Q_G(g', a') + \sum_{t=0}^{T-2} \varepsilon \gamma^t) \biggr].
 \end{multline*}
 %&\leq \gamma\sum_{t=0}^{T-2} \varepsilon \gamma^t + \sum_{g \in X(s_A)}\omega(g)\left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'}Q_0      \right]\\
-Then,
-\begin{equation*}
-Q_T(s_T, a) \leq \gamma\sum_{t=0}^{T-2} \varepsilon \gamma^t + \sum_{g \in G(s_T)}\left[ \omega(g)\ Q_G(g,a)\right].
-\end{equation*}
-since all aggregated states have $Q$-values within $\varepsilon$ of one another:
+%Then,
+%\begin{equation*}
+%Q_T(s_T, a) \leq \gamma\sum_{t=0}^{T-2} \varepsilon \gamma^t + \sum_{g \in G(s_T)}\left[ \omega(g)\ Q_G(g,a)\right].
+%\end{equation*}
+Since all aggregated states have $Q$-values within $\varepsilon$ of one another:
 \begin{align*}
 Q_T(s_T, a) \leq \gamma\sum_{t=0}^{T-2} \varepsilon \gamma^t + \varepsilon + Q_G(s_G, a). \\
-\therefore\ \left| Q_{T}(s_T, a) - Q_G(s_G,a) \right| \leq \gamma\sum_{t=0}^{T-1}\varepsilon \gamma^t
+%\therefore\ \left| Q_{T}(s_T, a) - Q_G(s_G,a) \right| \leq \gamma\sum_{t=0}^{T-1}\varepsilon \gamma^t
 \end{align*}
-Since $s_G$ is arbitrary, we conclude Equation \ref{eq:clm1Induct}.
-
-As $T \rightarrow \infty$, $\sum_{t=0}^{T-1} \varepsilon \gamma^t \rightarrow \frac{\varepsilon}{1-\gamma}$ by the sum of infinite geometric series and $Q_T \rightarrow Q_A$. Thus, Equation \ref{eq:clm1Induct} allows us to conclude Claim \ref{clm:closeQs}.
+$s_G$ is arbitrary so we conclude Equation \ref{eq:clm1Induct}. As $T \rightarrow \infty$, $\sum_{t=0}^{T-1} \varepsilon \gamma^t \rightarrow \frac{\varepsilon}{1-\gamma}$ by the sum of infinite geometric series and $Q_T \rightarrow Q_A$. Thus, Equation \ref{eq:clm1Induct} gives Claim \ref{clm:closeQs}.
 
 %Claim 2
 \begin{clm}
@@ -305,7 +304,7 @@ We let $\epM$ define a type of abstraction that, for fixed $\varepsilon$, satisf
 %Model Lemma
 \begin{lma}
 \label{lma:model}
-When $\mcS_A$ is created using a function of the $\ep_{model,\varepsilon}$ type:
+When $\mcS_A$ is created using a $\ep_{model,\varepsilon}$ type:
 \begin{equation}
 \forall_{s \in \mcS_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) \leq \frac{2\varepsilon + 2\gamma((|\mcS_G|-1)\varepsilon)}{(1-\gamma)^3}.
 \end{equation}
@@ -335,7 +334,7 @@ Since \textsc{QMax} $\leq \frac{\textsc{RMax}}{1-\gamma}$, and we defined $\text
 \begin{equation*}
 B \leq \frac{\varepsilon + \gamma(|\mcS_G| - 1) \varepsilon}{1-\gamma}.
 \end{equation*}
-Since the $Q$-values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\epQ$ with $\varepsilon = B$. Applying Lemma \ref{lma:Q*} yields Lemma \ref{lma:model}.
+Since the $Q$-values of ground states grouped under $\epM$ are strictly less than $B$, we can understand $\epM$ as a type of $\ep_{Q^*,B}$. Applying Lemma \ref{lma:Q*} yields Lemma \ref{lma:model}.
 \qed
 
 \subsection{Boltzmann over Optimal Q: $\epB$}
@@ -364,6 +363,7 @@ We also assume that the difference in normalizing terms is bounded by some non-n
 \end{equation}
 \label{lma:bolt_lemma}
 \end{lma}
+\vspace{-3mm}%vspace for more space
 We use the approximation for $e^x$, with $\delta$ error:
 \begin{equation}
  e^x = 1 + x + \delta  \approx 1 + x.
@@ -383,8 +383,7 @@ First suppose the former. It follows by algebra that:
 \begin{equation}
 -\varepsilon \leq \frac{1 + Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}} - \frac{1 + Q_G(s_2,a) + \delta_2}{\sum_j e^{Q_G(s_1,a_j)} + k\varepsilon} \leq \varepsilon
 \end{equation}
-
-By algebra, we see that:
+%By algebra, we see that:
 \begin{multline*}
 -\varepsilon \left(k\varepsilon + \sum_j e^{Q_G(s_1,a_j)}\right) - \delta_1 + \delta_2 \leq \\
 k\varepsilon\left(\frac{1+Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}}\right) + Q_G(s_1,a) - Q_G(s_2,a) \leq \\
@@ -392,29 +391,25 @@ k\varepsilon\left(\frac{1+Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}}\right)
 \end{multline*}
 
 
-In the minimal case, it follows that:
-\begin{equation}
--\varepsilon \leq \frac{1 + Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}} - \frac{1 + Q_G(s_2,a) + \delta_2}{\sum_j e^{Q_G(s_1,a_j)} - k\varepsilon} \leq \varepsilon
-\end{equation}
+%In the minimal case, it follows that:
+%\begin{equation}
+%-\varepsilon \leq \frac{1 + Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}} - \frac{1 + Q_G(s_2,a) + \delta_2}{\sum_j e^{Q_G(s_1,a_j)} - k\varepsilon} \leq \varepsilon
+%\end{equation}
 
-By similar algebra to the maximal case:
-\begin{multline*}
--\varepsilon \left(-k\varepsilon + \sum_j e^{Q_G(s_1,a_j)}\right) - \delta_1 + \delta_2 \leq \\
--k\varepsilon\left(\frac{1+Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}}\right) + Q_G(s_1,a) - Q_G(s_2,a) \leq \\
-\varepsilon \left(k\varepsilon + \sum_j e^{Q_G(s_1,a_j)}\right) - \delta_1 + \delta_2
-\end{multline*}
+%By similar algebra to the maximal case:
+%\begin{multline*}
+%-\varepsilon \left(-k\varepsilon + \sum_j e^{Q_G(s_1,a_j)}\right) - \delta_1 + \delta_2 \leq \\
+%-k\varepsilon\left(\frac{1+Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}}\right) + Q_G(s_1,a) - Q_G(s_2,a) \leq \\
+%\varepsilon \left(k\varepsilon + \sum_j e^{Q_G(s_1,a_j)}\right) - \delta_1 + \delta_2
+%\end{multline*}
 
-From both cases, it follows that:
+A similar equation follows if we suppose the latter and combining these equations gives us:
 \begin{equation}
 \left|Q_G(s_1,a) - Q_G(s_2,a)\right| \leq \varepsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\varepsilon + k \right).
 \label{eq:bolt_qs}
 \end{equation}
-Consequently, we can consider $\epB$ as a variation of $\epQ$, where the difference in $Q$-values is bounded by $\varepsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\varepsilon + k \right)$. Lemma~\ref{lma:bolt_lemma} then follows directly from Lemma~\ref{lma:Q*}.
+Consequently, we can consider $\epB$ as a of the $\ep_{Q^*,B}$ type, where $B = \varepsilon \left(\frac{|\mathcal{A}|}{1-\gamma} + k\varepsilon + k \right)$. Lemma~\ref{lma:bolt_lemma} then follows from Lemma~\ref{lma:Q*}.
 \qed
-
-
-
-
 
 % Subsection: Multinomial over Optimal Q
 \subsection{Multinomial over Optimal Q: $\epMu$}
@@ -439,7 +434,7 @@ We also assume that the difference in normalizing terms is bounded by some non-n
 \end{equation}
 \label{lma:mult_lemma}
 \end{lma}
-
+\vspace{-7mm}%vspace for more space
 {\bf Proof Sketch of Lemma~\ref{lma:mult_lemma}} The proof follows an identical strategy to that of Lemma~\ref{lma:bolt_lemma}, but without $e^x \approx 1+x$.
 \qed
 
