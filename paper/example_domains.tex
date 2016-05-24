@@ -5,7 +5,7 @@ We apply approximate abstraction to four example domains---NChain, Taxi, Minefie
 We provide visuals of both the ground \ac{MDP} and resulting abstract \ac{MDP} for one domain. A grey circle indicates a state and colored arrows indicate transitions. The thickness of the arrow indicates how much reward is associated with that transition. In the ground \acp{MDP}, states are labeled with a number. In the abstract \acp{MDP}, we indicate which ground states were collapsed to each abstract state by labelling the abstract states with their ground states. %(some are visually unwieldy and so were not labelled).
 
 %Description of code base
-Our code base (link redacted for review) provides implementations for abstracting arbitrary \acp{MDP} as well as visualizing and evaluating the resulting abstract \acp{MDP}. We use the graph-visualization library GraphStream~\cite{graphstream} and the planning and \ac{RL} library, BURLAP\footnote{http://burlap.cs.brown.edu/}.
+Our code base\footnote{Available here: \url{github.com/david-abel/state_abstraction}} provides implementations for abstracting arbitrary \acp{MDP} as well as visualizing and evaluating the resulting abstract \acp{MDP}. We use the graph-visualization library GraphStream~\cite{graphstream} and the planning and \ac{RL} library, BURLAP\footnote{http://burlap.cs.brown.edu/}. For all experiments, we set $\gamma$ to $0.95$.
 
 % Subsection: NChain.
 %\subsection{NChain}
