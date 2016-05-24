@@ -374,11 +374,10 @@ We let $\delta_1$ denote the error in approximating $e^{Q_G(s_1,a)}$, and $\delt
 {\bf Proof Sketch of Lemma~\ref{lma:bolt_lemma}:}
 
 By the approximation in Equation~\ref{eq:e_to_x_approx} and the assumption in Equation~\ref{eq:bolt_denom}:
-\begin{align*}
-\left|\frac{1 + Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}} - \frac{1 + Q_G(s_2,a) + \delta_2}{\sum_j e^{Q_G(s_1,a_j)} \pm k\varepsilon}\right| \leq \varepsilon
-\label{eq:bolt_with_approx}
-\end{align*}
-There are two cases of interest - either the $1 + x + \delta$ approximation is maximal or minimal in Equation~\ref{eq:bolt_with_approx}. That is, we either have $\sum_j e^{Q_G(s_1,a_j)} + k\varepsilon$, or $\sum_j e^{Q_G(s_1,a_j)} - k\varepsilon$.
+\begin{align}
+\left|\frac{1 + Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}} - \frac{1 + Q_G(s_2,a) + \delta_2}{\sum_j e^{Q_G(s_1,a_j)} \pm k\varepsilon}\right| \leq \varepsilon \label{eq:bolt_with_approx}
+\end{align}
+Either the $1 + x + \delta$ approximation is maximal or minimal in Equation~\ref{eq:bolt_with_approx}. That is, either $\sum_j e^{Q_G(s_1,a_j)} + k\varepsilon$, or $\sum_j e^{Q_G(s_1,a_j)} - k\varepsilon$.
 
 First suppose the former. It follows by algebra that:
 \begin{equation}
