@@ -62,14 +62,14 @@ We consider an approximate version of \citet{li2006towards}'s $\phi_{Q^*}$. In o
 An approximate $Q$ function abstraction has the same form as Equation~\ref{eq:phi_f}:
 \vspace{-1mm}%vspace for more space
 \begin{equation}
-\ep_{Q^*,\varepsilon}(s_1) = \ep_{Q^*,\varepsilon}(s_2) \rightarrow \forall_a \left|Q_G^*(s_1, a) - Q_G^*(s_2, a)\right| \leq \varepsilon.
+\ep_{Q^*,\varepsilon}(s_1) = \ep_{Q^*,\varepsilon}(s_2) \rightarrow \forall_a \left|Q_G(s_1, a) - Q_G(s_2, a)\right| \leq \varepsilon.
 \end{equation}
 \edefn
 
 % Q^* Lemma
 \begin{lma}
 \label{lma:Q*}
-When a $\ep_{Q^*,\varepsilon}$ type creates $\mcS_A$:
+When a $\ep_{Q^*,\varepsilon}$ type abstraction is used to create the abstract \ac{MDP}:
 \vspace{-2mm}%vspace for more space
 \begin{equation}
 \forall_{s \in \mcS_G} V_G^{\pi_G^*}(s) - V_G^{\pi_{GA}}(s) \leq \frac{2\varepsilon}{(1-\gamma)^2}.
@@ -90,31 +90,31 @@ Optimal $Q$-values in the abstract \ac{MDP} closely resemble optimal $Q$-values 
 \end{equation}
 \end{clm}
 
-Consider a non-Markovian decision process of the same form as an \ac{MDP}, $M^T = \langle \mathcal{S}_T, \mathcal{A}_G, \mathcal{R}_T, \mathcal{T}_T, \gamma \rangle$, parameterized by integer $T$, such that for the first $T$ time steps the reward function, transition dynamics and state space are those of the abstract MDP, $M_A$, and after $T$ time steps the reward function, transition dynamics and state spaces are those of $M_G$. Thus,
+Consider a non-Markovian decision process of the same form as an \ac{MDP}, $M_T = \langle \mathcal{S}_T, \mathcal{A}_G, \mathcal{R}_T, \mathcal{T}_T, \gamma \rangle$, parameterized by integer an $T$, such that for the first $T$ time steps the reward function, transition dynamics and state space are those of the abstract MDP, $M_A$, and after $T$ time steps the reward function, transition dynamics and state spaces are those of $M_G$. Thus,
 \begin{align*}
 \mathcal{S}_T &= \begin{cases}
-\mathcal{S}_G,& \text{if } T = 0, \\
-\mathcal{S}_A,& \text{o/w}
+\mathcal{S}_G& \text{if } T = 0 \\
+\mathcal{S}_A& \text{o/w}
 \end{cases}\\
 \end{align*}
 \begin{align*}
 \mathcal{R}_T(s,a) &= \begin{cases}
-\mathcal{R}_G(s,a),& \text{if } T = 0, \\
-\mathcal{R}_A(s, a),& \text{o/w}
+\mathcal{R}_G(s,a)& \text{if } T = 0\\
+\mathcal{R}_A(s, a)& \text{o/w}
 \end{cases}\\
 \mcT_T(s,a,s') &= \begin{cases}
-\mcT_G(s,a,s'),& \text{if }T = 0, \\
-\underset{{g \in G(s)}}{\sum}\left[\omega(g)\mcT_G(g, a, s')\right],& \text{if } T = 1, \\
-\mcT_A(s,a,s'),& \text{o/w}
+\mcT_G(s,a,s')& \text{if }T = 0\\
+\underset{{g \in G(s)}}{\sum}\left[\mcT_G(g, a, s') \omega(g) \right]& \text{if } T = 1\\
+\mcT_A(s,a,s')& \text{o/w}
 \end{cases}
 \end{align*}
 The $Q$-value of state $s$ in $\mathcal{S}_T$ for action $a$ is:
 \begin{equation}
 Q_T(s, a) = 
 \begin{cases}
-	   Q_G(s, a), &  \text{if } T=0,\\
-	   \underset{g \in G(s)}{\sum} \left[ \omega(g)Q_G(g,a) \right], & \text{if } T = 1,\\
-	   \mathcal{R}_A(s,a) + \sigma_{T-1}(s,a), &\text{o/w},
+	   Q_G(s, a) &  \text{if } T=0\\
+	   \underset{g \in G(s)}{\sum} \left[ Q_G(g,a) \omega(g) \right] & \text{if } T = 1\\
+	   \mathcal{R}_A(s,a) + \sigma_{T-1}(s,a) &\text{o/w}
 \end{cases}
 \end{equation}
 where:
@@ -137,7 +137,7 @@ When $T = 0$, $Q_T = Q_G$, so this base case trivially follows.
 \textit{Base Case: $T = 1$}\\
 By definition of $Q_T$, we have that $Q_1$ is
 \begin{align*}
-&Q_1(s,a) = \underset{g \in G(s)}{\sum} \left[ \omega(g)Q_G(g,a) \right].
+&Q_1(s,a) = \underset{g \in G(s)}{\sum} \left[ Q_G(g,a) \omega(g) \right].
 \end{align*}
 Since all co-aggregated states have $Q$-values within $\varepsilon$ of one another and $\omega(g)$ induces a convex combination,
 \begin{align*}
@@ -160,7 +160,7 @@ Since $T > 1$, $s_T$ is $\epQ(s_G)$.
 By definition of $Q_{T}(s_T, a)$, $\mathcal{R}_A$, $\mathcal{T}_A$:
 \begin{multline*}
 Q_T(s_T, a) = \sum_{g \in G(s_T)}\omega(g)\ \times \\ 
- \left[ R_0(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} T_0(g,a,g') \max_{a'} Q_{T-1}(g', a')      \right].
+ \left[ \mathcal{R}_G(g,a) + \gamma \sum_{g' \in \mathcal{S}_G} \mathcal{T}_G(g,a,g') \max_{a'} Q_{T-1}(g', a')      \right].
 \end{multline*}
 Applying our inductive hypothesis yields:
 \begin{multline*}
@@ -176,7 +176,7 @@ Since all aggregated states have $Q$-values within $\varepsilon$ of one another:
 Q_T(s_T, a) \leq \gamma\sum_{t=0}^{T-2} \varepsilon \gamma^t + \varepsilon + Q_G(s_G, a).
 %\therefore\ \left| Q_{T}(s_T, a) - Q_G(s_G,a) \right| \leq \gamma\sum_{t=0}^{T-1}\varepsilon \gamma^t
 \end{align*}
-$s_G$ is arbitrary so we conclude Equation \ref{eq:clm1Induct}. As $T \rightarrow \infty$, $\sum_{t=0}^{T-1} \varepsilon \gamma^t \rightarrow \frac{\varepsilon}{1-\gamma}$ by the sum of infinite geometric series and $Q_T \rightarrow Q_A$. Thus, Equation \ref{eq:clm1Induct} gives Claim \ref{clm:closeQs}.
+Since $s_G$ is arbitrary we conclude Equation \ref{eq:clm1Induct}. As $T \rightarrow \infty$, $\sum_{t=0}^{T-1} \varepsilon \gamma^t \rightarrow \frac{\varepsilon}{1-\gamma}$ by the sum of infinite geometric series and $Q_T \rightarrow Q_A$. Thus, Equation \ref{eq:clm1Induct} yields Claim \ref{clm:closeQs}.
 
 %Claim 2
 \begin{clm}
@@ -186,8 +186,8 @@ $s_G$ is arbitrary so we conclude Equation \ref{eq:clm1Induct}. As $T \rightarro
 Consider a fixed but arbitrary state, $s_G \in \mathcal{S}_G$ and its corresponding abstract state $s_A=\epQ(s_G)$.
 Let $a^*_G$ stand for the optimal action in $s_G$, and $a^*_A$ stand for the optimal action in $s_A$:
 \begin{align*}
-a^*_G = \argmin Q_G(s_G, a), \hspace{4mm}
-a^*_A = \argmin Q_A(s_A, a).
+a^*_G = \argmax_a Q_G(s_G, a), \hspace{4mm}
+a^*_A = \argmax_a Q_A(s_A, a).
 \end{align*}
 The optimal action in the abstract MDP has a $Q$-value in the ground MDP that is nearly optimal:
 \begin{equation}
@@ -220,16 +220,19 @@ Consider the policy for $M_G$ of following the optimal abstract policy $\pi^*_A$
 \begin{equation}
 \pi_{A,t}(s)=
 \begin{cases}
-\pi_G^*(s), &\text{if } t<=0,\\
-\pi_{GA}(s), &\text{if } t > 0.
+\pi_G^*(s) &\text{if } t= 0\\
+\pi_{GA}(s) &\text{if } t > 0
 \end{cases}
 \end{equation}
 
-For a particular $t$, the value of this policy for $s_G \in \mathcal{S}_G$ in the ground \ac{MDP} is as follows:
+For $t > 0$, the value of this policy for $s_G \in \mathcal{S}_G$ in the ground \ac{MDP} is:
 \begin{multline*}
 V_G^{\pi_{A,t}}(s_G) = \\
 R_G(s, \pi_{A,t}(s_G)) +\ \gamma \sum_{{s_G}' \in \mathcal{S}_G}\mathcal{T}_G(s_G, a, {s_G}')V_G^{\pi_{A,t-1}}({s_G}').
 \end{multline*}
+
+For $t=0$, $V_G^{\pi_{A,t}}(s_G)$ is simply $V_G(s_G)$.
+
 %Start induction on following the optimal abstract policy
 We now show by induction on $t$ that
 \begin{equation}
@@ -311,7 +314,7 @@ Let $B$ be the maximum $Q$-value difference between any pair of ground states in
 \begin{equation*}
 B = \max_{s_A, s_1, s_2, a}  |Q_G(s_1, a) - Q_G(s_2, a)|,
 \end{equation*}
-where $s_A \in \mcS_G$ and $s_1, s_2 \in G(s_A)$. Since difference of rewards is bounded by $\varepsilon$:
+where $s_A \in \mcS_A$ and $s_1, s_2 \in G(s_A)$. Since difference of rewards is bounded by $\varepsilon$:
 % Removed for space
 %\begin{multline*}
 %B=\max_{s_A, s_1, s_2, a}      \biggl|\mcR_G(s_1, a) - \mcR_G(s_2, a)\ + \gamma \sum_{{s_G}' \in \mcS_G} \\
@@ -325,7 +328,7 @@ By similarity of transitions under $\epM$:
 \begin{align*}
 B \leq \varepsilon + \gamma \textsc{QMax} \sum_{s_A \in \mcS_A} \varepsilon \leq \varepsilon + \gamma|\mcS_G|\varepsilon \textsc{QMax}.
 \end{align*}
-Since \textsc{QMax} $\leq \frac{\textsc{RMax}}{1-\gamma}$, and we defined $\textsc{RMax} = 1$:
+Since \textsc{QMax} $= \frac{\textsc{RMax}}{1-\gamma}$, and we defined $\textsc{RMax} = 1$:
 \begin{equation*}
 B \leq \frac{\varepsilon + \gamma(|\mcS_G| - 1) \varepsilon}{1-\gamma}.
 \end{equation*}
@@ -336,10 +339,10 @@ Since the $Q$-values of ground states grouped under $\epM$ are strictly less tha
 \label{sec:boltz}
 
 %zzz all this theory is quite abstract. is there some way to weave in a running example and/or to at least provide some more motiviation for why phiBoltz is desirable. Balancing exploration/exploitation isn't really a motivation for why values should be abstracted together. What do the first two abstraction types miss that this one provides? We didn't Lihong et al. study it in the exact case?
-Here, we introduce $\epB$, which aggregates states with similar Boltzmann distributions on $Q$-values. This family of abstractions is appealing as Boltzmman distributions balance exploration and exploitation~\cite{sutton1998reinforcement}. We find this family particularly interesting for abstraction purposes as, unlike $\epQ$, it allows for aggregation when $Q$-value ratios are similar but their magnitudes are different.
+Here, we introduce $\epB$, which aggregates states with similar Boltzmann distributions on $Q$-values. This family of abstractions is appealing as Boltzmman distributions balance exploration and exploitation~\cite{sutton1998reinforcement}. We find this type particularly interesting for abstraction purposes as, unlike $\epQ$, it allows for aggregation when $Q$-value ratios are similar but their magnitudes are different.
 
 \bdefn{$\epB$}
-We let $\epB$ define a family of abstractions that, for fixed $\varepsilon$, satisfies:
+We let $\epB$ define a type of abstractions that, for fixed $\varepsilon$, satisfies:
 \begin{multline}
 \epB(s_1) = \epB(s_2) \rightarrow \\
 \forall_{a} \left|\frac{e^{Q_G(s_1,a)}}{\sum_b e^{Q_G(s_1,b)}} - \frac{e^{Q_G(s_2,a)}}{\sum_b e^{Q_G(s_2,b)}}\right| \leq \varepsilon.
@@ -364,7 +367,7 @@ We use the approximation for $e^x$, with $\delta$ error:
  e^x = 1 + x + \delta  \approx 1 + x.
 \label{eq:e_to_x_approx}
 \end{equation}
-We let $\delta_1$ denote the error in approximating $e^{Q_G(s_1,a)}$, and $\delta_2$ denote the error in approximating $e^{Q_G(s_2,a)}$.
+We let $\delta_1$ denote the error in approximating $e^{Q_G(s_1,a)}$ and $\delta_2$ denote the error in approximating $e^{Q_G(s_2,a)}$.
 
 {\bf Proof Sketch of Lemma~\ref{lma:bolt_lemma}:}
 
@@ -372,7 +375,7 @@ By the approximation in Equation~\ref{eq:e_to_x_approx} and the assumption in Eq
 \begin{align}
 \left|\frac{1 + Q_G(s_1,a) + \delta_1}{\sum_j e^{Q_G(s_1,a_j)}} - \frac{1 + Q_G(s_2,a) + \delta_2}{\sum_j e^{Q_G(s_1,a_j)} \pm k\varepsilon}\right| \leq \varepsilon \label{eq:bolt_with_approx}
 \end{align}
-Either the $1 + x + \delta$ approximation is maximal or minimal in Equation~\ref{eq:bolt_with_approx}. That is, either $\sum_j e^{Q_G(s_1,a_j)} + k\varepsilon$, or $\sum_j e^{Q_G(s_1,a_j)} - k\varepsilon$.
+Either $\sum_j e^{Q_G(s_1,a_j)} \pm k\varepsilon$ is  $\sum_j e^{Q_G(s_1,a_j)} + k\varepsilon$, or $\sum_j e^{Q_G(s_1,a_j)} - k\varepsilon$.
 
 First suppose the former. It follows by algebra that:
 \begin{equation}
@@ -421,7 +424,7 @@ We let $\epMu$ define a type of abstraction that, for fixed $\varepsilon$, satis
 
 We also assume that the difference in normalizing terms is bounded by some non-negative constant, $k \in \mathbb{R}$, of $\varepsilon$:
 \begin{equation}
-\left |\sum_i Q_G(s_1,a_i) - \sum_j Q_G(s_2,a_j) \right | \leq k\varepsilon.
+\left |\sum_i Q_G(s_1,a_i) - \sum_j Q_G(s_2,a_j) \right | \leq k \times \varepsilon.
 \end{equation}
 \begin{lma} When $S_A$ is created using a function of the $\epMu$ type, for some non-negative constant $k \in \mathbb{R}$:
 \begin{equation}
