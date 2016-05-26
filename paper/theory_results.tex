@@ -3,7 +3,7 @@
 
 \label{sec:theory_results}
 % Intro to approx state abstraction results.
-Here, we introduce our formal analysis of approximate state abstraction, including results bounding the error associated with these abstraction methods. In particular, we demonstrate that abstractions based on approximate $Q^*$ similarity (\ref{sec:Q*}), approximate model similarity (\ref{sec:model}), and approximate similarity between distributions over $Q^*$, for both Boltzmann (\ref{sec:boltz}) and multinomial (\ref{sec:mult}) distributions, induce abstract \acp{MDP} for which the optimal policy has bounded error in the ground MDP.
+Here, we introduce our formal analysis of approximate state abstraction, including results bounding the error associated with these abstraction methods. In particular, we demonstrate that abstractions based on approximate $Q^*$ similarity (\ref{sec:Q*}), approximate model similarity (\ref{sec:model}), and approximate similarity between distributions over $Q^*$, for both Boltzmann (\ref{sec:boltz}) and multinomial (\ref{sec:mult}) distributions induce abstract \acp{MDP} for which the optimal policy has bounded error in the ground MDP.
 
 We first introduce some additional notation.
 
@@ -40,7 +40,7 @@ Let $Q_G = Q^{\pi_G^*} : \mathcal{S}_G \times \mathcal{A} \rightarrow \mathbb{R}
 Let $Q_A  = Q^{\pi_A^*}: \mathcal{S}_A \times \mathcal{A} \rightarrow \mathbb{R}$ and $V_A  = V^{\pi_A^*}: \mathcal{S}_A \rightarrow \mathbb{R}$  stand for the optimal Q and optimal value functions in the abstract \ac{MDP}.
 \edefn
 
-We now introduce the main result of the paper.
+We now introduce our main result.
 
 % Theorem 1
 \begin{thm}
@@ -50,16 +50,16 @@ There exist at least four types of approximate state-aggregation functions, $\ep
 \end{equation}
 \end{thm}
 
-We prove this theorem in the following sections by proving bounds on the error of each individual approximate state-aggregation function type.
+We prove this theorem in the following sections by proving polynomial bounds on the error of each individual approximate state-aggregation function type.
 
 % Subsection: Optimal Q Function
 \subsection{Optimal Q Function: $\ep_{Q^*,\varepsilon}$}
 \label{sec:Q*}
 
 % Q* Lemma -- lemma 1
-We consider an approximate version of \citet{li2006towards}'s $\phi_Q^*$,. In our abstraction, states are aggregated together when their optimal $Q$-values are within $\varepsilon$.
+We consider an approximate version of \citet{li2006towards}'s $\phi_{Q^*}$. In our abstraction, states are aggregated together when their optimal $Q$-values are within $\varepsilon$.
 \bdefn{$\epQ$}
-An approximate $Q$ function has the same form as Equation~\ref{eq:phi_f}:
+An approximate $Q$ function abstraction has the same form as Equation~\ref{eq:phi_f}:
 \vspace{-1mm}%vspace for more space
 \begin{equation}
 \ep_{Q^*,\varepsilon}(s_1) = \ep_{Q^*,\varepsilon}(s_2) \rightarrow \forall_a \left|Q_G^*(s_1, a) - Q_G^*(s_2, a)\right| \leq \varepsilon.
@@ -102,13 +102,11 @@ Consider a non-Markovian decision process of the same form as an \ac{MDP}, $M^T 
 \mathcal{R}_G(s,a),& \text{if } T = 0, \\
 \mathcal{R}_A(s, a),& \text{o/w}
 \end{cases}\\
-\end{align*}
-\begin{align*}
 \mcT_T(s,a,s') &= \begin{cases}
 \mcT_G(s,a,s'),& \text{if }T = 0, \\
 \underset{{g \in G(s)}}{\sum}\left[\omega(g)\mcT_G(g, a, s')\right],& \text{if } T = 1, \\
 \mcT_A(s,a,s'),& \text{o/w}
-\end{cases}\\
+\end{cases}
 \end{align*}
 The $Q$-value of state $s$ in $\mathcal{S}_T$ for action $a$ is:
 \begin{equation}
@@ -119,7 +117,7 @@ Q_T(s, a) =
 	   \mathcal{R}_A(s,a) + \sigma_{T-1}(s,a), &\text{o/w},
 \end{cases}
 \end{equation}
-where
+where:
 \begin{equation*}
 \sigma_{T-1}(s,a) = \gamma \underset{{s_A}' \in \mathcal{S}_A}{\sum} \mathcal{T}_A(s,a,{s_A}') \max_{a'} Q_{T-1}({s_A}', a').
 \end{equation*}
@@ -175,7 +173,7 @@ Q_T(s_T, a) \leq \sum_{g \in G(s_T)}\omega(g) \times \biggl[ R_G(g,a)\ + \\ \gam
 %\end{equation*}
 Since all aggregated states have $Q$-values within $\varepsilon$ of one another:
 \begin{align*}
-Q_T(s_T, a) \leq \gamma\sum_{t=0}^{T-2} \varepsilon \gamma^t + \varepsilon + Q_G(s_G, a). \\
+Q_T(s_T, a) \leq \gamma\sum_{t=0}^{T-2} \varepsilon \gamma^t + \varepsilon + Q_G(s_G, a).
 %\therefore\ \left| Q_{T}(s_T, a) - Q_G(s_G,a) \right| \leq \gamma\sum_{t=0}^{T-1}\varepsilon \gamma^t
 \end{align*}
 $s_G$ is arbitrary so we conclude Equation \ref{eq:clm1Induct}. As $T \rightarrow \infty$, $\sum_{t=0}^{T-1} \varepsilon \gamma^t \rightarrow \frac{\varepsilon}{1-\gamma}$ by the sum of infinite geometric series and $Q_T \rightarrow Q_A$. Thus, Equation \ref{eq:clm1Induct} gives Claim \ref{clm:closeQs}.
@@ -197,18 +195,15 @@ The optimal action in the abstract MDP has a $Q$-value in the ground MDP that is
 V_G(s_G) \leq Q_G(s_G, a^*_A) + \frac{2\varepsilon}{1-\gamma}.
 \end{equation}
 \end{clm}
-
 By Claim~\ref{clm:closeQs},
 \begin{align}
 &V_G(s_G) = Q_G(s_G, a^*_G) \leq Q_A(s_A, a^*_G) + \frac{\varepsilon}{1-\gamma}.
 \label{eq:Q*OptActionResult}
 \end{align}
-
 By the definition of $a^*_A$, we know that 
 \begin{align}
 Q_A(s_A, a^*_G) + \frac{\varepsilon}{1-\gamma} \leq Q_A(s_A, a^*_A) + \frac{\varepsilon}{1-\gamma}.
 \end{align}
-
 Lastly, again by Claim~\ref{clm:closeQs}, we know
 \begin{align}
 Q_A(s_A, a^*_A) + \frac{\varepsilon}{1-\gamma} \leq Q_G(s_g, a^*_A) + \frac{2\varepsilon}{1-\gamma}.

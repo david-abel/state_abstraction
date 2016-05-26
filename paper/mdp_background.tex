@@ -11,7 +11,7 @@ The objective of an agent is to solve for the policy that maximizes its expected
 \begin{equation}
 Q^\pi(s,a) = \mathcal{R}(s,a) + \gamma \sum_{s'} \mathcal{T}(s,a,s') Q^\pi(s',\pi(s')).
 \end{equation}
-We let \textsc{RMax} denote the maximum reward (which is 1), and \textsc{QMax} denote the maximum Q value, which is $\frac{\textsc{RMax}}{1-\gamma}$.
+We let \textsc{RMax} denote the maximum reward (which is 1), and \textsc{QMax} denote the maximum $Q$ value, which is $\frac{\textsc{RMax}}{1-\gamma}$.
 
 The value function defined under a given policy, denoted $V^\pi(s)$, is defined as:
 \begin{equation}

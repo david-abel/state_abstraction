@@ -1,6 +1,6 @@
 %Lihong Section
 \section{Abstraction Notation}
-We build upon the notation used by \citet{li2006towards}, who introduced a unifying theoretical framework for state abstraction in \acp{MDP} and sequential decision making.
+We build upon the notation used by \citet{li2006towards}, who introduced a unifying theoretical framework for state abstraction in \acp{MDP}.
 
 \bdefn{$M_G$, $M_A$}
 We understand an abstraction as a mapping from the state space of a ground \ac{MDP}, $M_G$, to that of an abstract MDP, $M_A$, using a state-aggregation scheme. Consequently, this mapping induces an abstract \ac{MDP}. Let $M_G = \langle \mathcal{S}_G, \mathcal{A}, \mathcal{T}_G, \mathcal{R}_G, \gamma \rangle$ and $M_A = \langle \mathcal{S}_A, \mathcal{A}, \mathcal{T}_A, \mathcal{R}_A, \gamma \rangle$.
@@ -27,20 +27,20 @@ G(s)=
 \end{equation}
 \edefn
 
-The abstract reward function and abstract transition dynamics for each abstract state are a weighted combination of the rewards and transitions for each ground state in the partition. We make no assumptions about the weighting scheme, except that for each abstract state, the weighting is a convex combination across all ground states.
+The abstract reward function and abstract transition dynamics for each abstract state are a weighted combination of the rewards and transitions for each ground state in the abstract state.
 
 %zzz it's weird that s is bound twice in this formula. is that needed/intentional?
 
 \bdefn{$\omega(s)$}
 We refer to the weight associated with a ground state, $s \in \mathcal{S}_G$ by $\omega(s)$. The only restriction placed on the weighting scheme is that it induces a probability distribution on the ground states of each abstract state:
 \begin{equation}
-\forall s \in \mcS_G \left(\sum_{s \in G(s)} \omega(s)\right) = 1 \textrm{ and }\hspace{6mm}  \omega(s) \in [0,1].
+\forall s \in \mcS_G \left(\sum_{s \in G(s)} \omega(s)\right) = 1 \hspace{3mm} \textrm{ AND }\hspace{3mm}  \omega(s) \in [0,1].
 \end{equation}
 \edefn
 
 % Reward
 \bdefn{$\mcR_A$}
-The abstract reward function $\mathcal{R}_A(s,a)$ is a weighted sum of the rewards of each of the ground states that map to the same abstract state:
+The abstract reward function $\mathcal{R}_A: \mathcal{S}_A \times \mathcal{A} \mapsto [0,1]$ is a weighted sum of the rewards of each of the ground states that map to the same abstract state:
 \begin{equation}
 \mathcal{R}_A(s,a) = \sum_{g \in G(s)} \mathcal{R}_G(g,a) \omega(g) .
 \end{equation}
@@ -48,7 +48,7 @@ The abstract reward function $\mathcal{R}_A(s,a)$ is a weighted sum of the rewar
 
 % Transition
 \bdefn{$\mcT_A$}
-The abstract transition function $\mathcal{T}_A(s,a,s')$ is a weighted sum of the transitions of each of the ground states that map to the same abstract state:
+The abstract transition function $\mathcal{T}_A: \mathcal{S}_A \times \mathcal{A} \times \mathcal{S}_A \mapsto [0,1]$ is a weighted sum of the transitions of each of the ground states that map to the same abstract state:
 \begin{equation}
 \mathcal{T}_A(s,a,s') = \sum_{g \in G(s)} \sum_{g' \in G(s')} \mathcal{T}_G(g,a,g') \omega(g).
 \end{equation}
