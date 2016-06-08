@@ -1,3 +1,0 @@
-- Pitch trench as an RL problem
-- Graph visuals
-- Clean up notation in everything.
