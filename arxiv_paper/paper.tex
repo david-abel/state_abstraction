@@ -1,0 +1,105 @@
+\documentclass{article}
+
+% --- Packages ---
+\usepackage[nolist]{acronym} % Acronym package -- give argument <dua> to suppress acronym usage
+\usepackage[usenames, dvipsnames]{color} % Cool colors
+\usepackage{enumerate, hyperref, footmisc, subfigure, amsmath, amsthm, amssymb, fullpage, csquotes, dashrule, tikz, bbm, booktabs, bm}
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage[numbers]{natbib}
+
+% --- Misc. ---
+\hbadness=10000 % No "underfull hbox" messages.
+%\setlength{\parindent}{0pt} % Removes all indentation.
+
+% --- Commands ---
+\input{commands}
+
+
+% --- DOCUMENT ---
+\begin{document}
+%\twocolumn
+%\twocolumn[
+\title{\Large{\bf Near Optimal Behavior via Approximate State Abstraction}\footnote{A previous version of this paper was published in the Proceedings of the 33rd International Conference on Machine Learning, New York, NY, USA, 2016. JMLR: W\&CP volume 48. Copyright 2016 by the author(s).}}
+\date{}
+% Author info:
+\author{David Abel\footnote{The first two authors contributed equally.}\ , D. Ellis Hershkowitz$^\dagger$, Michael L. Littman\\
+Brown University, Computer Science Department\\
+115 Waterman Street, 4th floor
+Providence, RI 02912
+}
+
+\maketitle
+
+% Paper Meta Info
+%\author{David Abel$^\dagger$}{david\_abel@brown.edu}
+%%\icmladdress{Brown University, 115 Waterman Street, Providence, RI 02906}
+%\author{D. Ellis Hershkowitz$^\dagger$}{david\_hershkowitz@brown.edu}
+%%\icmladdress{Brown University, 115 Waterman Street, Providence, RI 02906}
+%\author{Michael L.\ Littman}{michael\_littman@brown.edu}
+%\address{Brown University, 115 Waterman Street, Providence, RI 02906}
+%\keywords{Reinforcement Learning, State Aggregation, State Abstraction, Planning, MDP}
+%\vspace{0.3in}
+%]
+
+
+%Acronyms -- use \ac for acronym or \acp for plural/capitalization of acronym
+\begin{acronym}
+\acro{MDP}{Markov Decision Process}
+\acrodefplural{MDP}[MDPs]{Markov Decision Processes}
+\acro{RL}{reinforcement learning}
+\acrodefplural{RL}{Reinforcement learning}
+\end{acronym}
+
+% ------------------------
+% --- ABSTRACT ---
+% ------------------------
+\begin{abstract}
+\input{abstract.tex}
+\end{abstract}
+
+% ---------------------------------------
+% --- SECTION: Introduction ---
+% ---------------------------------------
+\input{introduction.tex}
+
+% ---------------------------------------
+% --- SECTION: Background ---
+% ---------------------------------------
+\input{mdp_background.tex}
+
+% -----------------------------------------
+% --- SECTION: Related Work ---
+% -----------------------------------------
+\input{related_work.tex}
+
+% -----------------------------------------------
+% --- SECTION: Abstraction Notion ---
+% -----------------------------------------------
+\input{abstraction_notation.tex}
+
+% ----------------------------------------------------------------
+% --- SECTION: Approximate State Abstraction  ---
+% ----------------------------------------------------------------
+\input{theory_results.tex}
+
+% -----------------------------------------------
+% --- SECTION: Example Domains ---
+% -----------------------------------------------
+\input{example_domains.tex}
+
+% ------------------------------------------------------------------------------------
+% --- SECTION: Approximate Abstraction on Example Domains ---
+% ------------------------------------------------------------------------------------
+\input{results_discussion.tex}
+
+% --------------------------------------
+% --- SECTION: Conclusion ---
+% --------------------------------------
+\input{conclusion.tex}
+
+
+% --- BIBLIOGRAPHY ---
+\bibliographystyle{icml2016/icml2016}
+\bibliography{../../abstraction}
+
+\end{document}
